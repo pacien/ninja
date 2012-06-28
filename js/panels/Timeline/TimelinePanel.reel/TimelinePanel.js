@@ -1211,63 +1211,8 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
         		j = 0,
         		arrLayersLength = this.arrLayers.length,
         		arrSelectedIndexesLength = arrSelectedIndexes.length,
-        		currentLayersSelectedLength = this.currentLayersSelected.length,
-        		boolContinue = false,
         		arrSelectedLayers = false,
         		arrCurrentElementsSelected = [];
-            var matchedValues = 0;
-
-        	/*
-            if (arrSelectedIndexesLength !== 0) {
-	            for(i=0;i<arrSelectedIndexesLength;i++){
-	                for(j=0;j<currentLayersSelectedLength;j++){
-	
-	                    if(this.arrLayers[arrSelectedIndexes[i]] === this.arrLayers[this.currentLayerSelected[j]]){
-	                        matchedValues+=1;
-	                    }
-	                }
-	            }
-	
-	            if(matchedValues === arrSelectedIndexesLength){
-	                return;
-	            }
-            } 
-
-                    if(this.arrLayers[arrSelectedIndexes[i]] === this.arrLayers[this.currentLayersSelected[j]]){
-                        matchedValues+=1;
-                    }
-                }
-            }
-
-
-        	 // TODO: this should probably check to see if it actually needs to run.
-
-        	        		console.log(arrSelectedIndexes);
-        		console.log(this.currentLayersSelected);
-        	// Compare arrSelectedIndexes with this.currentLayersSelected
-        	// If the items are the same, we do not need to do anything.
-        	if (arrSelectedIndexesLength !== currentLayersSelectedLength) {
-        		// Different length in the arrays, we definitely need to continue.
-        		console.log('diferent length')
-        		boolContinue = true;
-        	} else {
-        		// Check each selected index and see if it's in this.currentLayersSelected
-        		// If we find one that isn't, we need to continue
-
-        		for (i = 0; i < arrSelectedIndexesLength; i++) {
-        			console.log('checking for ', arrSelectedIndexes[i]);
-					if (this.currentLayersSelected.indexOf(arrSelectedIndexes[i]) === -1) {
-						// Ooops, one of them was not found.
-						boolContinue = true;
-					}
-        		}
-        	}
-        	if (boolContinue === false) {
-        		console.log('exiting')
-        		return;
-        	}
-        	*/
-        	
 
             // Deselect selected layers if they're not in arrSelectedIndexes.
             for (i = 0; i < arrLayersLength; i++) {
@@ -1278,7 +1223,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 	            		
 	            		// Check to see if this layer, that we're deselecting, has
 	            		// any selected keyframes associated with it.  If it does, deselect them.
-	            		for (var j = 0; j < this.selectedTweens.length; j++) {
+	            		for (j = 0; j < this.selectedTweens.length; j++) {
 	            			var currentStageElement;
 	            			if (typeof(this.selectedTweens[j].parentComponent.parentComponent.trackType) === "undefined") {
 	            				currentStageElement = this.selectedTweens[j].parentComponent.parentComponent.stageElement; 
@@ -1296,10 +1241,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             if (this.currentLayersSelected !== false) {
             	this.currentLayersSelected = false;
             }
-
-            // Deselect tweens
-            //this.deselectTweens();
-
             
             // If we are actually going to be selecting things, create an empty array to use
             if (arrSelectedIndexesLength > 0) {
