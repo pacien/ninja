@@ -1046,28 +1046,25 @@ var Layer = exports.Layer = Montage.create(Component, {
 
     handleLeftChange: {
         value: function(event) {
-            var prevPosition;
-            if(this.application.ninja.timeline.selectedStyle==="left" ||this.application.ninja.timeline.selectedStyle==="master" ){
-                if(!event.wasSetByCode) {
-                    if(this.savedPosition) prevPosition = [this.savedPosition + "px"];
-                        this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "left", [this.leftControl.value + "px"] , "Change", "timeline", prevPosition);
-                        this.savedPosition = null;
-                }
 
+        var prevPosition;
+            if(!event.wasSetByCode) {
+                if(this.savedPosition) prevPosition = [this.savedPosition + "px"];
+                    this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "left", [this.leftControl.value + "px"] , "Change", "timeline", prevPosition);
+                    this.savedPosition = null;
             }
         }
     },
 
     handleTopChange: {
         value: function(event) {
-            var prevPosition;
-            if(this.application.ninja.timeline.selectedStyle==="top" ||this.application.ninja.timeline.selectedStyle==="master" ){
-                if(!event.wasSetByCode) {
-                    if(this.savedPosition) prevPosition = [this.savedPosition + "px"];
+        var prevPosition;
 
-                    this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "top", [this.topControl.value + "px"] , "Change", "timeline", prevPosition);
-                    this.savedPosition = null;
-                }
+            if(!event.wasSetByCode) {
+                if(this.savedPosition) prevPosition = [this.savedPosition + "px"];
+
+                this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "top", [this.topControl.value + "px"] , "Change", "timeline", prevPosition);
+                this.savedPosition = null;
             }
         }
     },
@@ -1075,13 +1072,12 @@ var Layer = exports.Layer = Montage.create(Component, {
     handleWidthChange:{
         value: function(event) {
             var prevPosition;
-            if(this.application.ninja.timeline.selectedStyle==="width" ||this.application.ninja.timeline.selectedStyle==="master" ){
-                if(!event.wasSetByCode) {
-                    if(this.savedPosition) prevPosition = [this.savedPosition + "px"];
 
-                    this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "width", [this.dtextScaleX + "px"] , "Change", "timeline", prevPosition);
-                    this.savedPosition = null;
-                }
+            if(!event.wasSetByCode) {
+                if(this.savedPosition) prevPosition = [this.savedPosition + "px"];
+
+                this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "width", [this.dtextScaleX + "px"] , "Change", "timeline", prevPosition);
+                this.savedPosition = null;
             }
         }
     },
@@ -1089,13 +1085,12 @@ var Layer = exports.Layer = Montage.create(Component, {
     handleHeightChange:{
         value: function(event) {
             var prevPosition;
-            if(this.application.ninja.timeline.selectedStyle==="height" ||this.application.ninja.timeline.selectedStyle==="master" ){
-                if(!event.wasSetByCode) {
-                    if(this.savedPosition) prevPosition = [this.savedPosition + "px"];
 
-                    this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "height", [this.dtextScaleY + "px"] , "Change", "timeline", prevPosition);
-                    this.savedPosition = null;
-                }
+            if(!event.wasSetByCode) {
+                if(this.savedPosition) prevPosition = [this.savedPosition + "px"];
+
+                this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "height", [this.dtextScaleY + "px"] , "Change", "timeline", prevPosition);
+                this.savedPosition = null;
             }
         }
     },
@@ -1103,11 +1098,9 @@ var Layer = exports.Layer = Montage.create(Component, {
     handleLeftChanging: {
         value: function(event) {
 
-            if(this.application.ninja.timeline.selectedStyle==="left" ||this.application.ninja.timeline.selectedStyle==="master" ){
-                if(!event.wasSetByCode) {
-                    if(!this.savedPosition) this.savedPosition = this.leftPosition;
-                    this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "left", [this.leftControl.value + "px"] , "Changing", "timeline");
-                }
+            if(!event.wasSetByCode) {
+                if(!this.savedPosition) this.savedPosition = this.leftPosition;
+                this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "left", [this.leftControl.value + "px"] , "Changing", "timeline");
             }
 
         }
@@ -1115,37 +1108,31 @@ var Layer = exports.Layer = Montage.create(Component, {
 
     handleTopChanging: {
         value: function(event) {
-            if(this.application.ninja.timeline.selectedStyle==="top" ||this.application.ninja.timeline.selectedStyle==="master" ){
-                if(!event.wasSetByCode) {
-                    if(!this.savedPosition) this.savedPosition = this.topPosition;
-                    this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "top", [this.topControl.value + "px"] , "Changing", "timeline");
-                }
-            }
 
+            if(!event.wasSetByCode) {
+                if(!this.savedPosition) this.savedPosition = this.topPosition;
+                this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "top", [this.topControl.value + "px"] , "Changing", "timeline");
+            }
         }
     },
 
     handleWidthChanging:{
         value: function(event) {
-            if(this.application.ninja.timeline.selectedStyle==="width" ||this.application.ninja.timeline.selectedStyle==="master" ){
-                if(!event.wasSetByCode) {
-                    if(!this.savedPosition) this.savedPosition = this.dtextScaleX;
-                    this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "width", [this.dtextScaleX + "px"] , "Changing", "timeline");
-                }
-            }
 
+            if(!event.wasSetByCode) {
+                if(!this.savedPosition) this.savedPosition = this.dtextScaleX;
+                this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "width", [this.dtextScaleX + "px"] , "Changing", "timeline");
+            }
         }
     },
 
     handleHeightChanging:{
         value: function(event) {
-            if(this.application.ninja.timeline.selectedStyle==="height" ||this.application.ninja.timeline.selectedStyle==="master" ){
-                if(!event.wasSetByCode) {
-                    if(!this.savedPosition) this.savedPosition = this.dtextScaleY;
-                    this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "height", [this.dtextScaleY + "px"] , "Changing", "timeline");
-                }
-            }
 
+            if(!event.wasSetByCode) {
+                if(!this.savedPosition) this.savedPosition = this.dtextScaleY;
+                this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "height", [this.dtextScaleY + "px"] , "Changing", "timeline");
+            }
         }
     },
 
