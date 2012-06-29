@@ -1368,7 +1368,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             	arrLayersLength = arrLayers.length,
             	targetIndex = 0,
 	            isAlreadySelected = false,
-	            indexAlreadySelected = 0,
+	            indexAlreadySelected = -5,
 	            indexLastClicked = 0,
 	            ua = navigator.userAgent.toLowerCase(),
 				boolCommandControlKeyIsPressed = false;
@@ -1383,6 +1383,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 					boolCommandControlKeyIsPressed = true;
 				}
 			}
+
 			
 			// Did the mousedown event originate within a layer?
 			if (ptrParent === false) {
@@ -1400,17 +1401,15 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             
             // Did we just click on a layer that's already selected?
 			if (this.currentLayersSelected !== false) {
-				indexAlreadySelected = this.currentLayersSelected.indexOf(targetIndex);
+				for (i = 0; i < this.currentLayersSelected.length; i++) {
+					if (this.currentLayersSelected[i] === targetIndex) {
+						indexAlreadySelected = i;
+					}
+				}
 			}
 			if (indexAlreadySelected > -1) {
 				isAlreadySelected = true;
 			}
-			
-			/*
-			if (targetIndex > -1) {
-				indexLastClicked = targetIndex;
-			}
-			*/
             
             // Now, do the selection based on all of that information.
             if (this.currentLayersSelected.length === 0) {
@@ -1425,7 +1424,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 	            	// or remove it if it's already there.
 					if (this.currentLayersSelected === false) {
 						this.currentLayersSelected = [];
-						//this.currentLayerSelected = false;
 					}
 	            	if (isAlreadySelected === false) {
 	            		this.currentLayersSelected.push(targetIndex);
@@ -1457,9 +1455,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 	            	this.currentLayersSelected = [targetIndex];
 	            	this.lastLayerClicked = targetIndex;
 	            }
-	            
             }
-            //this._captureSelection = true;
             this.selectLayers(this.currentLayersSelected);
             this.updateStageSelection();
         }
