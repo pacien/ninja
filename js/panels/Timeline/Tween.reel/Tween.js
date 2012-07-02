@@ -250,7 +250,7 @@ var Tween = exports.Tween = Montage.create(Component, {
 	            this.isTweenAnimated = true;
         	}
 			
-			if (eventDetail.source === "translateTool") {
+			if (eventDetail.source === "translateTool" || eventDetail.source === "rotateTool") {
         		var arrMat = eventDetail.data.value[0].properties.mat,
         			strTweenProperty = "perspective(1400) matrix3d(" + arrMat.join() + ")";
         		
