@@ -1368,9 +1368,23 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             	arrLayersLength = arrLayers.length,
             	targetIndex = 0,
 	            isAlreadySelected = false,
-	            indexAlreadySelected = 0,
-	            indexLastClicked = 0;
+	            indexAlreadySelected = -5,
+	            indexLastClicked = 0,
+	            ua = navigator.userAgent.toLowerCase(),
+				boolCommandControlKeyIsPressed = false;
+			
+			// Check to see if either the Command key (macs) or Control key (windows) is being pressed
+			if (ua.indexOf("mac") > -1) {
+				if (event.metaKey === true) {
+					boolCommandControlKeyIsPressed = true;	
+				}
+			} else {
+				if (this._isControlPressed === true) {
+					boolCommandControlKeyIsPressed = true;
+				}
+			}
 
+			
 			// Did the mousedown event originate within a layer?
 			if (ptrParent === false) {
 				// No it did not.  Do nothing.
@@ -1387,17 +1401,15 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             
             // Did we just click on a layer that's already selected?
 			if (this.currentLayersSelected !== false) {
-				indexAlreadySelected = this.currentLayersSelected.indexOf(targetIndex);
+				for (i = 0; i < this.currentLayersSelected.length; i++) {
+					if (this.currentLayersSelected[i] === targetIndex) {
+						indexAlreadySelected = i;
+					}
+				}
 			}
 			if (indexAlreadySelected > -1) {
 				isAlreadySelected = true;
 			}
-			
-			/*
-			if (targetIndex > -1) {
-				indexLastClicked = targetIndex;
-			}
-			*/
             
             // Now, do the selection based on all of that information.
             if (this.currentLayersSelected.length === 0) {
@@ -1406,13 +1418,12 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             } else {
             	// Something is already selected.  What do do depends on whether
             	// or not other keys are pressed.
-	            if (this._isControlPressed === true) {
-	            	// Control key is being pressed, so we need to 
+	            if (boolCommandControlKeyIsPressed === true) {
+	            	// Control or Command key is being pressed, so we need to 
 	            	// either add the current layer to selectedLayers
 	            	// or remove it if it's already there.
 					if (this.currentLayersSelected === false) {
 						this.currentLayersSelected = [];
-						//this.currentLayerSelected = false;
 					}
 	            	if (isAlreadySelected === false) {
 	            		this.currentLayersSelected.push(targetIndex);
@@ -1444,9 +1455,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 	            	this.currentLayersSelected = [targetIndex];
 	            	this.lastLayerClicked = targetIndex;
 	            }
-	            
             }
-            //this._captureSelection = true;
             this.selectLayers(this.currentLayersSelected);
             this.updateStageSelection();
         }
@@ -1467,9 +1476,11 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 				// Control key has been pressed
 				this._isControlPressed = true;
 			}
+			/*
 			if (event.metaKey === true) {
 				this._isControlPressed = true;
 			}
+			*/
 		}
 	},
     
