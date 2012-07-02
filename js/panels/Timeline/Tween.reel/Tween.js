@@ -170,9 +170,26 @@ var Tween = exports.Tween = Montage.create(Component, {
     	
     },
 
+    _initSelect:{
+        value: null
+    },
+    initSelect:{
+        serializable:true,
+        get:function () {
+            return this._initSelect;
+        },
+        set:function (newVal) {
+            this._initSelect = newVal;
+            this.tweenData.initSelect = newVal;
+        }
+    },
+
     prepareForDraw:{
         value:function(){
-            this.keyframe.selectKeyframe();
+            if(this.initSelect){
+                this.keyframe.selectKeyframe();
+                this.initSelect = false;
+            }
         }
     },
 
@@ -200,6 +217,7 @@ var Tween = exports.Tween = Montage.create(Component, {
             this.tweenedProperties = this.tweenData.tweenedProperties;
             this.isTweenAnimated = this.tweenData.isTweenAnimated;
             this.easing = this.tweenData.easing;
+            this.initSelect = this.tweenData.initSelect;
             this.needsDraw = true;
         }
     },

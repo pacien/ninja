@@ -797,6 +797,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
                 newTween.tweenData.tweenID = 0;
                 newTween.tweenData.spanPosition = 0;
                 newTween.tweenData.easing = "none";
+                newTween.tweenData.initSelect = true;
                 newTween.tweenData.tweenedProperties = [];
                 newTween.tweenData.tweenedProperties["top"] = this.animatedElement.offsetTop + "px";
                 newTween.tweenData.tweenedProperties["left"] = this.animatedElement.offsetLeft + "px";
@@ -813,6 +814,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
                 newTween.tweenData.tweenID = this.nextKeyframe;
                 newTween.tweenData.spanPosition = clickPos - newTween.tweenData.spanWidth;
                 newTween.tweenData.easing = "none";
+                newTween.tweenData.initSelect = true;
                 newTween.tweenData.tweenedProperties = [];
                 newTween.tweenData.tweenedProperties["top"] = this.animatedElement.offsetTop + "px";
                 newTween.tweenData.tweenedProperties["left"] = this.animatedElement.offsetLeft + "px";
@@ -920,6 +922,8 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
                     newTweenToInsert.tweenData.tweenID = this.tweens.length;
                     newTweenToInsert.tweenData.spanPosition = position - newTweenToInsert.tweenData.spanWidth;
                     newTweenToInsert.tweenData.tweenedProperties = [];
+                    newTweenToInsert.tweenData.easing = "none";
+                    newTweenToInsert.tweenData.initSelect = true;
                     newTweenToInsert.tweenData.tweenedProperties["top"] = this.animatedElement.offsetTop + "px";
                     newTweenToInsert.tweenData.tweenedProperties["left"] = this.animatedElement.offsetLeft + "px";
                     newTweenToInsert.tweenData.tweenedProperties["width"] = this.animatedElement.offsetWidth + "px";
@@ -999,6 +1003,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
                             newTween.tweenData.keyFrameMillisec = 0;
                             newTween.tweenData.tweenID = 0;
                             newTween.tweenData.spanPosition = 0;
+                            newTween.tweenData.initSelect = false;
                             this.tweens.push(newTween);
                             this.createMatchingPositionSizeTween(newTween);
                         }
@@ -1016,6 +1021,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
                             newTween.tweenData.keyFramePosition = clickPosition;
                             newTween.tweenData.keyFrameMillisec = currentMilliSec;
                             newTween.tweenData.tweenID = this.nextKeyframe;
+                            newTween.tweenData.initSelect = false;
                             newTween.tweenData.spanPosition =clickPosition - newTween.tweenData.spanWidth;
                             newTween.tweenData.easing = this.currentKeyframeRule[i].style.webkitAnimationName;
                             if (newTween.tweenData.easing == "") {
