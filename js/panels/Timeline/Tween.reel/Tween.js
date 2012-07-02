@@ -170,6 +170,12 @@ var Tween = exports.Tween = Montage.create(Component, {
     	
     },
 
+    prepareForDraw:{
+        value:function(){
+            this.keyframe.selectKeyframe();
+        }
+    },
+
     draw:{
         value:function () {
         	this.tweenspan.element.style.width = this.spanWidth + "px";
