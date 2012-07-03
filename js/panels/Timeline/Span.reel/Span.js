@@ -177,7 +177,6 @@ var Span = exports.Span = Montage.create(Component, {
             this.parentTween.easing = this.easing;
             this.parentTween.tweenData.easing = this.easing;
     		
-    		// Unbind the event handler
     		this.application.ninja.timeline.easingMenu.popup.contentEl.removeEventListener("click");
     		this.hideEasingMenu();
     	}

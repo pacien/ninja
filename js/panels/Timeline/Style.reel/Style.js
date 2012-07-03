@@ -349,12 +349,6 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
 			var tweenable = {},
 				i = 0;
 
-            if (this.ruleTweener === true) {
-               return;
-            } else {
-               this.ruleTweener = true;
-            }
-				
 			tweenable.tweener = "input";
 
 			for (i = 0; i < this._myTweenables.length; i++) {
@@ -391,7 +385,6 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
                         this._borderSide = tweenable.strokePosition
                     }
                 }
-
                 if (this.addedColorChips === false && this.application.ninja.colorController.colorPanelDrawn) {
                     // setup fill color
                     this._fillColorCtrl.props = { side: 'top', align: 'center', wheel: true, palette: true, gradient: false, image: false, nocolor: true, offset: -80 };
