@@ -244,7 +244,9 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
     insertPropTween:{
         value:function(clickPos){
             var selectedIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID);
-            this.application.ninja.timeline.selectLayer(selectedIndex, true);
+            // this.application.ninja.timeline.selectLayer(selectedIndex, true); // Deprecated.
+            this.application.ninja.timeline.selectLayers([selectedIndex]);
+            this.application.ninja.timeline.updateStageSelection();
 
             var currentMillisecPerPixel = Math.floor(this.application.ninja.timeline.millisecondsOffset / 80);
             var currentMillisec = currentMillisecPerPixel * clickPos;
