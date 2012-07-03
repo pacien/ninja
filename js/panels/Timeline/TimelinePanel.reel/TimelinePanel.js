@@ -1214,58 +1214,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
         		arrSelectedLayers = false,
         		arrCurrentElementsSelected = [];
 
-        	/*
-            if (arrSelectedIndexesLength !== 0) {
-	            for(i=0;i<arrSelectedIndexesLength;i++){
-	                for(j=0;j<currentLayersSelectedLength;j++){
-	
-	                    if(this.arrLayers[arrSelectedIndexes[i]] === this.arrLayers[this.currentLayerSelected[j]]){
-	                        matchedValues+=1;
-	                    }
-	                }
-	            }
-	
-	            if(matchedValues === arrSelectedIndexesLength){
-	                return;
-	            }
-            } 
-
-                    if(this.arrLayers[arrSelectedIndexes[i]] === this.arrLayers[this.currentLayersSelected[j]]){
-                        matchedValues+=1;
-                    }
-                }
-            }
-
-
-        	 // TODO: this should probably check to see if it actually needs to run.
-
-        	        		console.log(arrSelectedIndexes);
-        		console.log(this.currentLayersSelected);
-        	// Compare arrSelectedIndexes with this.currentLayersSelected
-        	// If the items are the same, we do not need to do anything.
-        	if (arrSelectedIndexesLength !== currentLayersSelectedLength) {
-        		// Different length in the arrays, we definitely need to continue.
-        		console.log('diferent length')
-        		boolContinue = true;
-        	} else {
-        		// Check each selected index and see if it's in this.currentLayersSelected
-        		// If we find one that isn't, we need to continue
-
-        		for (i = 0; i < arrSelectedIndexesLength; i++) {
-        			console.log('checking for ', arrSelectedIndexes[i]);
-					if (this.currentLayersSelected.indexOf(arrSelectedIndexes[i]) === -1) {
-						// Ooops, one of them was not found.
-						boolContinue = true;
-					}
-        		}
-        	}
-        	if (boolContinue === false) {
-        		console.log('exiting')
-        		return;
-        	}
-        	*/
-        	
-
             // Deselect selected layers if they're not in arrSelectedIndexes.
             for (i = 0; i < arrLayersLength; i++) {
             	if (this.arrLayers[i].layerData.isSelected === true) {
@@ -1275,7 +1223,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 	            		
 	            		// Check to see if this layer, that we're deselecting, has
 	            		// any selected keyframes associated with it.  If it does, deselect them.
-	            		for (var j = 0; j < this.selectedTweens.length; j++) {
+	            		for (j = 0; j < this.selectedTweens.length; j++) {
 	            			var currentStageElement;
 	            			if (typeof(this.selectedTweens[j].parentComponent.parentComponent.trackType) === "undefined") {
 	            				currentStageElement = this.selectedTweens[j].parentComponent.parentComponent.stageElement; 
@@ -1293,10 +1241,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             if (this.currentLayersSelected !== false) {
             	this.currentLayersSelected = false;
             }
-
-            // Deselect tweens
-            //this.deselectTweens();
-
             
             // If we are actually going to be selecting things, create an empty array to use
             if (arrSelectedIndexesLength > 0) {
@@ -1424,9 +1368,23 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             	arrLayersLength = arrLayers.length,
             	targetIndex = 0,
 	            isAlreadySelected = false,
-	            indexAlreadySelected = 0,
-	            indexLastClicked = 0;
+	            indexAlreadySelected = -5,
+	            indexLastClicked = 0,
+	            ua = navigator.userAgent.toLowerCase(),
+				boolCommandControlKeyIsPressed = false;
+			
+			// Check to see if either the Command key (macs) or Control key (windows) is being pressed
+			if (ua.indexOf("mac") > -1) {
+				if (event.metaKey === true) {
+					boolCommandControlKeyIsPressed = true;	
+				}
+			} else {
+				if (this._isControlPressed === true) {
+					boolCommandControlKeyIsPressed = true;
+				}
+			}
 
+			
 			// Did the mousedown event originate within a layer?
 			if (ptrParent === false) {
 				// No it did not.  Do nothing.
@@ -1443,17 +1401,15 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             
             // Did we just click on a layer that's already selected?
 			if (this.currentLayersSelected !== false) {
-				indexAlreadySelected = this.currentLayersSelected.indexOf(targetIndex);
+				for (i = 0; i < this.currentLayersSelected.length; i++) {
+					if (this.currentLayersSelected[i] === targetIndex) {
+						indexAlreadySelected = i;
+					}
+				}
 			}
 			if (indexAlreadySelected > -1) {
 				isAlreadySelected = true;
 			}
-			
-			/*
-			if (targetIndex > -1) {
-				indexLastClicked = targetIndex;
-			}
-			*/
             
             // Now, do the selection based on all of that information.
             if (this.currentLayersSelected.length === 0) {
@@ -1462,13 +1418,12 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             } else {
             	// Something is already selected.  What do do depends on whether
             	// or not other keys are pressed.
-	            if (this._isControlPressed === true) {
-	            	// Control key is being pressed, so we need to 
+	            if (boolCommandControlKeyIsPressed === true) {
+	            	// Control or Command key is being pressed, so we need to 
 	            	// either add the current layer to selectedLayers
 	            	// or remove it if it's already there.
 					if (this.currentLayersSelected === false) {
 						this.currentLayersSelected = [];
-						//this.currentLayerSelected = false;
 					}
 	            	if (isAlreadySelected === false) {
 	            		this.currentLayersSelected.push(targetIndex);
@@ -1500,9 +1455,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 	            	this.currentLayersSelected = [targetIndex];
 	            	this.lastLayerClicked = targetIndex;
 	            }
-	            
             }
-            //this._captureSelection = true;
             this.selectLayers(this.currentLayersSelected);
             this.updateStageSelection();
         }
@@ -1523,9 +1476,11 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 				// Control key has been pressed
 				this._isControlPressed = true;
 			}
+			/*
 			if (event.metaKey === true) {
 				this._isControlPressed = true;
 			}
+			*/
 		}
 	},
     
