@@ -11,6 +11,7 @@ var ElementsMediator = require("js/mediators/element-mediator").ElementMediator;
 
 var Tween = exports.Tween = Montage.create(Component, {
 
+    // ==== Begin Models
     keyframe: {
         value: null,
         serializable: true
@@ -184,6 +185,23 @@ var Tween = exports.Tween = Montage.create(Component, {
         }
     },
 
+    setData:{
+        value:function(){
+            this.spanWidth = this.tweenData.spanWidth;
+            this.keyFramePosition = this.tweenData.keyFramePosition;
+            this.spanPosition = this.tweenData.spanPosition;
+            this.keyFrameMillisec = this.tweenData.keyFrameMillisec;
+            this.tweenID = this.tweenData.tweenID;
+            this.tweenedProperties = this.tweenData.tweenedProperties;
+            this.isTweenAnimated = this.tweenData.isTweenAnimated;
+            this.easing = this.tweenData.easing;
+            this.initSelect = this.tweenData.initSelect;
+            this.needsDraw = true;
+        }
+    },
+    // ==== End Models
+
+    // ==== Begin Draw cycle methods
     prepareForDraw:{
         value:function(){
             if(this.initSelect){
@@ -206,37 +224,19 @@ var Tween = exports.Tween = Montage.create(Component, {
             }
         }
     },
+    // ==== End Draw cycle methods
 
-    setData:{
-        value:function(){
-            this.spanWidth = this.tweenData.spanWidth;
-            this.keyFramePosition = this.tweenData.keyFramePosition;
-            this.spanPosition = this.tweenData.spanPosition;
-            this.keyFrameMillisec = this.tweenData.keyFrameMillisec;
-            this.tweenID = this.tweenData.tweenID;
-            this.tweenedProperties = this.tweenData.tweenedProperties;
-            this.isTweenAnimated = this.tweenData.isTweenAnimated;
-            this.easing = this.tweenData.easing;
-            this.initSelect = this.tweenData.initSelect;
-            this.needsDraw = true;
-        }
-    },
-
+    // ==== Begin Event handlers
     handleElementChange:{
         value:function (event) {
-            // temp - testing var
-        	var useAbsolute = true;
-
             if(event.detail.type === "cssChange"){
                 event.detail.source="cssPanelChange"
             }
-
             if (event.detail.source && event.detail.source !== "tween") {
 
                 if(this.parentComponent.parentComponent.isSubproperty){
                     this.setStyleTweenProperty(event.detail);
                 } else {
-                    // check for correct element selection
                     if (this.application.ninja.selectedElements[0] != this.parentComponent.parentComponent.animatedElement) {
                         console.log("Wrong element selected for this keyframe track");
                     } else {
@@ -246,10 +246,11 @@ var Tween = exports.Tween = Montage.create(Component, {
             }
         }
     },
+    // ==== End Event handlers
 
+    // ==== Begin Controllers
     setTweenProperties:{
         value:function (eventDetail) {
-
         	if (eventDetail.source === "SelectionTool" || eventDetail.source === "timeline" || eventDetail.source === "pi" || eventDetail.source === "cssPanelChange") {
 	            if(this.parentComponent.parentComponent.animatedElement.offsetTop != this.tweenedProperties["top"]){
 	                this.tweenedProperties["top"] = this.parentComponent.parentComponent.animatedElement.offsetTop + "px";
@@ -263,7 +264,7 @@ var Tween = exports.Tween = Montage.create(Component, {
 	            if (this.parentComponent.parentComponent.animatedElement.offsetHeight != this.tweenedProperties["height"]){
 	                this.tweenedProperties["height"] = this.parentComponent.parentComponent.animatedElement.offsetHeight + "px";
 	            }
-	            // tell track to update css rule
+
 	            this.parentComponent.parentComponent.updateKeyframeRule();
 	            this.isTweenAnimated = true;
         	}
@@ -281,26 +282,17 @@ var Tween = exports.Tween = Montage.create(Component, {
 
     setStyleTweenProperty:{
         value:function (eventDetail) {
-            //console.log("Setting style tween properties for: " + this.parentComponent.parentComponent.trackEditorProperty);
-            //console.log(eventDetail);
             if(eventDetail.type == "setProperties"){
-                // need to ignore top, left, width, and height
-                //console.log(eventDetail.data.value[0]);
                 this.tweenedProperties[this.parentComponent.parentComponent.trackEditorProperty] = eventDetail.data.value[0];
                 this.parentComponent.parentComponent.updatePropKeyframeRule();
-
             } else if(eventDetail.type == "setColor"){
                 var prop = this.parentComponent.parentComponent.trackEditorProperty;
                 this.tweenedProperties[prop] = eventDetail.data.value.color.css;
                 this.parentComponent.parentComponent.updatePropKeyframeRule();
-
             } else if(eventDetail.type == "setProperty"){
-                // need to ignore top, left, width, and height
-                //console.log(eventDetail.data.value[0]);
                 this.tweenedProperties[this.parentComponent.parentComponent.trackEditorProperty] = eventDetail.data.value[0];
                 this.parentComponent.parentComponent.updatePropKeyframeRule();
-
-            }else {
+            } else {
                 console.log("TWEEN Unhandled type - setStyleTweenProperty : " + eventDetail.type);
             }
         }
@@ -308,7 +300,6 @@ var Tween = exports.Tween = Montage.create(Component, {
 
     setKeyframeEase:{
         value:function(easeType){
-            // easeTypes - ease, ease-out, ease-in, ease-in-out, linear, cubic-bezier(x1, y1, x2, y2)
             this.tweenedProperties["-webkit-animation-timing-function"] = easeType;
             if(this.parentComponent.parentComponent.isSubproperty){
                 if(this.parentComponent.parentComponent.trackType == "position"){
@@ -323,18 +314,11 @@ var Tween = exports.Tween = Montage.create(Component, {
 
     selectTween:{
         value: function(){
-            // turn on event listener for element change
             this.eventManager.addEventListener("elementChange", this, false);
-
-            // select the containing layer
             var selectIndex = this.application.ninja.timeline.getLayerIndexByID(this.parentComponent.parentComponent.trackID);
             this.application.ninja.timeline.selectLayer(selectIndex, true);
-
-            // tell timeline to deselect all other tweens and push this one into the selectedTweens in timeline
             this.application.ninja.timeline.deselectTweens();
             this.application.ninja.timeline.selectedTweens.push(this);
-
-            // update playhead position and time text
             this.application.ninja.timeline.playhead.style.left = (this.keyFramePosition - 2) + "px";
             this.application.ninja.timeline.playheadmarker.style.left = this.keyFramePosition + "px";
             var currentMillisecPerPixel = Math.floor(this.application.ninja.timeline.millisecondsOffset / 80);
@@ -342,13 +326,11 @@ var Tween = exports.Tween = Montage.create(Component, {
             this.application.ninja.timeline.updateTimeText(currentMillisec);
 
             if(this.parentComponent.parentComponent.isSubproperty){
-                // set property specific style on element
                 var currentValue = this.tweenedProperties[this.parentComponent.parentComponent.trackEditorProperty];
                 var el = this.parentComponent.parentComponent.animatedElement;
                 var prop = this.parentComponent.parentComponent.trackEditorProperty;
                 this.application.ninja.elementMediator.setProperty([el], prop, [currentValue], "Change", "tween");
             } else {
-                // move animated element to correct position on stage
                 var currentTop = this.tweenedProperties["top"];
                 var currentLeft = this.tweenedProperties["left"];
                 var currentWidth = this.tweenedProperties["width"];
@@ -364,10 +346,9 @@ var Tween = exports.Tween = Montage.create(Component, {
 
     deselectTween:{
         value:function(){
-            // turn off event listener for element change
             this.eventManager.removeEventListener("elementChange", this, false);
-            // deselect the keyframe for this tween
             this.keyframe.deselectKeyframe();
         }
     }
+    // ==== End Controllers
 });
