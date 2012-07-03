@@ -13,7 +13,10 @@ var ElementsMediator = require("js/mediators/element-mediator").ElementMediator;
 var Layer = exports.Layer = Montage.create(Component, {
     
     /* Begin: Models */
-
+	_timelinePanel: {
+		value: null
+	},
+	
 	_dynamicLayerTag: {
 		value: null
 	},
@@ -664,6 +667,14 @@ var Layer = exports.Layer = Montage.create(Component, {
             this.dtextScaleX= parseFloat(ElementsMediator.getProperty(el, "width"));
         }
     },
+    
+    willDraw: {
+    	value: function() {
+    		if (this._timelinePanel === null) {
+    			this._timelinePanel = this.parentComponent.parentComponent;
+    		}
+    	}
+    },
 
     draw: {
     	value: function() {
@@ -770,11 +781,11 @@ var Layer = exports.Layer = Montage.create(Component, {
 			// Dispatch the event to the TimelineTrack component associated with this Layer.
 			var myIndex = false,
 				i = 0, 
-				arrLayersLength = this.parentComponent.parentComponent.arrLayers.length,
+				arrLayersLength = this._timelinePanel.arrLayers.length,
 				arrTracks = document.querySelectorAll('[data-montage-id="track"]');
 			
 			for (i = 0; i < arrLayersLength; i++) {
-				if (this.stageElement == this.parentComponent.parentComponent.arrLayers[i].layerData.stageElement) {
+				if (this.stageElement == this._timelinePanel.arrLayers[i].layerData.stageElement) {
 					myIndex = i;
 				}
 			}
@@ -1005,7 +1016,7 @@ var Layer = exports.Layer = Montage.create(Component, {
 	},
 	handleDragleave: {
 		value: function(event) {
-			if (this.parentComponent.parentComponent.draggingType !== "layer") {
+			if (this._timelinePanel.draggingType !== "layer") {
 				return;
 			}
 			this.element.classList.remove("dragOver");
@@ -1013,14 +1024,14 @@ var Layer = exports.Layer = Montage.create(Component, {
 	},
 	handleDragstart: {
 		value: function(event) {
-			//this.parentComponent.parentComponent.dragLayerID = this.layerID;
+			//this._timelinePanel.dragLayerID = this.layerID;
             event.dataTransfer.setData('Text', 'Layer');
-            this.parentComponent.parentComponent.draggingType = "layer";
+            this._timelinePanel.draggingType = "layer";
 		}
 	},
 	handleDragover: {
 		value: function(event) {
-			if (this.parentComponent.parentComponent.draggingType !== "layer") {
+			if (this._timelinePanel.draggingType !== "layer") {
 				return;
 			}
 			event.preventDefault();
@@ -1032,13 +1043,13 @@ var Layer = exports.Layer = Montage.create(Component, {
 	
 	handleDrop : {
 		value: function(event) {
-			if (this.parentComponent.parentComponent.draggingType !== "layer") {
+			if (this._timelinePanel.draggingType !== "layer") {
 				return;
 			}
 			event.stopPropagation();
 			this.element.classList.remove("dragOver");
-			if (this.parentComponent.parentComponent.dragLayerID !== this.layerID) {
-				this.parentComponent.parentComponent.dropLayerID = this.layerID;
+			if (this._timelinePanel.dragLayerID !== this.layerID) {
+				this._timelinePanel.dropLayerID = this.layerID;
 			}
 			return false;
 		}

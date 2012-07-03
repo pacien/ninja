@@ -284,6 +284,13 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
         	this.init();
         }
     },
+    willDraw: {
+    	value: function() {
+    		if (this._parentLayerComponent === null) {
+    			this._parentLayerComponent = this.parentComponent.parentComponent.parentComponent.parentComponent;
+    		}
+    	}
+    },
     draw: {
     	value: function() {
     		// Show the right view
@@ -372,9 +379,7 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
 
         	var arrHints = [],
         		i = 0;
-        	
-        	this._parentLayerComponent = this.parentComponent.parentComponent.parentComponent.parentComponent;
-        	
+        	        	
         	// Get the array of hints from _myTweenables:
         	for (i = 0; i < this._myTweenables.length; i++) {
         		arrHints.push(this._myTweenables[i].property)
