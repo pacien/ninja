@@ -11,10 +11,10 @@ var defaultEventManager = require("montage/core/event/event-manager").defaultEve
 
 var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
 
+    // ==== Begin Models
     _trackID:{
         value:null
     },
-
     trackID:{
         serializable:true,
         get:function () {
@@ -31,7 +31,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     _tween:{
         value:[]
     },
-
     tween:{
         serializable:true,
         get:function () {
@@ -53,7 +52,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     _isVisible:{
         value: true
     },
-
     isVisible:{
         get:function(){
             return this._isVisible;
@@ -72,6 +70,21 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
         	this.trackData.isVisible = value;
         }
     },
+
+	_bindingPoint : {
+    	value : {}
+    },
+    bindingPoint: {
+    	get: function() {
+    		return this._bindingPoint;
+    	},
+    	set: function(newVal) {
+    		if (newVal !== this._bindingPoint) {
+	    		this._bindingPoint = newVal;
+	    		this.setData();
+    		}
+    	}
+    },
     
     _stageElement: {
     	value: null
@@ -86,7 +99,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     	}
     },
 
-    // Are the various collapsers collapsed or not
     _isMainCollapsed:{
         value: true
     },
@@ -99,18 +111,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             this.trackData.isMainCollapsed = newVal;
         }
     },
-    _isTransformCollapsed:{
-        value:true
-    },
-    isTransformCollapsed:{
-        get:function () {
-            return this._isTransformCollapsed;
-        },
-        set:function (newVal) {
-            this._isTransformCollapsed = newVal;
-            this.trackData.isTransformCollapsed = newVal;
-        }
-    },
+
     _isPositionCollapsed:{
         value:true
     },
@@ -123,6 +124,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             this.trackData.isPositionCollapsed = newVal;
         }
     },
+
     _isStyleCollapsed:{
         value:true
     },
@@ -135,6 +137,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             this.trackData.isStyleCollapsed = newVal;
         }
     },
+
     _bypassAnimation : {
     	value: false
     },
@@ -164,6 +167,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             this.trackData.arrStyleTracks = newVal;
     	}
     },
+
     _styleTracksRepetition: {
     	value: null
     },
@@ -176,8 +180,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     		this._styleTracksRepetition = newVal;
     	}
     },
-    
-    /* Position Property Tracks */
+
     _arrPositionTracks : {
     	value: []
     },
@@ -192,6 +195,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             
     	}
     },
+
     _positionTracksRepetition: {
     	value: null
     },
@@ -204,26 +208,9 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     	}
     },
 
-
-    /* Transform Property Tracks */
-    _arrTransformTracks : {
-    	value: []
-    },
-    arrTransformTracks: {
-        serializable:true,
-    	get: function() {
-    		return this._arrTransformTracks;
-    	},
-    	set: function(newVal) {
-    		this._arrTransformTracks = newVal;
-            this.trackData.arrTransformTracks = newVal;
-    	}
-    },
-
     _tweens:{
         value:[]
     },
-
     tweens:{
     	serializable: true,
         get:function () {
@@ -238,7 +225,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     _tweenRepetition:{
         value:null
     },
-
     tweenRepetition:{
         get:function () {
             return this._tweenRepetition;
@@ -251,7 +237,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     _trackDuration:{
         value:0
     },
-
     trackDuration:{
         serializable:true,
         get:function () {
@@ -269,7 +254,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     _trackPosition:{
         value:0
     },
-
     trackPosition:{
         serializable:true,
         get:function () {
@@ -284,7 +268,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     _currentKeyframeRule:{
         value:null
     },
-
     currentKeyframeRule:{
         serializable: true,
         get:function(){
@@ -307,7 +290,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     _isTrackAnimated:{
         value:null
     },
-
     isTrackAnimated:{
         serializable: true,
         get:function(){
@@ -319,7 +301,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
         }
     },
 
-    // should be unneeded with one element per layer restriction
     _animatedElement:{
         value:null
     },
@@ -337,7 +318,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     _animationName:{
         value:null
     },
-
     animationName:{
         serializable:true,
         get:function () {
@@ -352,7 +332,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     _ruleList:{
         value:[]
     },
-
     ruleList:{
         get:function () {
             return this._ruleList;
@@ -382,6 +361,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             this._positionCollapser = val;
         }
     },
+
     _mainCollapser:{
         value:null
     },
@@ -394,18 +374,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             this._mainCollapser = val;
         }
     },
-    _transformCollapser:{
-        value:null
-    },
-    transformCollapser:{
-        serializable:true,
-        get:function () {
-            return this._transformCollapser;
-        },
-        set:function (val) {
-            this._transformCollapser = val;
-        }
-    },
+
     _styleCollapser:{
         value:null
     },
@@ -419,10 +388,10 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
         }
     },
 
-	// Drag and Drop properties
     _dragAndDropHelper : {
     	value: false
     },
+
     _dragAndDropHelperCoords: {
     	value: false
     },
@@ -434,6 +403,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     		this._dragAndDropHelperCoords = newVal;
     	}
     },
+
     _draggingIndex: {
     	value: false
     },
@@ -445,12 +415,15 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     		this._draggingIndex = newVal;
     	}
     },
+
     _dragAndDropHelperOffset : {
     	value: false
     },
+
     _appendHelper: {
     	value: false
     },
+
     _deleteHelper: {
     	value: false
     },
@@ -458,7 +431,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     _trackData:{
 		value: false
     },
-
     trackData:{
     	serializable: true,
         get:function(){
@@ -502,52 +474,9 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             this.needsDraw = true;
         }
     },
+    // ==== End Models
 
-    createTrackData: {
-    	value: function() {
-    		tempData = {};
-            tempData.bypassAnimation = this.bypassAnimation;
-            tempData.trackID = this.layerID;
-            tempData.tweens = this.tweens;
-            tempData.animatedElement = this.animatedElement; 
-            tempData.arrStyleTracks = this.arrStyleTracks;
-            tempData.arrPositionTracks = this.arrPositionTracks;
-            tempData.isTrackAnimated = this.isTrackAnimated;
-            tempData.trackDuration = this.trackDuration;
-            tempData.animationName = this.animationName;
-            tempData.currentKeyframeRule = this.currentKeyframeRule;
-            tempData.isMainCollapsed = this.isMainCollapsed;
-            tempData.isPositionCollapsed = this.isPositionCollapsed;
-            tempData.isTransformCollapsed = this.isTransformCollapsed;
-            tempData.isStyleCollapsed = this.isStyleCollapsed;
-            tempData.trackPosition = this.trackPosition;
-            tempData.isVisible = this.isVisible;
-            this.trackData = tempData;
-    	}
-    },
-    
-    // Data binding observation point and trigger method
-	_bindingPoint : {
-    	value : {}
-    },
-    bindingPoint: {
-    	get: function() {
-    		return this._bindingPoint;
-    	},
-    	set: function(newVal) {
-    		if (newVal !== this._bindingPoint) {
-	    		this._bindingPoint = newVal;
-	    		this.setData();
-    		}
-    	}
-    },
-    
-    triggerOutgoingBinding : {
-    	value: function() {
-            this.trackData.triggerBinding = !this.trackData.triggerBinding;
-    	}
-    },
-
+    // ==== Begin Draw cycle methods
     prepareForDraw:{
         value:function () {
             this.init();
@@ -555,11 +484,9 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             this.element.addEventListener("click", this, false);
             this.eventManager.addEventListener("tlZoomSlider", this, false);
             
-            // Drag and Drop event handlers 
-			//this.element.addEventListener("dragover", this.handleKeyframeDragover.bind(this), false);
+            // Drag and Drop event handlers
 			this.element.addEventListener("dragstart", this.handleKeyframeDragstart.bind(this), false);
 			this.element.addEventListener("dragend", this.handleKeyframeDragend.bind(this), false);
-			//this.element.addEventListener("drop", this.handleKeyframeDrop.bind(this), false);
         }
     },
 
@@ -574,12 +501,10 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             }
 
     		// Drag and Drop:
-    		// Do we have a helper to append?
             if (this._appendHelper === true) {
             	this.track_lanes.appendChild(this._dragAndDropHelper);
             	this._appendHelper = false;
             }
-            // Do we need to move the helper?
     		if (this._dragAndDropHelperCoords !== false) {
     			if (this._dragAndDropHelper !== null) {
     				if (typeof(this._dragAndDropHelper.style) !== "undefined") {
@@ -588,18 +513,14 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     			}
     			this._dragAndDropHelperCoords = false;
     		}
-    		// Do we have a helper to delete?
     		if (this._deleteHelper === true) {
     			if (this._dragAndDropHelper === null) {
-    				// Problem....maybe a helper didn't get appended, or maybe it didn't get stored.
-    				// Try and recover the helper so we can delete it.
     				var myHelper = this.element.querySelector(".track-dnd-helper");
     				if (myHelper != null) {
     					this._dragAndDropHelper = myHelper;
     				}
     			}
 	            if (this._dragAndDropHelper !== null) {
-	            	// We need to delete the helper.  Can we delete it from track_lanes?
 	            	if (this._dragAndDropHelper && this._dragAndDropHelper.parentNode === this.track_lanes) {
 	            		this.track_lanes.removeChild(this._dragAndDropHelper);
 	            		this._dragAndDropHelper = null;
@@ -625,7 +546,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             }
             
     		if (this._isFirstDraw === true) {
-	    		
 	    		if (this.isMainCollapsed === false) {
 					this._mainCollapser.myContent.style.height = "auto";
 					this._mainCollapser.myContent.classList.remove(this._mainCollapser.collapsedClass);
@@ -635,11 +555,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
 					this._positionCollapser.myContent.style.height = "auto";
 					this._positionCollapser.myContent.classList.remove(this._positionCollapser.collapsedClass);
 					this._positionCollapser.clicker.classList.remove(this._positionCollapser.collapsedClass);
-	    		}
-	    		if (this.isTransformCollapsed === false) {
-					this._transformCollapser.myContent.style.height = "auto";
-					this._transformCollapser.myContent.classList.remove(this._transformCollapser.collapsedClass);
-					this._transformCollapser.clicker.classList.remove(this._transformCollapser.collapsedClass);
 	    		}
 	    		if (this.isStyleCollapsed === false) {
 					this._styleCollapser.myContent.style.height = "auto";
@@ -651,7 +566,9 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             
         }
     },
+    // ==== End Draw cycle methods
 
+    // ==== Begin Event handlers
 	handleTlZoomSlider: {
 		value: function(event) {
 			
@@ -663,7 +580,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
 	        	
 	        	if (i === 0) {
 					// Exception: 0th item does not depend on anything
-					// TODO: If 0th tween is draggable, this will need to be fixed.
+					// If 0th tween is draggable, this will need to be fixed.
 			        this.tweens[i].tweenData.spanWidth=0;
 		            this.tweens[i].tweenData.spanPosition=0;
 		            this.tweens[i].tweenData.keyFramePosition=0;
@@ -693,10 +610,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
 
     handleClick:{
         value:function (ev) {
-            // TEMP - if the SHIFT key is down, add a new keyframe or split an existing span
-            // This needs to move to a keyboard shortcut that is TBD
-            var selectedIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID);
-
             var targetElementOffset = this.findXOffset(ev.currentTarget),
             	position = (event.pageX - targetElementOffset) - 18;
 
@@ -704,7 +617,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             var currentMillisecPerPixel = Math.floor(this.application.ninja.timeline.millisecondsOffset / 80);
             var currentMillisec = currentMillisecPerPixel * position;
             this.application.ninja.timeline.updateTimeText(currentMillisec);
-
             if (ev.shiftKey) {
 	            var selectedIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID);
 	            this.application.ninja.timeline.selectLayer(selectedIndex, true);
@@ -726,8 +638,8 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     },
 
     handleKeyboardShortcut:{
-        value:function(ev){
-            if(ev.actionType == "insert"){
+        value:function (ev) {
+            if (ev.actionType == "insert") {
                 if (this.tweens.length < 1) {
                     this.insertTween(0);
                     this.addAnimationRuleToElement(ev);
@@ -736,23 +648,79 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
                     this.handleNewTween(ev);
                     this.updateKeyframeRule();
                 }
-            } else if(ev.actionType == "remove"){
+            } else if (ev.actionType == "remove") {
                 this.removeTween();
                 this.updateKeyframeRule();
             }
         }
     },
 
+    // Drag and drop event handlers
+    handleKeyframeDragstart:{
+        value:function (event) {
+            var dragIcon = document.createElement("img"),
+                minPosition = 0,
+                maxPosition = 100000000000;
+
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('Text', this.identifier);
+            dragIcon.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAA1JREFUGFdj+P//PwMACPwC/ohfBuAAAAAASUVORK5CYII="
+            dragIcon.width = 1;
+            event.dataTransfer.setDragImage(dragIcon, 0, 0);
+
+            // Clone the element we're dragging
+            this._dragAndDropHelper = event.target.cloneNode(true);
+            this._dragAndDropHelper.style.opacity = 0.8;
+            this._dragAndDropHelper.style.position = "absolute";
+            this._dragAndDropHelper.style.top = "5px";
+            this._dragAndDropHelper.style.left = "0px";
+            this._dragAndDropHelper.style.zIndex = 700;
+            this._dragAndDropHelper.classList.add("keyframeSelected");
+            this._dragAndDropHelper.classList.add("track-dnd-helper");
+
+            if (this.draggingIndex < (this.tweens.length - 1)) {
+                maxPosition = this.tweenRepetition.childComponents[this.draggingIndex + 1].keyFramePosition;
+            }
+            if (this.draggingIndex > 1) {
+                minPosition = this.tweenRepetition.childComponents[this.draggingIndex - 1].keyFramePosition;
+            }
+            this._keyframeMinPosition = minPosition + 2;
+            this._keyframeMaxPosition = maxPosition - 9;
+            this._appendHelper = true;
+            this._deleteHelper = false;
+
+            var i = 0,
+                arrLayersLength = this.parentComponent.parentComponent.arrLayers.length,
+                myId = null;
+            for (i = 0; i < arrLayersLength; i++) {
+                var currUuid = this.parentComponent.parentComponent.trackRepetition.childComponents[i].uuid;
+                if (currUuid === this.uuid) {
+                    myId = i;
+                }
+            }
+            this.parentComponent.parentComponent.draggingTrackId = myId;
+            this.parentComponent.parentComponent.draggingType = "keyframe";
+        }
+    },
+
+    handleKeyframeDragend:{
+        value:function (event) {
+            if (this.parentComponent.parentComponent.draggingType !== "keyframe") {
+                return;
+            }
+            this._deleteHelper = true;
+            this.needsDraw = true;
+
+        }
+    },
+
     handleNewTween:{
         value:function (ev) {
-        	
             if (ev.offsetX > this.tweens[this.tweens.length - 1].tweenData.keyFramePosition) {
                 var selectedIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID);
                 this.application.ninja.timeline.selectLayer(selectedIndex, false);
                 this.insertTween(ev.offsetX);
             } else {
-            	// We will be splitting a tween.  Get the x-coordinate of the mouse click within the target element.
-            	// You'd think you could use the event.x info for that, right? NO. We must use page values, calculating offsets and scrolling.
 	            if (typeof(ev.currentTarget) === "undefined") {
 	            	this.splitTweenAt(ev.offsetX);
 	            } else {
@@ -764,20 +732,113 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
         }
     },
 
-    findXOffset:{
-        value:function (obj) {
-            // Here's an easy function that adds up offsets and scrolls and returns the page x value of an element
-            var curleft = 0;
-            if (typeof(obj) === "undefined") {
-            	//debugger;
+    handleLayerEvent:{
+        value:function (layerEvent) {
+            if (layerEvent.layerID !== this.trackID) {
+                return;
             }
-            if (obj.offsetParent) {
-                do {
-                    curleft += (obj.offsetLeft - obj.scrollLeft);
+            if (layerEvent.layerEventType === "newStyle") {
+                var newStyleTrack = {};
+                newStyleTrack.propTrackData = {};
+                newStyleTrack.propTrackData.styleSelection = layerEvent.styleSelection;
+                newStyleTrack.propTrackData.propTweens = [];
+                newStyleTrack.propTrackData.trackType = "style";
+                newStyleTrack.propTrackData.trackEditorProperty = "";
+                newStyleTrack.propTrackData.styleIndex = layerEvent.styleIndex;
+                newStyleTrack.propTrackData.existingRule = "";
+            	this.arrStyleTracks.push(newStyleTrack);
+            } else if (layerEvent.layerEventType === "restoreStyle") {
+                var restoredStyleTrack = {};
+                restoredStyleTrack.propTrackData = {};
+                restoredStyleTrack.propTrackData.styleSelection = layerEvent.styleSelection;
+                restoredStyleTrack.propTrackData.propTweens = [];
+                restoredStyleTrack.propTrackData.trackType = "style";
+                restoredStyleTrack.propTrackData.trackEditorProperty = layerEvent.trackEditorProperty;
+                restoredStyleTrack.propTrackData.styleIndex = layerEvent.styleIndex;
+                restoredStyleTrack.propTrackData.existingRule = layerEvent.existingRule;
+                this.arrStyleTracks.push(restoredStyleTrack);
+            }
+            else if (layerEvent.layerEventType === "deleteStyle") {
+            	this.arrStyleTracks.splice(layerEvent._event.selectedStyleIndex, 1);
+            }
+        }
+    },
+    // ==== End Event handlers
 
-                } while (obj = obj.offsetParent);
+    // ==== Begin Controllers
+    init:{
+        value:function () {
+            this.createPositionTracks();
+            this.element.addEventListener("layerEvent", this, false);
+        }
+    },
+
+    createPositionTracks:{
+        value:function(){
+            if (this.arrPositionTracks.length > 0) {
+            	return;
             }
-            return curleft;
+
+            var newLeftTrack = {};
+            newLeftTrack.propTrackData = {};
+            newLeftTrack.propTrackData.propTweens = [];
+            newLeftTrack.propTrackData.styleIndex = 1;
+            newLeftTrack.propTrackData.trackType = "position";
+            newLeftTrack.propTrackData.trackEditorProperty = "left";
+            this.arrPositionTracks.push(newLeftTrack);
+
+            var newTopTrack = {};
+            newTopTrack.propTrackData = {};
+            newTopTrack.propTrackData.propTweens = [];
+            newTopTrack.propTrackData.styleIndex = 0;
+            newTopTrack.propTrackData.trackType = "position";
+            newTopTrack.propTrackData.trackEditorProperty = "top";
+            this.arrPositionTracks.push(newTopTrack);
+
+            var newWidthTrack = {};
+            newWidthTrack.propTrackData = {};
+            newWidthTrack.propTrackData.propTweens = [];
+            newWidthTrack.propTrackData.styleIndex = 2;
+            newWidthTrack.propTrackData.trackType = "position";
+            newWidthTrack.propTrackData.trackEditorProperty = "width";
+            this.arrPositionTracks.push(newWidthTrack);
+
+            var newHeightTrack = {};
+            newHeightTrack.propTrackData = {};
+            newHeightTrack.propTrackData.propTweens = [];
+            newHeightTrack.propTrackData.styleIndex = 3;
+            newHeightTrack.propTrackData.trackType = "position";
+            newHeightTrack.propTrackData.trackEditorProperty = "height";
+            this.arrPositionTracks.push(newHeightTrack);
+        }
+    },
+
+    createTrackData:{
+        value:function () {
+            tempData = {};
+            tempData.bypassAnimation = this.bypassAnimation;
+            tempData.trackID = this.layerID;
+            tempData.tweens = this.tweens;
+            tempData.animatedElement = this.animatedElement;
+            tempData.arrStyleTracks = this.arrStyleTracks;
+            tempData.arrPositionTracks = this.arrPositionTracks;
+            tempData.isTrackAnimated = this.isTrackAnimated;
+            tempData.trackDuration = this.trackDuration;
+            tempData.animationName = this.animationName;
+            tempData.currentKeyframeRule = this.currentKeyframeRule;
+            tempData.isMainCollapsed = this.isMainCollapsed;
+            tempData.isPositionCollapsed = this.isPositionCollapsed;
+            tempData.isTransformCollapsed = this.isTransformCollapsed;
+            tempData.isStyleCollapsed = this.isStyleCollapsed;
+            tempData.trackPosition = this.trackPosition;
+            tempData.isVisible = this.isVisible;
+            this.trackData = tempData;
+        }
+    },
+
+    triggerOutgoingBinding:{
+        value:function () {
+            this.trackData.triggerBinding = !this.trackData.triggerBinding;
         }
     },
 
@@ -822,7 +883,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
                 newTween.tweenData.tweenedProperties["height"] = this.animatedElement.offsetHeight + "px";
                 this.tweens.push(newTween);
 
-                // update the animation duration
                 var animationDuration = (this.trackDuration / 1000) + "s";
                 this.ninjaStylesContoller.setElementStyle(this.animatedElement, "-webkit-animation-duration", animationDuration);
                 this.nextKeyframe += 1;
@@ -845,36 +905,21 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
                 this.tweens.pop();
                 return;
             }
-
-            // Update the next tween to have new span position and width.
             this.tweens[tweenIDToRemove + 1].tweenData.spanPosition = oldPosition;
             this.tweens[tweenIDToRemove + 1].spanPosition = oldPosition;
             this.tweens[tweenIDToRemove + 1].tweenData.spanWidth = this.tweens[tweenIDToRemove + 1].tweenData.spanWidth + oldSpanWidth;
             this.tweens[tweenIDToRemove + 1].spanWidth = this.tweens[tweenIDToRemove + 1].spanWidth + oldSpanWidth;
 
-            // redraw the tweens
             for(var i in this.tweenRepetition.childComponents){
                 this.tweenRepetition.childComponents[i].setData();
             }
 
-            // remove the selected tween
             this.tweens.splice(tweenIDToRemove, 1);
             this.application.ninja.currentDocument.model.needsSave = true;
 
-            // update the tween ids
             for (var j = 0; j < this.tweens.length; j++) {
                 this.tweens[j].tweenID = j;
                 this.tweens[j].tweenData.tweenID = j;
-            }
-        }
-    },
-
-    createMatchingPositionSizeTween:{
-        value:function (newTween) {
-            var i;
-            var posTracks = this.positionTracksRepetition.childComponents.length;
-            for (i = 0; i < posTracks; i++) {
-                this.positionTracksRepetition.childComponents[i].propTweens.push(newTween);
             }
         }
     },
@@ -929,16 +974,12 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
                     newTweenToInsert.tweenData.tweenedProperties["width"] = this.animatedElement.offsetWidth + "px";
                     newTweenToInsert.tweenData.tweenedProperties["height"] = this.animatedElement.offsetHeight + "px";
                     this.tweens.splice(splitTweenIndex, 0, newTweenToInsert);
-                    
-                    // We are done, so end the loop.
+
                     i = tweensLength;
                 }
             }
-            
-            // We've made a change, so set the needsSave flag
             this.application.ninja.currentDocument.model.needsSave = true;
-            
-            // Our tween IDs are now all messed up.  Fix them.
+
             for (i = 0; i <= tweensLength+1; i++) {
 				this.tweens[i].tweenID = i;
 				this.tweens[i].tweenData.tweenID = i;
@@ -955,8 +996,9 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             this.application.ninja.timeline.arrLayers[selectedIndex].layerData.created=true;
             this.animatedElement = this.application.ninja.timeline.arrLayers[selectedIndex].layerData.stageElement;
             if(this.animatedElement!==undefined){
+
                 this.animationName = this.application.ninja.stylesController.getElementStyle(this.animatedElement, "-webkit-animation-name");
-                // build tweens for this tracks's keyframe rule
+
                 if(this.animationName){
                     // check for multiple animation names
                     var animationNameList = this.animationName.split(",");
@@ -979,16 +1021,10 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
 
                         var j, styleLength = this.currentKeyframeRule[i].style.length, keyframeStyles = [];
 
-                        for(j=0; j<styleLength; j++){
-                            // check for vendor prefixes and skip them for now
-                            //var firstChar = this.currentKeyframeRule[i].style[j].charAt(0);
-                            //if(firstChar === "-"){
-                            //    break;
-                            //} else {
-                                var currProp = this.currentKeyframeRule[i].style[j];
-                                var propVal = this.currentKeyframeRule[i].style[currProp];
-                                keyframeStyles.push([currProp, propVal]);
-                            //}
+                        for (j = 0; j < styleLength; j++) {
+                            var currProp = this.currentKeyframeRule[i].style[j];
+                            var propVal = this.currentKeyframeRule[i].style[currProp];
+                            keyframeStyles.push([currProp, propVal]);
                         }
 
                         // recreate tween properties array for timeline tween
@@ -1089,128 +1125,54 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
 
     updateKeyframeRule:{
         value:function () {
-            // delete the current rule
             this.ninjaStylesContoller.deleteRule(this.currentKeyframeRule);
-
-            // build the new keyframe string
             var keyframeString = "@-webkit-keyframes " + this.animationName + " {";
-
-            //console.log(this.animationName);
 
             for (var i = 0; i < this.tweens.length; i++) {
                 var keyMill = parseInt(this.tweens[i].tweenData.keyFrameMillisec);
-                // TODO - trackDur should be parseFloat rounded to significant digits
+                // trackDur should be parseFloat rounded to significant digits
                 var trackDur = parseInt(this.trackDuration);
                 var keyframePercent = Math.round((keyMill / trackDur) * 100) + "%";
                 var keyframePropertyString = " " + keyframePercent + " {";
                 for(var prop in this.tweens[i].tweenData.tweenedProperties){
-                    //console.log(prop + " - " + this.tweens[i].tweenData.tweenedProperties[prop]);
                     keyframePropertyString += prop + ": " + this.tweens[i].tweenData.tweenedProperties[prop] + ";";
                 }
                 keyframePropertyString += "}";
                 keyframeString += keyframePropertyString;
             }
             keyframeString += " }";
-            //console.log(keyframeString);
-            // set the keyframe string as the new rule
+
             this.currentKeyframeRule = this.ninjaStylesContoller.addRule(keyframeString);
-            //console.log(this.currentKeyframeRule);
             this.application.ninja.currentDocument.model.needsSave = true;
         }
     },
 
-    // Init and event handler for layer expand/collapse
-    init:{
-        value:function () {
-            this.createPositionTracks();
-            // Register event handler for layer events.
-            //defaultEventManager.addEventListener("layerEvent", this, false);
-            this.element.addEventListener("layerEvent", this, false);
-        }
-    },
-
-    createPositionTracks:{
-        value:function(){
-            // create track objects for position and transform tracks and push into arrays
-            
-            // ... but only do it if we haven't already.
-            if (this.arrPositionTracks.length > 0) {
-            	return;
-            }
-
-            // create 'left' track
-            var newLeftTrack = {};
-            newLeftTrack.propTrackData = {};
-            newLeftTrack.propTrackData.propTweens = [];
-            newLeftTrack.propTrackData.styleIndex = 1;
-            newLeftTrack.propTrackData.trackType = "position";
-            newLeftTrack.propTrackData.trackEditorProperty = "left";
-            this.arrPositionTracks.push(newLeftTrack);
-
-             // create 'top' track
-            var newTopTrack = {};
-            newTopTrack.propTrackData = {};
-            newTopTrack.propTrackData.propTweens = [];
-            newTopTrack.propTrackData.styleIndex = 0;
-            newTopTrack.propTrackData.trackType = "position";
-            newTopTrack.propTrackData.trackEditorProperty = "top";
-            this.arrPositionTracks.push(newTopTrack);
-
-            // create 'width' track
-            var newWidthTrack = {};
-            newWidthTrack.propTrackData = {};
-            newWidthTrack.propTrackData.propTweens = [];
-            newWidthTrack.propTrackData.styleIndex = 2;
-            newWidthTrack.propTrackData.trackType = "position";
-            newWidthTrack.propTrackData.trackEditorProperty = "width";
-            this.arrPositionTracks.push(newWidthTrack);
-
-            // create 'height' track
-            var newHeightTrack = {};
-            newHeightTrack.propTrackData = {};
-            newHeightTrack.propTrackData.propTweens = [];
-            newHeightTrack.propTrackData.styleIndex = 3;
-            newHeightTrack.propTrackData.trackType = "position";
-            newHeightTrack.propTrackData.trackEditorProperty = "height";
-            this.arrPositionTracks.push(newHeightTrack);
-        }
-    },
-
-    handleLayerEvent:{
-        value:function (layerEvent) {
-            if (layerEvent.layerID !== this.trackID) {
-                return;
-            }
-            if (layerEvent.layerEventType === "newStyle") {
-                var newStyleTrack = {};
-                newStyleTrack.propTrackData = {};
-                newStyleTrack.propTrackData.styleSelection = layerEvent.styleSelection;
-                newStyleTrack.propTrackData.propTweens = [];
-                newStyleTrack.propTrackData.trackType = "style";
-                newStyleTrack.propTrackData.trackEditorProperty = "";
-                newStyleTrack.propTrackData.styleIndex = layerEvent.styleIndex;
-                newStyleTrack.propTrackData.existingRule = "";
-
-            	this.arrStyleTracks.push(newStyleTrack);
-
-            } else if (layerEvent.layerEventType === "restoreStyle") {
-                var restoredStyleTrack = {};
-                restoredStyleTrack.propTrackData = {};
-                restoredStyleTrack.propTrackData.styleSelection = layerEvent.styleSelection;
-                restoredStyleTrack.propTrackData.propTweens = [];
-                restoredStyleTrack.propTrackData.trackType = "style";
-                restoredStyleTrack.propTrackData.trackEditorProperty = layerEvent.trackEditorProperty;
-                restoredStyleTrack.propTrackData.styleIndex = layerEvent.styleIndex;
-                restoredStyleTrack.propTrackData.existingRule = layerEvent.existingRule;
-
-                this.arrStyleTracks.push(restoredStyleTrack);
-            }
-            else if (layerEvent.layerEventType === "deleteStyle") {
-            	// We are deleting a style, so delete the associated track
-            	this.arrStyleTracks.splice(layerEvent._event.selectedStyleIndex, 1);
+    createMatchingPositionSizeTween:{
+        value:function (newTween) {
+            var i;
+            var posTracks = this.positionTracksRepetition.childComponents.length;
+            for (i = 0; i < posTracks; i++) {
+                this.positionTracksRepetition.childComponents[i].propTweens.push(newTween);
             }
         }
     },
+
+    findXOffset:{
+        value:function (obj) {
+            var curleft = 0;
+            if (typeof(obj) === "undefined") {
+
+            }
+            if (obj.offsetParent) {
+                do {
+                    curleft += (obj.offsetLeft - obj.scrollLeft);
+
+                } while (obj = obj.offsetParent);
+            }
+            return curleft;
+        }
+    },
+
     getTweenIndexById: {
     	value: function(intID) {
     		var i = 0,
@@ -1222,98 +1184,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
 			}
 			return returnVal;
     	}
-    },
-    
-    // Drag and drop event handlers
-    handleKeyframeDragstart : {
-    	value: function(event) {
-            var dragIcon = document.createElement("img"), 
-            	minPosition = 0,
-            	maxPosition = 100000000000;
-            	
-            event.dataTransfer.effectAllowed = 'move';
-            event.dataTransfer.setData('Text', this.identifier);
-            dragIcon.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAA1JREFUGFdj+P//PwMACPwC/ohfBuAAAAAASUVORK5CYII="
-            dragIcon.width = 1;
-            event.dataTransfer.setDragImage(dragIcon, 0, 0);
-            
-            // Clone the element we're dragging
-            this._dragAndDropHelper = event.target.cloneNode(true);
-            this._dragAndDropHelper.style.opacity = 0.8;
-            this._dragAndDropHelper.style.position = "absolute";
-            this._dragAndDropHelper.style.top = "5px";
-            this._dragAndDropHelper.style.left = "0px";
-            this._dragAndDropHelper.style.zIndex = 700;
-            this._dragAndDropHelper.classList.add("keyframeSelected");
-            
-            //this._dragAndDropHelper.style.width = window.getComputedStyle(this.container_layers, null).getPropertyValue("width");
-            this._dragAndDropHelper.classList.add("track-dnd-helper");
- 
-    		if (this.draggingIndex < (this.tweens.length -1)) {
-    			maxPosition = this.tweenRepetition.childComponents[this.draggingIndex+1].keyFramePosition;
-    		}
-    		if (this.draggingIndex > 1) {
-    			minPosition = this.tweenRepetition.childComponents[this.draggingIndex-1].keyFramePosition;
-    		}
-    		this._keyframeMinPosition = minPosition+2;
-    		this._keyframeMaxPosition = maxPosition-9;
-    		this._appendHelper = true;
-    		this._deleteHelper = false;
-    		
-    		// Get my index in the track array
-    		var i = 0,
-    			arrLayersLength = this.parentComponent.parentComponent.arrLayers.length,
-    			myId = null;
-    		for (i = 0; i < arrLayersLength; i++) {
-    			var currUuid = this.parentComponent.parentComponent.trackRepetition.childComponents[i].uuid;
-    			if ( currUuid === this.uuid) {
-    				myId = i;
-    			}
-    		}
-    		this.parentComponent.parentComponent.draggingTrackId = myId;
-    		this.parentComponent.parentComponent.draggingType = "keyframe";
-    	}
-    },
-    handleKeyframeDragend : {
-    	value: function(event) {
-    		if (this.parentComponent.parentComponent.draggingType !== "keyframe") {
-    			return;
-    		}
-    		this._deleteHelper = true;
-    		this.needsDraw = true;
-           
-    	}
-    },
-    
-    
-	/* Begin: Logging routines */
-    _boolDebug: {
-    	enumerable: false,
-    	value: false // set to true to enable debugging to console; false for turning off all debugging.
-    },
-    boolDebug: {
-    	get: function() {
-    		return this._boolDebug;
-    	},
-    	set: function(boolDebugSwitch) {
-    		this._boolDebug = boolDebugSwitch;
-    	}
-    },
-    log: {
-    	value: function(strMessage) {
-    		if (this.boolDebug) {
-    			console.log(this.getLineNumber() + ": " + strMessage);
-    		}
-    	}
-    },
-    getLineNumber: {
-    	value: function() {
-			try {
-			   throw new Error('bazinga')
-			}catch(e){
-				return e.stack.split("at")[3].split(":")[2];
-			}
-    	}
     }
-	/* End: Logging routines */
+    // ==== End Controllers
 });

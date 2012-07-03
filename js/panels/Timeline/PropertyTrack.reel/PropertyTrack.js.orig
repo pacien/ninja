@@ -9,14 +9,29 @@ var Component = require("montage/ui/component").Component;
 
 var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
+    /* ===- Begin Models ==== */
     hasTemplate:{
         value: true
     },
 
-    _propTweenRepetition:{
+<<<<<<< HEAD
+=======
+    trackEditorProperty:{
+        value:""
+    },
+
+    animatedElement:{
         value:null
     },
 
+    isSubproperty:{
+        value:true
+    },
+
+>>>>>>> refs/heads/TimelineUberJD
+    _propTweenRepetition:{
+        value:null
+    },
     propTweenRepetition:{
         get:function () {
             return this._propTweenRepetition;
@@ -29,7 +44,6 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
     _propTweens:{
         value:[]
     },
-
     propTweens:{
         serializable:true,
         get:function () {
@@ -43,7 +57,6 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
     _propTrackData:{
         value:false
     },
-
     propTrackData:{
         serializable:true,
         get:function () {
@@ -59,7 +72,6 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
     _trackID:{
         value:null
     },
-
     trackID:{
         serializable:true,
         get:function () {
@@ -75,7 +87,6 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
     _trackType:{
         value:null
     },
-
     trackType:{
         serializable:true,
         get:function () {
@@ -91,7 +102,6 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
     _styleIndex:{
         value:null
     },
-
     styleIndex:{
         serializable:true,
         get:function () {
@@ -154,7 +164,28 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
             this.needsDraw = true;
         }
     },
+    /* ===- End Models ==== */
 
+    /* ===- Begin Draw Cycle ==== */
+    prepareForDraw:{
+        value:function () {
+            this.element.addEventListener("click", this, false);
+            this.trackID = this.parentComponent.parentComponent.parentComponent.parentComponent.trackID;
+            this.animatedElement = this.parentComponent.parentComponent.parentComponent.parentComponent.animatedElement;
+            this.ninjaStylesContoller = this.application.ninja.stylesController;
+        }
+    },
+
+    didDraw:{
+        value:function () {
+            if (this.currentKeyframeRule) {
+                this.retrieveStoredStyleTweens();
+            }
+        }
+    },
+    /* ===- End Draw Cycle ==== */
+
+<<<<<<< HEAD
     prepareForDraw:{
         value:function(){
             this.element.addEventListener("click", this, false);
@@ -173,23 +204,32 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
         }
     },
 
+=======
+    /* ===- Begin Event Handlers ==== */
+>>>>>>> refs/heads/TimelineUberJD
     handleClick:{
         value:function (ev) {
 
             var selectIndex , currentSelectedStyleIndex;
             if (ev.shiftKey) {
-
                 if (this.trackType == "position") {
                     this.timelineTrack.handleNewTween(ev);
                 }
-
                 if (this.propTweens.length < 1) {
+<<<<<<< HEAD
 
                     selectIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID),
                     currentSelectedStyleIndex = this.getCurrentSelectedStyleIndex(selectIndex);
 
                     if (this.trackType == "style") {
                         if (this.application.ninja.timeline.arrLayers[selectIndex].layerData.arrLayerStyles[currentSelectedStyleIndex].editorProperty == null) {
+=======
+                    var selectIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID),
+                    	currentSelectedStyleIndex = this.getCurrentSelectedStyleIndex(selectIndex);
+
+                    if (this.trackType == "style") {
+                    	if (this.application.ninja.timeline.arrLayers[selectIndex].layerData.arrLayerStyles[currentSelectedStyleIndex].editorProperty == null) {
+>>>>>>> refs/heads/TimelineUberJD
                             console.log("Please enter a style property for this track before adding keyframes.");
                             return;
                         } else {
@@ -199,6 +239,10 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                         this.addPropAnimationRuleToElement(ev);
                         this.updatePropKeyframeRule();
                     } else if (this.trackType == "position") {
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/heads/TimelineUberJD
                     }
                 } else {
                     this.handleNewPropTween(ev);
@@ -216,8 +260,12 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
             if (ev.offsetX > this.propTweens[this.propTweens.length - 1].tweenData.keyFramePosition) {
                 this.insertPropTween(ev.offsetX);
             } else {
+<<<<<<< HEAD
                 // An easy function that adds up offsets and scrolls and returns the page x value of an element
                 findXOffset = function (obj) {
+=======
+                var findXOffset = function (obj) {
+>>>>>>> refs/heads/TimelineUberJD
                     var curleft = 0;
                     if (obj.offsetParent) {
                         do {
@@ -233,6 +281,23 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                 this.splitPropTweenAt(position - 18);
             }
         }
+    },
+    /* ===- End Event Handlers ==== */
+
+    /* ===- Begin Controllers ==== */
+    getCurrentSelectedStyleIndex: {
+    	value: function(layerIndex) {
+    		var returnVal = false,
+    			i = 0,
+    			arrLayerStylesLength = this.application.ninja.timeline.arrLayers[layerIndex].layerData.arrLayerStyles.length;
+    		for (i = 0; i < arrLayerStylesLength; i++) {
+    			var currItem =  this.application.ninja.timeline.arrLayers[layerIndex].layerData.arrLayerStyles[i];
+    			if (currItem.isSelected === true) {
+    				returnVal = i;
+    			}
+    		}
+    		return returnVal;
+    	}
     },
 
     getCurrentSelectedStyleIndex: {
@@ -337,7 +402,13 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                     i = tweensLength;
                 }
             }
+<<<<<<< HEAD
+
             this.application.ninja.currentDocument.model.needsSave = true;
+
+=======
+            this.application.ninja.currentDocument.model.needsSave = true;
+>>>>>>> refs/heads/TimelineUberJD
             for (i = 0; i <= tweensLength + 1; i++) {
                 this.propTweens[i].tweenID = i;
                 this.propTweens[i].tweenData.tweenID = i;
@@ -364,8 +435,13 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                         styleLength = this.currentKeyframeRule[i].style.length, keyframeStyles = [];
 
                         for (j = 0; j < styleLength; j++) {
+<<<<<<< HEAD
 
                             firstChar = this.currentKeyframeRule[i].style[j].charAt(0);
+=======
+                            // check for vendor prefixes and skip them for now
+                            var firstChar = this.currentKeyframeRule[i].style[j].charAt(0);
+>>>>>>> refs/heads/TimelineUberJD
                             if (firstChar === "-") {
                                 break;
                             } else {
@@ -414,6 +490,9 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
     updatePropKeyframeRule:{
         value:function(){
+<<<<<<< HEAD
+            var keyframeString, keyMill, trackDur, keyframePercent, keyframePropertyString, prop, i;
+            // delete the current rule
             this.ninjaStylesContoller.deleteRule(this.currentKeyframeRule);
 
             // build the new keyframe string
@@ -421,6 +500,12 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
             for (i = 0; i < this.propTweens.length; i++) {
                 keyMill = parseInt(this.propTweens[i].tweenData.keyFrameMillisec);
+=======
+            this.ninjaStylesContoller.deleteRule(this.currentKeyframeRule);
+            var keyframeString = "@-webkit-keyframes " + this.animationName + " {";
+            for (var i = 0; i < this.propTweens.length; i++) {
+                var keyMill = parseInt(this.propTweens[i].tweenData.keyFrameMillisec);
+>>>>>>> refs/heads/TimelineUberJD
                 // trackDur should be parseFloat rounded to significant digits
                 trackDur = parseInt(this.trackDuration);
                 keyframePercent = Math.round((keyMill / trackDur) * 100) + "%";
