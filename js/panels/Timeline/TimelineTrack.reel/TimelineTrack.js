@@ -981,14 +981,14 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
 
                         for(j=0; j<styleLength; j++){
                             // check for vendor prefixes and skip them for now
-                            var firstChar = this.currentKeyframeRule[i].style[j].charAt(0);
-                            if(firstChar === "-"){
-                                break;
-                            } else {
+                            //var firstChar = this.currentKeyframeRule[i].style[j].charAt(0);
+                            //if(firstChar === "-"){
+                            //    break;
+                            //} else {
                                 var currProp = this.currentKeyframeRule[i].style[j];
                                 var propVal = this.currentKeyframeRule[i].style[currProp];
                                 keyframeStyles.push([currProp, propVal]);
-                            }
+                            //}
                         }
 
                         // recreate tween properties array for timeline tween
