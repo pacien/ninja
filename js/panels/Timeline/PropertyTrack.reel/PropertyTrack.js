@@ -421,7 +421,6 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
             for (i = 0; i < this.propTweens.length; i++) {
                 keyMill = parseInt(this.propTweens[i].tweenData.keyFrameMillisec);
-                // trackDur should be parseFloat rounded to significant digits
                 trackDur = parseInt(this.trackDuration);
                 keyframePercent = Math.round((keyMill / trackDur) * 100) + "%";
                 keyframePropertyString = " " + keyframePercent + " {";
