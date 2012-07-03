@@ -239,6 +239,18 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
         }
     },
     
+    _lastInsertionIndex: {
+    	value: false
+    },
+    lastInsertionIndex: {
+    	get: function() {
+    		return this._lastInsertionIndex;
+    	},
+    	set: function(newVal) {
+    		this._lastInsertionIndex = newVal;
+    	}
+    },
+    
     _areTracksScrolling: {
     	value: false
     },
@@ -1504,65 +1516,59 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 			}
 		}
 	},
-    createstageElement:{
-        value:function (object) {
-            var stageElementName = "",
-                thingToPush = this.createLayerTemplate(),
-                myIndex = 0,
-                i = 0,
-                arrLayersLength = this.arrLayers.length;
 
-			// Make up a layer name.
-            this.currentLayerNumber = this.currentLayerNumber + 1;
-//            stageElementName = "Layer " + this.currentLayerNumber;
-            stageElementName="         ";
 
-			// Possibly currentLayerNumber doesn't correctly reflect the
-			// number of layers.  Check that.
-            // Commented out to fix WebGL rendering bug
-            /*for(k = 0; k < arrLayersLength; k++){
-                if(this.arrLayers[k].layerData.layerName === stageElementName){
-                     this.currentLayerNumber = this.currentLayerNumber + 1;
-                     stageElementName = "Layer " + this.currentLayerNumber;
-                     break;
-                }
-            }*/
+    createStageElementsAt: {
+        value:function (isPaste, arrElements) {
+        	
+        	var i = 0,
+        		j = 0,
+        		arrElementsLength = arrElements.length,
+        		arrNewLayers = [],
+        		arrNewLayersLength = 0,
+        		stageElementName = "",
+        		targetIndex = 0;
+        	if (this.lastInsertionIndex !== false) {
+        		targetIndex = this.lastInsertionIndex;
+        		this.lastInsertionIndex = false;
+        	}
+        	
             // We will no longer have multiple things selected, so wipe that info out
             // if it isn't already gone.
             this.currentLayersSelected = false;
-            
-            // thingToPush is the template we just got.  Now fill it in.
-            thingToPush.layerData.layerName = stageElementName;
-            thingToPush.layerData.layerTag = "<" + object.nodeName.toLowerCase() + ">";
-            thingToPush.layerData.layerID = this.currentLayerNumber;
-            thingToPush.parentElement = this.currentDocument.model.domContainer;
-            thingToPush.layerData.isSelected = true;
-            thingToPush.layerData._isFirstDraw = true;
-            thingToPush.layerData.created = true;
-            thingToPush.layerData.stageElement = object;
-            thingToPush.layerData.isLock = false;
-            thingToPush.layerData.isHidden = false;
 
+			for (i = arrElementsLength-1; i >= 0; i--) {
+				var thingToPush = this.createLayerTemplate();
+				
+				// Make up a layer name.
+            	this.currentLayerNumber = this.currentLayerNumber + 1;
+	            stageElementName="";
+	            
+	            // thingToPush is the template we just got.  Now fill it in.
+	            thingToPush.layerData.layerName = stageElementName;
+	            thingToPush.layerData.layerTag = "<" + arrElements[i].nodeName.toLowerCase() + ">";
+	            thingToPush.layerData.layerID = this.currentLayerNumber;
+	            thingToPush.parentElement = this.currentDocument.model.domContainer;
+	            thingToPush.layerData.isSelected = true;
+	            thingToPush.layerData._isFirstDraw = true;
+	            thingToPush.layerData.created = true;
+	            thingToPush.layerData.stageElement = arrElements[i];
+	            thingToPush.layerData.isLock = false;
+	            thingToPush.layerData.isHidden = false;
+	            thingToPush.layerData.created = !isPaste;
+	            thingToPush.created = !isPaste;
 
-            if (this.checkable_animated.classList.contains("checked")) {
-            	thingToPush.layerData.isVisible = false;
-            }
-            
-            // Determine where the new array should be inserted in arrLayers.
-            // Ordinarily we could use this.getInsertionIndex BUT the new element
-            // insertion and selection has already fired, so getInsertionIndex will return 
-            // incorrect info. So we need to look at the DOM.
-            var childrenLength = this.application.ninja.currentDocument.model.domContainer.children.length,
-            	newIndex = childrenLength -1;
-            for (i = 0; i < childrenLength; i++) {
-            	var currTest = this.application.ninja.currentDocument.model.domContainer.children[i];
-            	if (object == currTest) {
-            		myIndex = newIndex - i;
-            	}
-            }
+				if (this.checkable_animated.classList.contains("checked")) {
+					thingToPush.layerData.isVisible = false;
+				}
+				//arrNewLayers.push(thingToPush);
+				this.arrLayers.splice(targetIndex, 0, thingToPush);
+			}
+			//console.log(arrNewLayers);
+			//console.log(thingToPush);
+        	
+            //this.arrLayers.splice(targetIndex, 0, arrNewLayers);
 
-            this.arrLayers.splice(myIndex, 0, thingToPush);
-            this.selectLayers([myIndex]);
         }
     },
 
@@ -1647,8 +1653,18 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     },
 
     handleElementAdded:{
-        value:function() {
-            this.createstageElement(this.application.ninja.selectedElements[0]);
+        value:function(event) {
+        	var i = 0, 
+    			targetIndex = 0;
+        	// One or more elements have been added to the stage.
+        	// We need to add them to the timeline.
+        	if (typeof(event.detail.length) === "undefined") {
+        		// This is a standard element creation event.
+        		this.createStageElementsAt(false, [event.detail]);
+        	} else {
+        		// This is a paste action, because event.detail has more than one item in it.
+        		this.createStageElementsAt(true, event.detail);
+        	}
         }
     },
 
@@ -1750,9 +1766,11 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 				arrLayersLength = this.arrLayers.length,
 				returnVal = arrLayersLength -1;
 			if (returnVal === -1) {
+				this.lastInsertionIndex = 0;
 				return false;
 			}
 			if (this.currentLayersSelected === false) {
+				this.lastInsertionIndex = 0;
 				return false;
 			}
 			
@@ -1761,6 +1779,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 					returnVal = i;
 				}
 			}
+			this.lastInsertionIndex = returnVal;
 			return returnVal;
 		}
 	},
