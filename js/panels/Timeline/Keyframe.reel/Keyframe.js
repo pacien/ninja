@@ -9,6 +9,7 @@ var Component = require("montage/ui/component").Component;
 
 var Keyframe = exports.Keyframe = Montage.create(Component, {
 
+    // ==== Begin models
     hasTemplate:{
         value: true
     },
@@ -42,7 +43,9 @@ var Keyframe = exports.Keyframe = Montage.create(Component, {
             this.needsDraw = true;
         }
     },
+    // ==== End Models
 
+    // ==== Begin Draw cycle methods
     prepareForDraw:{
         value:function(){
             this.element.addEventListener("click", this, false);
@@ -66,57 +69,31 @@ var Keyframe = exports.Keyframe = Montage.create(Component, {
             this.element.style.left = (this.position - 5) + "px";
         }
     },
+    // ==== End Draw cycle methods
 
-    deselectKeyframe:{
-        value:function(){
-            this.isSelected=false;
-            this.element.style.left = (this.position - 5) + "px";
-        }
-    },
-
-    selectKeyframe:{
-        value:function(){
-            if(this.isSelected){
-                return;
-            }
-
-            if(this.parentComponent.parentComponent.parentComponent.trackType == "position"){
-                var tweenID = this.parentComponent.tweenID;
-                var mainTrack = this.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent;
-                mainTrack.childComponents[0].childComponents[tweenID].childComponents[0].selectKeyframe();
-                return;
-            }
-
-            this.isSelected=true;
-            this.element.style.left = (this.position - 6) + "px";
-            this.application.ninja.timeline.selectedStyle = this.parentComponent.parentComponent.parentComponent.trackEditorProperty;
-            this.parentComponent.selectTween();
-        }
-    },
-
+    // ==== Begin Event handlers
     handleClick:{
         value:function(ev){
             this.selectKeyframe();
             ev.stopPropagation();
         }
     },
-    
+
 	handleMouseover: {
 		value: function(event) {
 			this.element.draggable = true;
 		}
 	},
+
 	handleMouseout: {
 		value: function(event) {
 			this.element.draggable = false;
 		}
 	},
+
 	handleDragstart: {
 		value: function(event) {
-			//this.parentComponent.parentComponent.dragLayerID = this.layerID;
             event.dataTransfer.setData('Text', 'Keyframe');
-            
-            // Get my index in my track's tween array
             var i = 0,
             	tweenRepetitionLength = this.parentComponent.parentComponent.parentComponent.tweenRepetition.childComponents.length,
             	myIndex = null;
@@ -129,10 +106,38 @@ var Keyframe = exports.Keyframe = Montage.create(Component, {
             this.selectKeyframe();
 		}
 	},
+
 	handleDragend: {
 		value: function(event) {
 			this.parentComponent.isDragging = false;
 		}
-	}
-    
+	},
+    // ==== End Event handlers
+
+    // === Begin Controllers
+    selectKeyframe:{
+        value:function(){
+            if(this.isSelected){
+                return;
+            }
+            if(this.parentComponent.parentComponent.parentComponent.trackType == "position"){
+                var tweenID = this.parentComponent.tweenID;
+                var mainTrack = this.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent;
+                mainTrack.childComponents[0].childComponents[tweenID].childComponents[0].selectKeyframe();
+                return;
+            }
+            this.isSelected=true;
+            this.element.style.left = (this.position - 6) + "px";
+            this.application.ninja.timeline.selectedStyle = this.parentComponent.parentComponent.parentComponent.trackEditorProperty;
+            this.parentComponent.selectTween();
+        }
+    },
+
+    deselectKeyframe:{
+        value:function () {
+            this.isSelected = false;
+            this.element.style.left = (this.position - 5) + "px";
+        }
+    }
+    // ==== End Controllers
 });
