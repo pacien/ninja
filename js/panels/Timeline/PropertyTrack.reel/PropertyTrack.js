@@ -221,7 +221,7 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
                 if (this.propTweens.length < 1) {
 
-                    selectIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID),
+                    selectIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID);
                     currentSelectedStyleIndex = this.getCurrentSelectedStyleIndex(selectIndex);
 
                     if (this.trackType == "style") {
@@ -265,8 +265,8 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                         } while (obj = obj.offsetParent);
                     }
                     return curleft;
-                }
-                targetElementOffset = findXOffset(ev.currentTarget),
+                };
+                targetElementOffset = findXOffset(ev.currentTarget);
                 position = event.pageX - targetElementOffset;
 
                 this.splitPropTweenAt(position - 18);
@@ -437,7 +437,8 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                         newTween = {};
                         newTween.tweenData = {};
 
-                        styleLength = this.currentKeyframeRule[i].style.length, keyframeStyles = [];
+                        styleLength = this.currentKeyframeRule[i].style.length;
+                        keyframeStyles = [];
 
                         /* Traversering through the style of the currentKeyFrameRule of the animatedElement */
                         for (j = 0; j < styleLength; j++) {
