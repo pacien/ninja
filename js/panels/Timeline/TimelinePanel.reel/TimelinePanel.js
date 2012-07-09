@@ -35,103 +35,244 @@ var Montage = require("montage/core/core").Montage,
 
 var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 
-    user_layers: {
-        value: null,
-        serializable: true
-    },
-
-    track_container: {
-        value: null,
-        serializable: true
-    },
-
-    timeline_leftpane: {
-        value: null,
-        serializable: true
-    },
-
-    layer_tracks: {
-        value: null,
-        serializable: true
-    },
-
-    master_track: {
-        value: null,
-        serializable: true
-    },
-
-    time_markers: {
-        value: null,
-        serializable: true
-    },
-
-    playhead: {
-        value: null,
-        serializable: true
-    },
-
-    playheadmarker: {
-        value: null,
-        serializable: true
-    },
-
-    timetext: {
-        value: null,
-        serializable: true
-    },
-
-    timebar: {
-        value: null,
-        serializable: true
-    },
-
-    container_tracks: {
-        value: null,
-        serializable: true
-    },
-
-    end_hottext: {
-        value: null,
-        serializable: true
-    },
-
-    container_layers: {
-        value: null,
-        serializable: true
-    },
-
-    timeline_disabler: {
-        value: null,
-        serializable: true
-    },
-
-    checkable_relative: {
-        value: null,
-        serializable: true
-    },
-
-    checkable_absolute: {
-        value: null,
-        serializable: true
-    },
-
-    checkable_animated: {
-        value: null,
-        serializable: true
-    },
-
-    tl_configbutton: {
-        value: null,
-        serializable: true
-    },
-
-
-
     /* === BEGIN: Models === */
+	_user_layers: {
+		value: null
+	},
+    user_layers: {
+        serializable: true,
+        get: function() {
+        	return this._user_layers;
+        },
+        set: function(newVal) {
+        	this._user_layers = newVal;
+        }
+    },
+
+	_track_container: {
+		value: null
+	},
+    track_container: {
+        serializable: true,
+        get: function() {
+        	return this._track_container;
+        },
+        set: function(newVal) {
+        	this._track_container = newVal;
+        }
+    },
+
+	_timeline_leftpane: {
+		value: null
+	},
+    timeline_leftpane: {
+        serializable: true,
+        get: function() {
+        	return this._timeline_leftpane;
+        },
+        set: function(newVal) {
+        	this._timeline_leftpane = newVal;
+        }
+    },
+
+	_layer_tracks: {
+		value: null
+	},
+    layer_tracks: {
+        serializable: true,
+        get: function() {
+        	return this._layer_tracks;
+        },
+        set: function(newVal) {
+        	this._layer_tracks = newVal;
+        }
+    },
+
+	_master_track: {
+		value: null
+	},
+    master_track: {
+        serializable: true,
+        get: function() {
+        	return this._master_track;
+        },
+        set: function(newVal) {
+        	this._master_track = newVal;
+        }
+    },
+
+	_time_markers: {
+		value: null
+	},
+    time_markers: {
+        serializable: true,
+        get: function() {
+        	return this._time_markers;
+        },
+        set: function(newVal) {
+        	this._time_markers = newVal;
+        }
+    },
+
+	_playhead: {
+		value: null
+	},
+    playhead: {
+        serializable: true,
+        get: function() {
+        	return this._playhead;
+        },
+        set: function(newVal) {
+        	this._playhead = newVal;
+        }
+    },
+
+	_playheadmarker: {
+		value: null
+	},
+    playheadmarker: {
+        serializable: true,
+        get: function() {
+        	return this._playheadmarker;
+        },
+        set: function(newVal) {
+        	this._playheadmarker = newVal;
+        }
+    },
+
+	_timetext: {
+		value: null
+	},
+    timetext: {
+        serializable: true,
+        get: function() {
+        	return this._timetext;
+        },
+        set: function(newVal) {
+        	this._timetext = newVal;
+        }
+    },
+
+	_timebar: {
+		value: null
+	},
+    timebar: {
+        serializable: true,
+        get: function() {
+        	return this._timebar;
+        },
+        set: function(newVal) {
+        	this._timebar = newVal;
+        }
+    },
+
+	_container_tracks: {
+		value: null
+	},
+    container_tracks: {
+        serializable: true,
+        get: function() {
+        	return this._container_tracks;
+        },
+        set: function(newVal) {
+        	this._container_tracks = newVal;
+        }
+    },
+
+	_end_hottext: {
+		value: null
+	},
+    end_hottext: {
+        serializable: true,
+        get: function() {
+        	return this._end_hottext;
+        },
+        set: function(newVal) {
+        	this._end_hottext = newVal;
+        }
+    },
+
+	_container_layers: {
+		value: null
+	},
+    container_layers: {
+        serializable: true,
+        get: function() {
+        	return this._container_layers;
+        },
+        set: function(newVal) {
+        	this._container_layers = newVal;
+        }
+    },
+
+	_timeline_disabler: {
+		value: null
+	},
+    timeline_disabler: {
+        serializable: true,
+        get: function() {
+        	return this._timeline_disabler;
+        },
+        set: function(newVal) {
+        	this._timeline_disabler = newVal;
+        }
+    },
+
+	_checkable_relative: {
+		value: null
+	},
+    checkable_relative: {
+        serializable: true,
+        get: function() {
+        	return this._checkable_relative;
+        },
+        set: function(newVal) {
+        	this._checkable_relative = newVal;
+        }
+    },
+
+	_checkable_absolute: {
+		value: null
+	},
+    checkable_absolute: {
+        serializable: true,
+        get: function() {
+        	return this._checkable_absolute;
+        },
+        set: function(newVal) {
+        	this._checkable_absolute = newVal;
+        }
+    },
+
+	_checkable_animated: {
+		value: null
+	},
+    checkable_animated: {
+        serializable: true,
+        get: function() {
+        	return this._checkable_animated;
+        },
+        set: function(newVal) {
+        	this._checkable_animated = newVal;
+        }
+    },
+
+	_tl_configbutton: {
+		value: null
+	},
+    tl_configbutton: {
+        serializable: true,
+        get: function() {
+        	return this._tl_configbutton;
+        },
+        set: function(newVal) {
+        	this._tl_configbutton = newVal;
+        }
+    },
+
     _currentDocument: {
         value : null
     },
-
     currentDocument : {
         get : function() {
             return this._currentDocument;
@@ -181,14 +322,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
         }
     },
 
-    handleChange: {
-        value: function() {
-            if(this.currentDocument && this.currentDocument.model.getProperty("domContainer")) {
-                this.currentSelectedContainer = this.currentDocument.model.getProperty("domContainer");
-            }
-        }
-    },
-    
     _currentSelectedContainer: {
         value: null
     },
@@ -223,7 +356,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     _arrLayers:{
         value:[]
     },
-
     arrLayers:{
         serializable:true,
         get:function () {
@@ -239,7 +371,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     _temparrLayers:{
         value:[]
     },
-
     temparrLayers:{
         get:function () {
             return this._temparrLayers;
@@ -253,7 +384,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     _layerRepetition:{
         value:null
     },
-
     layerRepetition:{
         get:function () {
             return this._layerRepetition;
@@ -304,7 +434,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     _currentLayerNumber:{
         value:0
     },
-
     currentLayerNumber:{
         get:function () {
             return this._currentLayerNumber;
@@ -317,18 +446,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
         }
     },
 
-    _currentLayerSelected:{
-        value: false
-    },
-    currentLayerSelected:{
-        get:function () {
-            return this._currentLayerSelected;
-        },
-        set:function (newVal) {
-            this._currentLayerSelected = newVal;
-            this.cacheTimeline();
-        }
-    },
     _currentElementsSelected: {
     	value: []
     },
@@ -386,7 +503,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     _millisecondsOffset:{
         value:1000
     },
-
     millisecondsOffset:{
         get:function () {
             return this._millisecondsOffset;
@@ -403,7 +519,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     _masterDuration:{
         value:0
     },
-
     masterDuration:{
         serializable:true,
         get:function () {
@@ -420,7 +535,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     _trackRepetition:{
         value:null
     },
-
     trackRepetition:{
         get:function () {
             return this._trackRepetition;
@@ -433,7 +547,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     _selectedKeyframes:{
         value:[]
     },
-
     selectedKeyframes:{
         serializable:true,
         get:function () {
@@ -447,7 +560,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     _selectedTweens:{
         value:[]
     },
-
     selectedTweens:{
         serializable:true,
         get:function () {
@@ -461,7 +573,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     _breadCrumbContainer:{
             value:null
     },
-
     breadCrumbContainer:{
         get:function () {
             return this._breadCrumbContainer;
@@ -493,15 +604,15 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     _dragAndDropHelper : {
     	value: false
     },
+    
     _dragAndDropHelperCoords: {
     	value: false
     },
+    
     _dragAndDropHelperOffset : {
     	value: false
     },
-    _dragLayerID : {
-    	value: null
-    },
+
     _draggingType: {
     	value: false
     },
@@ -526,6 +637,9 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     	}
     },
 
+    _dragLayerID : {
+    	value: null
+    },
     dragLayerID : {
     	get: function() {
     		return this._dragLayerID;
@@ -564,8 +678,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     				dragAndDropDirection = -1;
     			} 
     			targetIndex = dropLayerIndex + dragAndDropDirection;
-
-    			// TODO: possibly we'll need to sort dragLayerIndexes so things don't get out of order?
     			
     			// Get the target DOM element.
     			if (typeof(this.arrLayers[targetIndex]) !== "undefined") {
@@ -577,7 +689,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 				// Splice
     			for (i = 0; i < dragLayerIndexesLength; i++) {
 					var myDraggingLayer = this.arrLayers[this.currentLayersSelected[i]];
-    				// Splice arrLayers
     				this.arrLayers.splice(this.currentLayersSelected[i], 1);
     				this.arrLayers.splice(dropLayerIndex, 0, myDraggingLayer);
     			}
@@ -598,15 +709,19 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     		}
     	}
     },
+    
     _needsDOMManipulation: {
     	value: false
     },
+    
     _appendHelper: {
     	value: false
     },
+    
     _deleteHelper: {
     	value: false
     },
+    
     _scrollTracks: {
     	value: false
     },
@@ -624,16 +739,18 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     	}
     },
     
-    
     useAbsolutePosition:{
         value:true
     },
+    
     _currentDocumentUuid: {
     	value: false
     },
+    
     _ignoreSelectionChanges: {
     	value: false
     },
+    
 	// is the control key currently being pressed (used for multiselect)
 	_isControlPressed: {
 		value: false
@@ -643,6 +760,11 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 	_isShiftPressed: {
 		value: false
 	},
+
+	// Hack to ignore extra container change event during document switching.
+    _ignoreNextContainerChange: {
+        value: true
+    },
     /* === END: Models === */
    
     /* === BEGIN: Draw cycle === */
@@ -730,8 +852,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 
     		// Do we need to scroll the layers?
     		if (this._areTracksCollapsing !== false) {
-    			//console.log("diddraw: user_layers, layout_tracks", this.user_layers.scrollTop, this.layout_tracks.scrollTop);
-	            //this.layout_tracks.scrollTop = this.user_layers.scrollTop;\
 	            this.layout_tracks.scrollTop = this._areTracksCollapsing;
     			this._areTracksCollapsing = false;
     		}
@@ -739,6 +859,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     },
 
     /* === END: Draw cycle === */
+   
     /* === BEGIN: Controllers === */
     // Create an empty layer template object with minimal defaults and return it for use
     createLayerTemplate:{
@@ -794,7 +915,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 	    		    this.application.ninja.currentDocument.tlArrLayers = this.arrLayers;
 	    		    this.application.ninja.currentDocument.tlCurrentSelectedContainer = this.currentDocument.model.domContainer;
 	    		    this.application.ninja.currentDocument.tllayerNumber = this.currentLayerNumber;
-	    		    this.application.ninja.currentDocument.tlCurrentLayerSelected = this.currentLayerSelected;
 	    		    this.application.ninja.currentDocument.tlCurrentLayersSelected = this.currentLayersSelected;
 	    		    for (i = 0; i < hashLength; i++ ) {
 	    		    	if (this.application.ninja.currentDocument.tlBreadcrumbHash[i].containerUuid === this.currentDocument.model.domContainer.uuid) {
@@ -813,6 +933,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 			}
     	}
     },
+    
     // Initialize Timeline cache in currentDocument.
     initTimelineCache: {
     	value: function() {
@@ -829,62 +950,9 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     	}
     },
     
-    // Create an array of style objects for an element, for use
-    // in creating a new layer
-    createLayerStyles : {
-    	value: function(ptrElement) {
-    		// TODO: Create logic to loop through 
-    		// CSS properties on element and build 
-    		// array of layer styles for return.
-    		// Right now this method just returns an array of one bogus style.
-    		
-    		var returnArray = [],
-    			newStyle = {}, 
-    			styleID = "1@0"; // format: layerID + "@" + style counter
-    			
-    		/* Example new style 	
-            newStyle.styleID = styleID;
-			newStyle.whichView = "propval";		// Which view do we want to show, usually property/value view (see Style)
-			newStyle.editorProperty = "top";	// the style property
-			newStyle.editorValue = 0;			// The current value
-			newStyle.ruleTweener = false; 
-			newStyle.isSelected = false;
-			
-			returnArray.push(newStyle);
-			*/
-			
-			return returnArray;
-    		
-    	}
-    },
-    
-    // Create an array of style track objects for an element, for use
-    // in creating a new layer
-    createStyleTracks : {
-    	value: function(ptrElement) {
-    		// TODO: Create logic to loop through 
-    		// CSS properties on element and build 
-    		// array of layer styles for return.
-    		// Right now this method just returns an array of one bogus style.
-    		
-    		var returnArray = [];
-						
-			return returnArray;
-    		
-    	}
-    },
-
     // Bind all document-specific events (pass in true to unbind)
     _bindDocumentEvents : {
         value: function(boolUnbind) {
-        	/*
-			var arrEvents = [ "stageElement",
-                             "deleteLayer",
-                             "elementAdded",
-                             "elementsRemoved",
-                             "elementReplaced",
-                             "selectionChange"],
-        	 */
 			var arrEvents = ["elementAdded",
                              "elementsRemoved",
                              "selectionChange"],
@@ -911,12 +979,8 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             this.layout_tracks = this.element.querySelector(".layout-tracks");
             this.layout_markers = this.element.querySelector(".layout_markers");
             
-            
-            // Bind the event handler for the document change events
-            //this.eventManager.addEventListener("onOpenDocument", this.handleDocumentChange.bind(this), false);
+            // Bind the event handler for the document close events
             this.eventManager.addEventListener("closeDocument", this.handleDocumentChange.bind(this), false);
-            //this.eventManager.addEventListener("switchDocument", this.handleDocumentChange.bind(this), false);
-            //this.eventManager.addEventListener("breadCrumbBinding",this,false);
             
             // Bind drag and drop event handlers
             this.container_layers.addEventListener("dragstart", this.handleLayerDragStart.bind(this), false);
@@ -932,12 +996,10 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             document.addEventListener("click", this.handleDocumentClick.bind(this), false);
             
             // Add some event handlers
-            this.timeline_leftpane.addEventListener("click", this.timelineLeftPanelMousedown.bind(this), false);
-            //this.timeline_leftpane.addEventListener("click", this.timelineLeftPanelMousedown.bind(this), false);
-            //this.timeline_leftpane.addEventListener("mouseup", this.timelineLeftPaneMouseup.bind(this), false);
-            this.layout_tracks.addEventListener("scroll", this.updateLayerScroll.bind(this), false);
-            this.user_layers.addEventListener("scroll", this.updateLayerScroll.bind(this), false);
-            this.end_hottext.addEventListener("changing", this.updateTrackContainerWidth.bind(this), false);
+            this.timeline_leftpane.addEventListener("click", this.handleTimelineLeftPanelClick.bind(this), false);
+            this.layout_tracks.addEventListener("scroll", this.handleLayerScroll.bind(this), false);
+            this.user_layers.addEventListener("scroll", this.handleLayerScroll.bind(this), false);
+            this.end_hottext.addEventListener("changing", this.handleTrackContainerWidthChange.bind(this), false);
             this.playhead.addEventListener("mousedown", this.startPlayheadTracking.bind(this), false);
             this.playhead.addEventListener("mouseup", this.stopPlayheadTracking.bind(this), false);
             this.time_markers.addEventListener("click", this.updatePlayhead.bind(this), false);
@@ -947,7 +1009,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 			this.checkable_lock.addEventListener("click",this.handleLockLayerClick.bind(this),false);
             this.checkable_visible.addEventListener("click",this.handleLayerVisibleClick.bind(this),false);
             this.play_button.addEventListener("click", this.handlePlayButtonClick.bind(this), false);
-            
             this.addPropertyChangeListener("currentDocument.model.domContainer", this);
             
 			// Start the panel out in disabled mode by default
@@ -961,19 +1022,14 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 
     // Initialize the timeline for a document.
     // Called when a document is opened (new or existing), or when documents are switched.
-    _ignoreNextContainerChange: {
-        value: true
-    },
     initTimelineForDocument:{
         value:function () {
             var myIndex;
             this.drawTimeMarkers();
+            
             // Document switching
             // Check to see if we have saved timeline information in the currentDocument.
-            // console.log("TimelinePanel.initTimelineForDocument");
-
             if ((typeof(this.application.ninja.currentDocument.isTimelineInitialized) === "undefined")) {
-            //	console.log('TimelinePanel.initTimelineForDocument: new Document');
                 // No, we have no information stored.
                 // This could mean we are creating a new file, OR are opening an existing file.
                 
@@ -1001,9 +1057,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
                 this._currentDocumentUuid = this.application.ninja.currentDocument.uuid;
                 
 			} else if (this.application.ninja.currentDocument.setLevel) {
-                // console.log('TimelinePanel.initTimelineForDocument: breadCrumbClick');
 				// Information stored, but we're moving up or down in the breadcrumb.
-				
 				var i = 0,
 					hash = this.application.ninja.currentDocument.tlBreadcrumbHash,
 					hashLength = hash.length,
@@ -1020,7 +1074,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     		    	}
     		    }
 				
-				// Possibly nothing was in the hash, so check and if so fall back to old restoreLayer method.
+				// Possibly nothing was in the hash, fall back to old restoreLayer method.
 				if (boolHashed === false) {
 	                for (myIndex = 0; parentNode.children[myIndex]; myIndex++) {
 	                    this._openDoc = true;
@@ -1035,12 +1089,11 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
                 this.resetMasterDuration();
 
             } else {
-            //	console.log('TimelinePanel.initTimelineForDocument: else fallback');
                 // we do have information stored.  Use it.
                 var i = 0, 
                 	tlArrLayersLength = this.application.ninja.currentDocument.tlArrLayers.length;
                 
-                
+                // Hack to ignore next container change event
                 this._ignoreNextContainerChange = true;
                 
                 // We're reading from the cache, not writing to it.
@@ -1053,14 +1106,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
                 }
                 this.arrLayers = this.application.ninja.currentDocument.tlArrLayers;
                 this.currentLayerNumber = this.application.ninja.currentDocument.tllayerNumber;
-                this.currentLayerSelected = this.application.ninja.currentDocument.tlCurrentLayerSelected;
                 this.currentLayersSelected = this.application.ninja.currentDocument.tlCurrentLayersSelected;
-
-
-                //debugger;
-                if (typeof(this.application.ninja.currentDocument.tlCurrentSelectedContainer) !== "undefined") {
-//                	this.currentDocument.model.domContainer = this.application.ninja.currentDocument.tlCurrentSelectedContainer;
-                }
                 this.currentElementsSelected = this.application.ninja.currentDocument.tlCurrentElementsSelected;
                 this._currentDocumentUuid = this.application.ninja.currentDocument.uuid;
                 
@@ -1091,14 +1137,12 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             this.deselectTweens();
 
             // Reset visual appearance
-            // TODO: Maybe playhead position should be stored per document, so we can persist between document switch?
             this.application.ninja.timeline.playhead.style.left = "-2px";
             this.application.ninja.timeline.playheadmarker.style.left = "0px";
             this.application.ninja.timeline.updateTimeText(0.00);
             this.timebar.style.width = "0px";
 			this.checkable_animated.classList.remove("checked");
             this.currentLayerNumber = 0;
-            this.currentLayerSelected = false;
             this.currentLayersSelected = false;
             this.currentElementsSelected = [];
             this.selectedKeyframes = [];
@@ -1106,7 +1150,8 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             this._captureSelection = false;
             this._openDoc = false;
             this.end_hottext.value = 25;
-            this.updateTrackContainerWidth();
+            this.handleTrackContainerWidthChange();
+            
             // Clear the repetitions
             if (this.arrLayers.length > 0) {
                 this.arrLayers = [];
@@ -1115,128 +1160,12 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             this.resetMasterDuration();
         }
     },
-
-    handleDocumentChange:{
-        value:function () {
-
-        }
-    },
-
-    handlePlayButtonClick:{
-        value:function(ev){
-            this.application.ninja.appModel.livePreview = !this.application.ninja.appModel.livePreview;
-
-            if (this.application.ninja.appModel.livePreview) {
-                this.play_button.classList.remove("playbutton");
-                this.play_button.classList.add("pausebutton");
-
-            } else {
-                this.play_button.classList.remove("pausebutton");
-                this.play_button.classList.add("playbutton");
-            }
-        }
-    },
-
-    handleKeyframeShortcut:{
-        value:function(action){
-            var tempEv = {};
-            tempEv.offsetX = this.playheadmarker.offsetLeft;
-            tempEv.actionType = action;
-
-            if (this.currentLayersSelected === false) {
-            	// oops, we do not have a layer selected. We should growl at the user. For now, this will fail silently.
-            	return;
-            }
-            
-            // Okay. We need to get the correct layer(s).  For each currentElementSelected,
-            // loop through trackRepetition.childComponents and compare to stageElement.
-            // If they match, that's one of the components that needs the event.
-            var i = 0, 
-            	j = 0, 
-            	currentElementsSelectedLength = this.currentElementsSelected.length,
-            	trackRepLength = this.trackRepetition.childComponents.length,
-            	arrTargetIndexes = [],
-            	arrTargetIndexesLength = 0;
-            	
-            
-            for (i = 0; i < trackRepLength; i++) {
-            	var currentElement = this.trackRepetition.childComponents[i].stageElement;
-            	for (j = 0; j < currentElementsSelectedLength; j++) {
-            		if (currentElement === this.currentElementsSelected[j]) {
-            			arrTargetIndexes.push(i);
-            		}
-            	}
-            }
-            arrTargetIndexesLength = arrTargetIndexes.length;
-
-			// Now we have an array of things that need to handle the event.
-            for (i = 0; i < arrTargetIndexesLength; i++) {
-            	this.trackRepetition.childComponents[arrTargetIndexes[i]].handleKeyboardShortcut(tempEv);
-            }
-        }
-    },
-
-    updateTrackContainerWidth:{
-        value:function () {
-            this.container_tracks.style.width = (this.end_hottext.value * 80) + "px";
-            this.master_track.style.width = (this.end_hottext.value * 80) + "px";
-            this.time_markers.style.width = (this.end_hottext.value * 80) + "px";
-            if (this.timeMarkerHolder) {
-                this.time_markers.removeChild(this.timeMarkerHolder);
-            }
-            this.drawTimeMarkers();
-        }
-    },
     
     synchScrollbars: {
     	value: function(intScrollBy) {
-    		//this.updateLayerScroll();
-    		//this.user_layers.scrollTop = 0;
-    		//this.layout_tracks.scrollTop = this.user_layers.scrollTop;
-    		//console.log("synch: user_layers, layout_tracks", this.user_layers.scrollTop, this.layout_tracks.scrollTop);
     		this._areTracksCollapsing = this.layout_tracks.scrollTop - intScrollBy;
     		this.needsDraw = true;
-
     	}
-    },
-
-    updateLayerScroll:{
-        value:function () {
-        	//console.log("TimelinePanel.updateLayerScroll")
-        	this._areTracksScrolling = true;
-        	this.needsDraw = true;
-        	
-        }
-    },
-
-    startPlayheadTracking:{
-        value:function () {
-            this.time_markers.onmousemove = this.updatePlayhead.bind(this);
-        }
-    },
-
-    stopPlayheadTracking:{
-        value:function () {
-            this.time_markers.onmousemove = null;
-        }
-    },
-
-    updatePlayhead:{
-        value:function (event) {
-            var clickedPosition = event.target.offsetLeft + event.offsetX;
-            this.playhead.style.left = (clickedPosition - 2) + "px";
-            this.playheadmarker.style.left = clickedPosition + "px";
-            var currentMillisecPerPixel = Math.floor(this.millisecondsOffset / 80);
-            var currentMillisec = currentMillisecPerPixel * clickedPosition;
-            this.updateTimeText(currentMillisec);
-        }
-    },
-	
-	// Event handler for changes in stage selection.
-    handleSelectionChange: {
-        value:function (event) {
-        	this.updateLayerSelection();
-        }
     },
 
 	// Select the layers whose indexes are passed in as arrSelectedIndexes.
@@ -1396,7 +1325,420 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
         }
     },
 
-	timelineLeftPanelMousedown: {
+    createStageElementsAt: {
+        value:function (isPaste, arrElements) {
+        	
+        	var i = 0,
+        		j = 0,
+        		arrElementsLength = arrElements.length,
+        		arrNewLayers = [],
+        		arrNewLayersLength = 0,
+        		stageElementName = "",
+        		targetIndex = 0;
+        	if (this.lastInsertionIndex !== false) {
+        		targetIndex = this.lastInsertionIndex;
+        		this.lastInsertionIndex = false;
+        	}
+        	
+            // We will no longer have multiple things selected, so wipe that info out
+            // if it isn't already gone.
+            this.currentLayersSelected = false;
+
+			for (i = arrElementsLength-1; i >= 0; i--) {
+				var thingToPush = this.createLayerTemplate();
+				
+				// Make up a layer name.
+            	this.currentLayerNumber = this.currentLayerNumber + 1;
+	            stageElementName="";
+	            
+	            // thingToPush is the template we just got.  Now fill it in.
+	            thingToPush.layerData.layerName = stageElementName;
+	            thingToPush.layerData.layerTag = "<" + arrElements[i].nodeName.toLowerCase() + ">";
+	            thingToPush.layerData.layerID = this.currentLayerNumber;
+	            thingToPush.parentElement = this.currentDocument.model.domContainer;
+	            thingToPush.layerData.isSelected = true;
+	            thingToPush.layerData._isFirstDraw = true;
+	            thingToPush.layerData.created = true;
+	            thingToPush.layerData.stageElement = arrElements[i];
+	            thingToPush.layerData.isLock = false;
+	            thingToPush.layerData.isHidden = false;
+	            thingToPush.layerData.created = !isPaste;
+	            thingToPush.created = !isPaste;
+
+				if (this.checkable_animated.classList.contains("checked")) {
+					thingToPush.layerData.isVisible = false;
+				}
+				this.arrLayers.splice(targetIndex, 0, thingToPush);
+			}
+        }
+    },
+
+    restoreLayer:{
+        value:function (ele) {
+            var stageElementName, 
+            	thingToPush = this.createLayerTemplate();
+
+            this.currentLayerNumber = this.currentLayerNumber + 1;
+
+            if(ele.id){
+                thingToPush.layerData.layerName = ele.id;
+            }
+            thingToPush.layerData.layerID = this.currentLayerNumber;
+            thingToPush.layerData.layerTag = "<" + ele.nodeName.toLowerCase() + ">";
+            thingToPush.parentElement = this.currentDocument.model.domContainer;
+            if (this._openDoc) {
+                thingToPush.layerData.stageElement = ele;
+            }
+            if (this.checkable_animated.classList.contains("checked")) {
+            	thingToPush.layerData.isVisible = false;
+            }
+            
+            // Initialize arrays for styles and their associated tracks;
+            // These will be filled (if necessary) in TimelineTrack.
+            thingToPush.layerData.arrLayerStyles = [];
+            thingToPush.layerData.arrStyleTracks = [];
+
+			// Add the layer to the repetition
+            this.temparrLayers.splice(0, 0, thingToPush);
+            thingToPush.layerData.trackPosition = this.temparrLayers.length - 1;
+            thingToPush.layerData.layerPosition = this.temparrLayers.length - 1;
+
+            this._openDoc = false;
+        }
+    },
+
+    deleteLayers: {
+    	value: function(arrElements) {
+    		var i = 0, 
+    			j = 0,
+    			arrLayersLength = this.arrLayers.length,
+    			arrElementsLength = arrElements.length;
+    		
+    		for (i = 0; i < arrElementsLength; i++) {
+    			var currentTest = arrElements[i];
+    			for (j = 0; j < arrLayersLength; j++) {
+    				if (this.arrLayers[j].layerData.stageElement == currentTest) {
+    					this.arrLayers.splice(j, 1);
+    					// Super-secret magic trick: Now that we've spliced out an element,
+    					// arrLayers.length is different. We need to update it.
+    					arrLayersLength = this.arrLayers.length;
+    				}
+    			}
+    		}
+    		this.selectLayers([]);
+    		this.resetMasterDuration();
+    	}
+    },
+
+    resetMasterDuration:{
+        value:function(){
+            var trackDuration = 0,
+            	arrLayersLength = this.arrLayers.length, 
+            	i = 0;
+
+            if (arrLayersLength > 0) {
+            	for (i = 0; i < arrLayersLength; i++) {
+            		var currLength = this.arrLayers[i].layerData.trackDuration;
+            		if (currLength > trackDuration) {
+            			trackDuration = currLength;
+            		}
+            	}
+            }
+            this.masterDuration = trackDuration;
+        }
+    },
+
+    drawTimeMarkers:{
+        value:function () {
+            this.timeMarkerHolder = document.createElement("div");
+
+            if(this.time_markers.children[0]){
+               this.time_markers.removeChild(this.time_markers.children[0]);
+            }
+
+            this.time_markers.appendChild(this.timeMarkerHolder);
+            var i;
+            var totalMarkers = Math.floor(this.time_markers.offsetWidth / 80);
+            for (i = 0; i < totalMarkers; i++) {
+                var timeMark = document.createElement("div");
+                var markValue = this.calculateTimeMarkerValue(i);
+                timeMark.className = "timemark";
+                timeMark.innerHTML = markValue;
+                this.timeMarkerHolder.appendChild(timeMark);
+            }
+        }
+    },
+
+    calculateTimeMarkerValue:{
+        value:function (currentMarker) {
+            var currentMilliseconds = currentMarker * this.millisecondsOffset;
+            return this.convertMillisecondsToTime(currentMilliseconds);
+        }
+    },
+
+    updateTimeText:{
+        value:function (millisec) {
+            this.timetext.innerHTML = this.convertMillisecondsToTime(millisec);
+        }
+    },
+
+    convertMillisecondsToTime:{
+        value:function(millisec){
+            var timeToReturn;
+            var sec = (Math.floor((millisec / 1000))) % 60;
+            var min = (Math.floor((millisec / 1000) / 60)) % 60;
+            var milliSeconds = String(Math.round(millisec / 10));
+            var returnMillisec = milliSeconds.slice(milliSeconds.length - 2, milliSeconds.length);
+            var returnSec;
+            var returnMin;
+            if (sec < 10) {
+                returnSec = "0" + sec;
+            } else {
+                returnSec = sec;
+            }
+            if (min < 10) {
+                returnMin = "0" + min;
+            } else {
+                returnMin = min;
+            }
+            if (returnMillisec == "0") {
+                returnMillisec = "0" + returnMillisec;
+            }
+            timeToReturn = returnMin + ":" + returnSec + ":" + returnMillisec;
+            return timeToReturn;
+        }
+    },
+
+	// Get the index where a layer should be inserted based on selection.
+	// If nothing is selected, returns false.
+	// Used by ElementController.addElement.
+	getInsertionIndex: {
+		value: function() {
+			var i = 0, 
+				currentLayersSelectedLength = this.currentLayersSelected.length,
+				arrLayersLength = this.arrLayers.length,
+				returnVal = arrLayersLength -1;
+			if (returnVal === -1) {
+				this.lastInsertionIndex = 0;
+				return false;
+			}
+			if (this.currentLayersSelected === false) {
+				this.lastInsertionIndex = 0;
+				return false;
+			}
+			
+			for (i = 0; i < arrLayersLength; i++) {
+				if (this.arrLayers[i].layerData.isSelected) {
+					returnVal = i;
+				}
+			}
+			this.lastInsertionIndex = returnVal;
+			return returnVal;
+		}
+	},
+
+    getLayerIndexByID:{
+        value:function (layerID, tempArr) {
+            var i = 0,
+                returnVal = false,
+                arrLayersLength = this.arrLayers.length;
+
+            if (tempArr) {
+                var tempArrLength = this.temparrLayers.length;
+
+                for (i = 0; i < tempArrLength; i++) {
+                    if (this.temparrLayers[i].layerData.layerID === layerID) {
+                        returnVal = i;
+                    }
+                }
+
+            } else {
+                for (i = 0; i < arrLayersLength; i++) {
+                    if (this.arrLayers[i].layerData.layerID === layerID) {
+                        returnVal = i;
+                    }
+                }
+            }
+            return returnVal;
+        }
+    },
+
+    enablePanel:{
+        value:function (boolEnable) {
+            if (boolEnable) {
+                this.timeline_disabler.style.display = "none";
+            } else {
+                this.timeline_disabler.style.display = "block";
+            }
+        }
+    },
+
+    buildDragHelper: {
+    	value: function() {
+    		var myContainer = document.createElement("div"),
+    			i = 0, 
+    			currentLayersSelectedLength = this.currentLayersSelected.length;
+
+    		for (i = 0; i < currentLayersSelectedLength; i++) {
+    			var currentClone = this.layerRepetition.childComponents[this.currentLayersSelected[i]].element.cloneNode(true);
+    			currentClone.classList.add("layerSelected");
+    			myContainer.appendChild(currentClone);
+    		}
+
+    		this._dragAndDropHelper = myContainer;
+            this._dragAndDropHelper.style.opacity = 0.8;
+            this._dragAndDropHelper.style.position = "absolute";
+            this._dragAndDropHelper.style.top = "0px";
+            this._dragAndDropHelper.style.left = "0px";
+            this._dragAndDropHelper.style.zIndex = 700;
+            
+            this._dragAndDropHelper.style.width = window.getComputedStyle(this.container_layers, null).getPropertyValue("width");
+            this._dragAndDropHelper.classList.add("timeline-dnd-helper");
+    	}
+    },
+
+    // Trigger the layer/track data binding
+    triggerLayerBinding : {
+    	value: function(intIndex) {
+            this.arrLayers[intIndex].layerData.triggerBinding = !this.arrLayers[intIndex].layerData.triggerBinding;
+        }
+    },
+
+	getActiveLayerIndex: {
+		value: function() {
+			var i = 0,
+				returnVal = false,
+				arrLayersLength = this.arrLayers.length;
+			for (i = 0; i < arrLayersLength; i++) {
+				if (this.arrLayers[i].layerData.isSelected === true) {
+					returnVal = i;
+				}
+			}
+			return returnVal;
+		}
+	},
+    /* === END: Controllers === */
+    
+    /* === BEGIN: Event Handlers === */
+    handleChange: {
+        value: function() {
+            if(this.currentDocument && this.currentDocument.model.getProperty("domContainer")) {
+                this.currentSelectedContainer = this.currentDocument.model.getProperty("domContainer");
+            }
+        }
+    },
+
+    handleDocumentChange:{
+        value:function () {
+
+        }
+    },
+
+    handlePlayButtonClick:{
+        value:function(ev){
+            this.application.ninja.appModel.livePreview = !this.application.ninja.appModel.livePreview;
+
+            if (this.application.ninja.appModel.livePreview) {
+                this.play_button.classList.remove("playbutton");
+                this.play_button.classList.add("pausebutton");
+
+            } else {
+                this.play_button.classList.remove("pausebutton");
+                this.play_button.classList.add("playbutton");
+            }
+        }
+    },
+
+    handleKeyframeShortcut:{
+        value:function(action){
+            var tempEv = {};
+            tempEv.offsetX = this.playheadmarker.offsetLeft;
+            tempEv.actionType = action;
+
+            if (this.currentLayersSelected === false) {
+            	// we do not have a layer selected. We should growl at the user. For now, this will fail silently.
+            	return;
+            }
+            
+            // We need to get the correct layer(s).  For each currentElementSelected,
+            // loop through trackRepetition.childComponents and compare to stageElement.
+            // If they match, that's one of the components that needs the event.
+            var i = 0, 
+            	j = 0, 
+            	currentElementsSelectedLength = this.currentElementsSelected.length,
+            	trackRepLength = this.trackRepetition.childComponents.length,
+            	arrTargetIndexes = [],
+            	arrTargetIndexesLength = 0;
+            	
+            
+            for (i = 0; i < trackRepLength; i++) {
+            	var currentElement = this.trackRepetition.childComponents[i].stageElement;
+            	for (j = 0; j < currentElementsSelectedLength; j++) {
+            		if (currentElement === this.currentElementsSelected[j]) {
+            			arrTargetIndexes.push(i);
+            		}
+            	}
+            }
+            arrTargetIndexesLength = arrTargetIndexes.length;
+
+			// Now we have an array of things that need to handle the event.
+            for (i = 0; i < arrTargetIndexesLength; i++) {
+            	this.trackRepetition.childComponents[arrTargetIndexes[i]].handleKeyboardShortcut(tempEv);
+            }
+        }
+    },
+
+    handleTrackContainerWidthChange:{
+        value:function () {
+            this.container_tracks.style.width = (this.end_hottext.value * 80) + "px";
+            this.master_track.style.width = (this.end_hottext.value * 80) + "px";
+            this.time_markers.style.width = (this.end_hottext.value * 80) + "px";
+            if (this.timeMarkerHolder) {
+                this.time_markers.removeChild(this.timeMarkerHolder);
+            }
+            this.drawTimeMarkers();
+        }
+    },
+
+    handleLayerScroll: {
+        value:function () {
+        	this._areTracksScrolling = true;
+        	this.needsDraw = true;
+        	
+        }
+    },
+
+    startPlayheadTracking:{
+        value:function () {
+            this.time_markers.onmousemove = this.updatePlayhead.bind(this);
+        }
+    },
+
+    stopPlayheadTracking:{
+        value:function () {
+            this.time_markers.onmousemove = null;
+        }
+    },
+
+    updatePlayhead:{
+        value:function (event) {
+            var clickedPosition = event.target.offsetLeft + event.offsetX;
+            this.playhead.style.left = (clickedPosition - 2) + "px";
+            this.playheadmarker.style.left = clickedPosition + "px";
+            var currentMillisecPerPixel = Math.floor(this.millisecondsOffset / 80);
+            var currentMillisec = currentMillisecPerPixel * clickedPosition;
+            this.updateTimeText(currentMillisec);
+        }
+    },
+	
+	// Event handler for changes in stage selection.
+    handleSelectionChange: {
+        value:function (event) {
+        	this.updateLayerSelection();
+        }
+    },
+
+	handleTimelineLeftPanelClick: {
         value:function (event) {
             var ptrParent = nj.queryParentSelector(event.target, ".container-layer"),
             	i = 0,
@@ -1472,7 +1814,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 	            	// Start by selecting the lastLayerClicked
 					if (this.currentLayersSelected === false) {
 						this.currentLayersSelected = [];
-						//this.currentLayerSelected = false;
 					}
 					this.currentLayersSelected = [this.lastLayerClicked];
 					// Add all the layers between lastLayerClicked and targetIndex
@@ -1512,11 +1853,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 				// Control key has been pressed
 				this._isControlPressed = true;
 			}
-			/*
-			if (event.metaKey === true) {
-				this._isControlPressed = true;
-			}
-			*/
 		}
 	},
     
@@ -1540,141 +1876,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 			}
 		}
 	},
-
-
-    createStageElementsAt: {
-        value:function (isPaste, arrElements) {
-        	
-        	var i = 0,
-        		j = 0,
-        		arrElementsLength = arrElements.length,
-        		arrNewLayers = [],
-        		arrNewLayersLength = 0,
-        		stageElementName = "",
-        		targetIndex = 0;
-        	if (this.lastInsertionIndex !== false) {
-        		targetIndex = this.lastInsertionIndex;
-        		this.lastInsertionIndex = false;
-        	}
-        	
-            // We will no longer have multiple things selected, so wipe that info out
-            // if it isn't already gone.
-            this.currentLayersSelected = false;
-
-			for (i = arrElementsLength-1; i >= 0; i--) {
-				var thingToPush = this.createLayerTemplate();
-				
-				// Make up a layer name.
-            	this.currentLayerNumber = this.currentLayerNumber + 1;
-	            stageElementName="";
-	            
-	            // thingToPush is the template we just got.  Now fill it in.
-	            thingToPush.layerData.layerName = stageElementName;
-	            thingToPush.layerData.layerTag = "<" + arrElements[i].nodeName.toLowerCase() + ">";
-	            thingToPush.layerData.layerID = this.currentLayerNumber;
-	            thingToPush.parentElement = this.currentDocument.model.domContainer;
-	            thingToPush.layerData.isSelected = true;
-	            thingToPush.layerData._isFirstDraw = true;
-	            thingToPush.layerData.created = true;
-	            thingToPush.layerData.stageElement = arrElements[i];
-	            thingToPush.layerData.isLock = false;
-	            thingToPush.layerData.isHidden = false;
-	            thingToPush.layerData.created = !isPaste;
-	            thingToPush.created = !isPaste;
-
-				if (this.checkable_animated.classList.contains("checked")) {
-					thingToPush.layerData.isVisible = false;
-				}
-				//arrNewLayers.push(thingToPush);
-				this.arrLayers.splice(targetIndex, 0, thingToPush);
-			}
-			//console.log(arrNewLayers);
-			//console.log(thingToPush);
-        	
-            //this.arrLayers.splice(targetIndex, 0, arrNewLayers);
-
-        }
-    },
-
-    restoreLayer:{
-        value:function (ele) {
-            var stageElementName, 
-            	thingToPush = this.createLayerTemplate();
-
-            this.currentLayerNumber = this.currentLayerNumber + 1;
-//            stageElementName = "Layer " + this.currentLayerNumber;
-
-//            if(ele.dataset.storedLayerName){
-//                stageElementName = ele.dataset.storedLayerName;
-//            }
-            if(ele.id){
-                thingToPush.layerData.layerName = ele.id;
-            }
-            thingToPush.layerData.layerID = this.currentLayerNumber;
-            thingToPush.layerData.layerTag = "<" + ele.nodeName.toLowerCase() + ">";
-            thingToPush.parentElement = this.currentDocument.model.domContainer;
-            if (this._openDoc) {
-                //thingToPush.layerData.elementsList.push(ele);
-                thingToPush.layerData.stageElement = ele;
-            }
-            if (this.checkable_animated.classList.contains("checked")) {
-            	thingToPush.layerData.isVisible = false;
-            }
-            
-            // Are there styles to add?
-            thingToPush.layerData.arrLayerStyles = this.createLayerStyles();
-            thingToPush.layerData.arrStyleTracks = this.createStyleTracks();
-
-			// Add the layer to the repetition
-            this.temparrLayers.splice(0, 0, thingToPush);
-            thingToPush.layerData.trackPosition = this.temparrLayers.length - 1;
-            thingToPush.layerData.layerPosition = this.temparrLayers.length - 1;
-
-            this._openDoc = false;
-
-        }
-    },
-
-    deleteLayers: {
-    	value: function(arrElements) {
-    		var i = 0, 
-    			j = 0,
-    			arrLayersLength = this.arrLayers.length,
-    			arrElementsLength = arrElements.length;
-    		
-    		for (i = 0; i < arrElementsLength; i++) {
-    			var currentTest = arrElements[i];
-    			for (j = 0; j < arrLayersLength; j++) {
-    				if (this.arrLayers[j].layerData.stageElement == currentTest) {
-    					this.arrLayers.splice(j, 1);
-    					// Super-secret magic trick: Now that we've spliced out an element,
-    					// arrLayers.length is different. We need to update it.
-    					arrLayersLength = this.arrLayers.length;
-    				}
-    			}
-    		}
-    		this.selectLayers([]);
-    		this.resetMasterDuration();
-    	}
-    },
-
-    resetMasterDuration:{
-        value:function(){
-            var trackDuration = 0,
-            	arrLayersLength = this.arrLayers.length, 
-            	i = 0;
-
-            if (arrLayersLength > 0) {
-            	for (i = 0; i < arrLayersLength; i++) {
-            		var currLength = this.arrLayers[i].layerData.trackDuration;
-            		if (currLength > trackDuration) {
-            			trackDuration = currLength;
-            		}
-            	}
-            }
-            this.masterDuration = trackDuration;
-        }
-    },
 
     handleElementAdded:{
         value:function(event) {
@@ -1700,149 +1901,10 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 
     handleElementReplaced:{
         value:function(event){
-        	// TODO: this needs to be updated. Not sure when an elementReplaced event will be fired?
-        	/*
-            this.currentLayerSelected.layerData.elementsList.pop();
-            this.currentLayerSelected.layerData.elementsList.push(event.detail.data.newChild);
-            this.currentLayerSelected.layerData.animatedElement = event.detail.data.newChild;
-            */
+        	// TODO: Is this event even fired? It's in element-controller.
         }
     },
 
-    drawTimeMarkers:{
-        value:function () {
-            this.timeMarkerHolder = document.createElement("div");
-
-            if(this.time_markers.children[0]){
-               this.time_markers.removeChild(this.time_markers.children[0]);
-            }
-
-            this.time_markers.appendChild(this.timeMarkerHolder);
-            var i;
-            var totalMarkers = Math.floor(this.time_markers.offsetWidth / 80);
-            for (i = 0; i < totalMarkers; i++) {
-                var timeMark = document.createElement("div");
-                var markValue = this.calculateTimeMarkerValue(i);
-                timeMark.className = "timemark";
-                timeMark.innerHTML = markValue;
-                this.timeMarkerHolder.appendChild(timeMark);
-            }
-        }
-    },
-
-    calculateTimeMarkerValue:{
-        value:function (currentMarker) {
-            var currentMilliseconds = currentMarker * this.millisecondsOffset;
-            return this.convertMillisecondsToTime(currentMilliseconds);
-        }
-    },
-
-    updateTimeText:{
-        value:function (millisec) {
-            this.timetext.innerHTML = this.convertMillisecondsToTime(millisec);
-        }
-    },
-
-    convertMillisecondsToTime:{
-        value:function(millisec){
-            var timeToReturn;
-            var sec = (Math.floor((millisec / 1000))) % 60;
-            var min = (Math.floor((millisec / 1000) / 60)) % 60;
-            var milliSeconds = String(Math.round(millisec / 10));
-            var returnMillisec = milliSeconds.slice(milliSeconds.length - 2, milliSeconds.length);
-            var returnSec;
-            var returnMin;
-            if (sec < 10) {
-                returnSec = "0" + sec;
-            } else {
-                returnSec = sec;
-            }
-            if (min < 10) {
-                returnMin = "0" + min;
-            } else {
-                returnMin = min;
-            }
-            if (returnMillisec == "0") {
-                returnMillisec = "0" + returnMillisec;
-            }
-            timeToReturn = returnMin + ":" + returnSec + ":" + returnMillisec;
-            return timeToReturn;
-        }
-    },
-
-    selectLayer:{
-        value:function (layerIndex, userSelection) {
-        	//console.log("=----> Please update this component to use TimelinePanel.selectLayers. See this message for syntax. <----=");
-        	this.selectLayers([layerIndex]);
-        	if (userSelection === true) {
-        		this.updateStageSelection();
-        	}
-        }
-    },
-
-	// Get the index where a layer should be inserted based on selection.
-	// If nothing is selected, returns false.
-	// Used by ElementController.addElement.
-	getInsertionIndex: {
-		value: function() {
-			var i = 0, 
-				currentLayersSelectedLength = this.currentLayersSelected.length,
-				arrLayersLength = this.arrLayers.length,
-				returnVal = arrLayersLength -1;
-			if (returnVal === -1) {
-				this.lastInsertionIndex = 0;
-				return false;
-			}
-			if (this.currentLayersSelected === false) {
-				this.lastInsertionIndex = 0;
-				return false;
-			}
-			
-			for (i = 0; i < arrLayersLength; i++) {
-				if (this.arrLayers[i].layerData.isSelected) {
-					returnVal = i;
-				}
-			}
-			this.lastInsertionIndex = returnVal;
-			return returnVal;
-		}
-	},
-
-    getLayerIndexByID:{
-        value:function (layerID, tempArr) {
-            var i = 0,
-                returnVal = false,
-                arrLayersLength = this.arrLayers.length;
-
-            if (tempArr) {
-                var tempArrLength = this.temparrLayers.length;
-
-                for (i = 0; i < tempArrLength; i++) {
-                    if (this.temparrLayers[i].layerData.layerID === layerID) {
-                        returnVal = i;
-                    }
-                }
-
-            } else {
-                for (i = 0; i < arrLayersLength; i++) {
-                    if (this.arrLayers[i].layerData.layerID === layerID) {
-                        returnVal = i;
-                    }
-                }
-            }
-            return returnVal;
-        }
-    },
-
-    enablePanel:{
-        value:function (boolEnable) {
-            if (boolEnable) {
-                this.timeline_disabler.style.display = "none";
-            } else {
-                this.timeline_disabler.style.display = "block";
-            }
-        }
-    },
     handleConfigButtonClick: {
     	value: function(event) {
     		event.stopPropagation();
@@ -1850,6 +1912,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     		
     	}
     },
+    
     handleDocumentClick: {
     	value: function(event) {
     		if (this.tl_configbutton.classList.contains("checked")) {
@@ -1896,6 +1959,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     		
     	}
     },
+    
     handleCheckableClick: {
     	value: function(event) {
     		if (event.currentTarget.classList.contains("checked")) {
@@ -1991,14 +2055,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 		}
 	},
 
-    // Trigger the layer/track data binding
-    triggerLayerBinding : {
-    	value: function(intIndex) {
-            this.arrLayers[intIndex].layerData.triggerBinding = !this.arrLayers[intIndex].layerData.triggerBinding;
-        }
-    },
-    
-    
     /* Layer drag and drop */
     handleLayerDragStart : {
     	value: function(event) {
@@ -2032,33 +2088,8 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     	}
     },
     
-    buildDragHelper: {
-    	value: function() {
-    		var myContainer = document.createElement("div"),
-    			i = 0, 
-    			currentLayersSelectedLength = this.currentLayersSelected.length;
-
-    		for (i = 0; i < currentLayersSelectedLength; i++) {
-    			var currentClone = this.layerRepetition.childComponents[this.currentLayersSelected[i]].element.cloneNode(true);
-    			currentClone.classList.add("layerSelected");
-    			myContainer.appendChild(currentClone);
-    		}
-
-    		this._dragAndDropHelper = myContainer;
-            this._dragAndDropHelper.style.opacity = 0.8;
-            this._dragAndDropHelper.style.position = "absolute";
-            this._dragAndDropHelper.style.top = "0px";
-            this._dragAndDropHelper.style.left = "0px";
-            this._dragAndDropHelper.style.zIndex = 700;
-            
-            this._dragAndDropHelper.style.width = window.getComputedStyle(this.container_layers, null).getPropertyValue("width");
-            this._dragAndDropHelper.classList.add("timeline-dnd-helper");
-    	}
-    },
-    
     handleLayerDragover: {
     	value: function(event) {
-    		
     		// If this isn't a layer event we don't do anything.
     		if (this.draggingType !== "layer") {
     			return;
@@ -2083,9 +2114,9 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     		this.needsDraw = true;
     	}
     },
+    
     handleLayerDragEnd : {
     	value: function(event) {
-    		
     		// If this isn't a layer event we don't do anything.
     		if (this.draggingType !== "layer") {
     			return;
@@ -2095,9 +2126,9 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
            
     	}
     },
+    
     handleLayerDrop : {
     	value: function(event) {
-    		
     		// If this isn't a layer event we don't do anything.
     		if (this.draggingType !== "layer") {
     			return;
@@ -2112,7 +2143,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     /* Keyframe drag and drop */
     handleKeyframeDragover: {
     	value: function(event) {
-    		
     		// If this isn't a keyframe drag and drop event, we don't want to do anything.
     		if (this.draggingType !== "keyframe") {
     			return;
@@ -2146,9 +2176,9 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     		return false;
     	}
     },
+    
     handleKeyframeDrop: {
     	value: function(event) {
-    		
     		// If this isn't a keyframe drop event, we don't want to do anything.
     		if (this.draggingType !== "keyframe") {
     			return;
@@ -2202,51 +2232,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 			}
 			return false;
     	}
-    },
-
-	getActiveLayerIndex: {
-		value: function() {
-			var i = 0,
-				returnVal = false,
-				arrLayersLength = this.arrLayers.length;
-			for (i = 0; i < arrLayersLength; i++) {
-				if (this.arrLayers[i].layerData.isSelected === true) {
-					returnVal = i;
-				}
-			}
-			return returnVal;
-		}
-	},
-    /* === END: Controllers === */
-   
-    /* === BEGIN: Logging routines === */
-    _boolDebug:{
-        enumerable:false,
-        value:false // set to true to enable debugging to console; false for turning off all debugging.
-    },
-    boolDebug:{
-        get:function () {
-            return this._boolDebug;
-        },
-        set:function (boolDebugSwitch) {
-            this._boolDebug = boolDebugSwitch;
-        }
-    },
-    log:{
-        value:function (strMessage) {
-            if (this.boolDebug) {
-                console.log(this.getLineNumber() + ": " + strMessage);
-            }
-        }
-    },
-    getLineNumber:{
-        value:function () {
-            try {
-                throw new Error('bazinga')
-            } catch (e) {
-                return e.stack.split("at")[3].split(":")[2];
-            }
-        }
     }
-    /* === END: Logging routines === */
+    /* === END: Event Handlers === */
+
 });

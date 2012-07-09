@@ -340,7 +340,9 @@ var Tween = exports.Tween = Montage.create(Component, {
         value: function(){
             this.eventManager.addEventListener("elementChange", this, false);
             var selectIndex = this.application.ninja.timeline.getLayerIndexByID(this.parentComponent.parentComponent.trackID);
-            this.application.ninja.timeline.selectLayer(selectIndex, true);
+            // this.application.ninja.timeline.selectLayer(selectIndex, true); // deprecated
+            this.application.ninja.timeline.selectLayers([selectIndex]);
+            this.application.ninja.timeline.updateStageSelection();
             this.application.ninja.timeline.deselectTweens();
             this.application.ninja.timeline.selectedTweens.push(this);
             this.application.ninja.timeline.playhead.style.left = (this.keyFramePosition - 2) + "px";

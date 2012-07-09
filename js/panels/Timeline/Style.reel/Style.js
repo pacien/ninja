@@ -41,38 +41,80 @@ POSSIBILITY OF SUCH DAMAGE.
 
 var Montage = require("montage/core/core").Montage;
 var Component = require("montage/ui/component").Component;
-var ElementsMediator =  	require("js/mediators/element-mediator").ElementMediator
+var ElementsMediator = require("js/mediators/element-mediator").ElementMediator
 
 
 var LayerStyle = exports.LayerStyle = Montage.create(Component, {
-
-    styleContainer: {
-        value: null,
-        serializable: true
-    },
-
-    styleHintable: {
-        value: null,
-        serializable: true
-    },
-
-    styleProperty: {
-        value: null,
-        serializable: true
-    },
-
-    valueEditorHottext: {
-        value: null,
-        serializable: true
-    },
-
-    dtextProperty: {
-        value: null,
-        serializable: true
-    },
-
     /* === BEGIN: Models === */
-	// isSelected: whether or not the style is selected
+	_parentLayerComponent: {
+		value: null
+	},
+	
+	_styleContainer: {
+		value: null
+	},
+    styleContainer: {
+        serializable: true,
+        get: function() {
+        	return this._styleContainer;
+        },
+        set: function(newVal) {
+        	this._styleContainer = newVal;
+        }
+    },
+
+	_styleHintable: {
+		value: null
+	},
+    styleHintable: {
+        serializable: true,
+        get: function() {
+        	return this._styleHintable;
+        },
+        set: function(newVal) {
+        	this._styleHintable = newVal;
+        }
+    },
+
+	_styleProperty: {
+		value: null
+	},
+    styleProperty: {
+        serializable: true,
+        get: function() {
+        	return this._styleProperty;
+        },
+        set: function(newVal) {
+        	this._styleProperty = newVal;
+        }
+    },
+
+	_valueEditorHottext: {
+		value: null
+	},
+    valueEditorHottext: {
+        serializable: true,
+        get: function() {
+        	return this._valueEditorHottext;
+        },
+        set: function(newVal) {
+        	this._valueEditorHottext = newVal;
+        }
+    },
+
+	_dtextProperty: {
+		value: null
+	},
+    dtextProperty: {
+        serializable: true,
+        get: function() {
+        	return this._dtextProperty;
+        },
+        set: function(newVal) {
+        	this._dtextProperty = newVal;
+        }
+    },
+
 	_isSelected: {
 		value: false
 	},
@@ -90,9 +132,6 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
 		}
 	},
 	
-    /* isActive:  Whether or not the user is actively clicking within the style; used to communicate state with
-     * parent Layer.
-     */
     _isActive: {
     	value: false
     },
@@ -163,6 +202,7 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
     	},
         serializable: true
     },
+    
     _myHintableValue : {
     	value: null
     },
@@ -218,13 +258,13 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
  		}
  	},
 
-    addedColorChips:
-        { value: false },
+    addedColorChips: { 
+		value: false
+	},
 
     _colorelement: {
         writable:true
     },
-
     colorelement: {
         enumerable: true,
         get: function () {
@@ -268,13 +308,21 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
         	this.init();
         }
     },
+    willDraw: {
+    	value: function() {
+    		if (this._parentLayerComponent === null) {
+    			this._parentLayerComponent = this.parentComponent.parentComponent.parentComponent.parentComponent;
+    		}
+    	}
+    },
     draw: {
     	value: function() {
-    		
+    		// Show the right view
     		if (this._swapViews === true) {
-    			// Show the right thing
     			this._showView();
     		}
+    		
+    		// Is this style selected?
     		if (this.isSelected) {
     			this.element.classList.add("style-selected");
     		} else {
@@ -284,6 +332,7 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
 
     	}
     },
+    
     didDraw: {
     	value: function() {
     		if (this._swapViews === true) {
@@ -312,6 +361,41 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
 		    this.whichView = "propval";
 		}
 	},
+
+    handleFillColorChange: {
+        value: function (event) {
+            if(this.application.ninja.timeline.selectedStyle === "color" ||this.application.ninja.timeline.selectedStyle === this.editorProperty){
+                var fillColorObject={};
+                fillColorObject.color=event._event.color;
+                fillColorObject.mode=event._event.colorMode;
+                ElementsMediator.setColor([this._parentLayerComponent.layerData.stageElement], fillColorObject, this._isFill, "Change", "timeline",null,this._borderSide)
+            }
+        }
+    },
+
+    handleHottextChange:{
+        value:function(event){
+            if(this.application.ninja.timeline.selectedStyle === this.editorProperty){
+                this.application.ninja.elementMediator.setProperty([this._parentLayerComponent.layerData.stageElement], this.editorProperty, [this.editorValue + event.target._units]  , "Change", "timeline");
+            }
+        }
+    },
+
+    handleHottextChanging:{
+        value:function(event){
+            if(this.application.ninja.timeline.selectedStyle === this.editorProperty){
+               this.application.ninja.elementMediator.setProperty([this._parentLayerComponent.layerData.stageElement], this.editorProperty, [this.editorValue + event.target._units]  , "Changing", "timeline");
+             }
+        }
+    },
+
+    handleBlur:{
+        value:function(event){
+            if(this.application.ninja.timeline.selectedStyle === this.editorProperty){
+                this.application.ninja.elementMediator.setProperty([this._parentLayerComponent.layerData.stageElement], this.editorProperty, [event.target.value] , "Change", "timeline");
+            }
+        }
+    },
 	
 	// Init: Initialize the component with some useful selectors and other defaults.
 	init : {
@@ -319,7 +403,7 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
 
         	var arrHints = [],
         		i = 0;
-        	
+        	        	
         	// Get the array of hints from _myTweenables:
         	for (i = 0; i < this._myTweenables.length; i++) {
         		arrHints.push(this._myTweenables[i].property)
@@ -396,7 +480,7 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
 				this.valueEditorHottext.minValue = tweenable.min;
 				this.valueEditorHottext.maxValue = tweenable.max;
                 this.valueEditorHottext.identifier="hottext";
-                el = this.parentComponent.parentComponent.parentComponent.parentComponent.layerData.stageElement;
+                el = this._parentLayerComponent.layerData.stageElement;
                 this.editorValue = parseFloat(ElementsMediator.getProperty(el, this.editorProperty));
                 this.valueEditorHottext.value = this.editorValue
                 this.valueEditorHottext.addEventListener("change",this,false);
@@ -421,7 +505,7 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
                     this._fillColorCtrl.props = { side: 'top', align: 'center', wheel: true, palette: true, gradient: false, image: false, nocolor: true, offset: -80 };
                     this.application.ninja.colorController.addButton("chip", this._fillColorCtrl);
                     this.colorelement = this._fillColorCtrl;
-                    var currentValue = ElementsMediator.getColor(this.parentComponent.parentComponent.parentComponent.parentComponent.layerData.stageElement,this._isFill,this._borderSide)
+                    var currentValue = ElementsMediator.getColor(this._parentLayerComponent.layerData.stageElement,this._isFill,this._borderSide)
                     this.application.ninja.timeline.selectedStyle = this.editorProperty;
                     this._fillColorCtrl.addEventListener("change", this.handleFillColorChange.bind(this), false);
                     if(currentValue){
@@ -749,72 +833,6 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
             }
         ]
 
-    },
-
-    handleFillColorChange: {
-        value: function (event) {
-            if(this.application.ninja.timeline.selectedStyle === "color" ||this.application.ninja.timeline.selectedStyle === this.editorProperty){
-                var fillColorObject={};
-                fillColorObject.color=event._event.color;
-                fillColorObject.mode=event._event.colorMode;
-                ElementsMediator.setColor([this.parentComponent.parentComponent.parentComponent.parentComponent.layerData.stageElement], fillColorObject, this._isFill, "Change", "timeline",null,this._borderSide)
-            }
-        }
-    },
-
-    handleHottextChange:{
-        value:function(event){
-            if(this.application.ninja.timeline.selectedStyle === this.editorProperty){
-                this.application.ninja.elementMediator.setProperty([this.parentComponent.parentComponent.parentComponent.parentComponent.layerData.stageElement], this.editorProperty, [this.editorValue + event.target._units]  , "Change", "timeline");
-            }
-        }
-    },
-
-    handleHottextChanging:{
-        value:function(event){
-            if(this.application.ninja.timeline.selectedStyle === this.editorProperty){
-               this.application.ninja.elementMediator.setProperty([this.parentComponent.parentComponent.parentComponent.parentComponent.layerData.stageElement], this.editorProperty, [this.editorValue + event.target._units]  , "Changing", "timeline");
-             }
-        }
-    },
-
-    handleBlur:{
-        value:function(event){
-            if(this.application.ninja.timeline.selectedStyle === this.editorProperty){
-                this.application.ninja.elementMediator.setProperty([this.parentComponent.parentComponent.parentComponent.parentComponent.layerData.stageElement], this.editorProperty, [event.target.value] , "Change", "timeline");
-            }
-        }
-    },
-
-	
-	/* Begin: Logging routines */
-    _boolDebug: {
-    	enumerable: false,
-    	value: false // set to true to enable debugging to console; false for turning off all debugging.
-    },
-    boolDebug: {
-    	get: function() {
-    		return this._boolDebug;
-    	},
-    	set: function(boolDebugSwitch) {
-    		this._boolDebug = boolDebugSwitch;
-    	}
-    },
-    log: {
-    	value: function(strMessage) {
-    		if (this.boolDebug) {
-    			console.log(this.getLineNumber() + ": " + strMessage);
-    		}
-    	}
-    },
-    getLineNumber: {
-    	value: function() {
-			try {
-			   throw new Error('bazinga')
-			}catch(e){
-				return e.stack.split("at")[3].split(":")[2];
-			}
-    	}
     }
 	/* End: Logging routines */
 

@@ -643,7 +643,9 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             this.application.ninja.timeline.updateTimeText(currentMillisec);
             if (ev.shiftKey) {
 	            var selectedIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID);
-	            this.application.ninja.timeline.selectLayer(selectedIndex, true);
+	            // this.application.ninja.timeline.selectLayer(selectedIndex, true); // deprecated
+	            this.application.ninja.timeline.selectLayers([selectedIndex]);
+	            this.application.ninja.timeine.updateStageSelection();
                 if (this.tweens.length < 1) {
                     this.insertTween(0);
                     this.addAnimationRuleToElement(ev);
@@ -742,7 +744,8 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
         value:function (ev) {
             if (ev.offsetX > this.tweens[this.tweens.length - 1].tweenData.keyFramePosition) {
                 var selectedIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID);
-                this.application.ninja.timeline.selectLayer(selectedIndex, false);
+                // this.application.ninja.timeline.selectLayer(selectedIndex, false); // deprecated
+                this.application.ninja.timeline.selectLayers([selectedIndex]);
                 this.insertTween(ev.offsetX);
             } else {
 	            if (typeof(ev.currentTarget) === "undefined") {
