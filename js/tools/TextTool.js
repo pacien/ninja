@@ -189,10 +189,9 @@ exports.TextTool = Montage.create(DrawingTool, {
 
     Configure: {
         value: function(wasSelected) {
-            
+
             if(wasSelected) {
                 NJevent("enableStageMove");
-                this.options.defineInitialProperties();
                 this.application.ninja.stage.stageDeps.snapManager.setupDragPlaneFromPlane( workingPlane );
             } else {
                 this.selectedElement = null;

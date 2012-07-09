@@ -39,7 +39,8 @@ var Montage = require("montage/core/core").Montage,
     TextField = require("js/components/TextField.reel").TextField,
     ColorChip = require("js/components/ui/color-chip.reel").ColorChip,
     FileInput = require("js/components/ui/file-input.reel").FileInput,
-    InputGroup = require("js/components/ui/input-group.reel").InputGroup;
+    InputGroup = require("js/components/ui/input-group.reel").InputGroup,
+    GradientPicker = require("js/components/gradientpicker.reel").GradientPicker;
 
 var PropertyControl = exports.PropertyControl = Montage.create(Component, {
 
@@ -169,15 +170,15 @@ var PropertyControl = exports.PropertyControl = Montage.create(Component, {
     },
 
     handleEvent:
-	{
-		value:function(event)
-		{
+    {
+        value:function(event)
+        {
             if(event.wasSetByCode) {
                 return;
             }
             this._dispatchPropEvent(event);
-		}
-	},
+        }
+    },
 
     _dispatchPropEvent: {
         value: function(event) {
@@ -195,7 +196,7 @@ var PropertyControl = exports.PropertyControl = Montage.create(Component, {
             propEvent.propertyLabel = this.label;
             propEvent.propertyValue = event.currentTarget[this._prop];
             propEvent.propertyEvent = event;
-            
+
             this.dispatchEvent(propEvent);
         }
     },
@@ -259,6 +260,11 @@ var PropertyControl = exports.PropertyControl = Montage.create(Component, {
                     this._control = InputGroup.create();
                     this._control.addEventListener("change", this, false);
                     this._control.addEventListener("changing", this, false);
+                    this._prop = "value";
+                    break;
+                case "GradientPicker":
+                    this._control = GradientPicker.create();
+                    this._control.addEventListener("change", this, false);
                     this._prop = "value";
                     break;
                 default:

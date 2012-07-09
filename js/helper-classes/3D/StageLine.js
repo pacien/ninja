@@ -122,7 +122,7 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
                         // add the intersection
                         var dot = MathUtils.dot3( pt0, planeEq ) + planeEq[3];
                         var deltaVis = (dot > 0) ? 1 : -1;
-//					if (plane.isBackFacing())
+//                  if (plane.isBackFacing())
 //                        deltaVis = (dot < 0) ? 1 : -1;
 
                         this.addIntersection( plane, t, deltaVis );
@@ -194,14 +194,14 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
                     MathUtils.negate( vec );
                 planeEq = [-vec[1], vec[0], 0];
                 var normal = [planeEq[0], planeEq[1], planeEq[2]];
-//			var d = -planeEq.dot(bPt0);
+//          var d = -planeEq.dot(bPt0);
                 var d = -vecUtils.vecDot(3, planeEq, bPt0);
                 planeEq[3] = d;
 
                 t = MathUtils.vecIntersectPlaneForParam( pt0, lineDir, planeEq );
                 if (t)
                 {
-                    if ((MathUtils.fpSign(t) > 0) && (MathUtils.fpCmp(t,1.0) <= 0))	// the strict vs not-strict inequality comparisons are IMPORTANT!
+                    if ((MathUtils.fpSign(t) > 0) && (MathUtils.fpCmp(t,1.0) <= 0)) // the strict vs not-strict inequality comparisons are IMPORTANT!
                     {
                         // get the intersection point
                         var pt = MathUtils.interpolateLine3D( pt0, pt1, t );
@@ -384,49 +384,50 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
                         if ((st0 >= 0) && (st1 >= 0))
                         {
                             //if (  (plane.isBackFacing() && (s1 < 0)) || (!plane.isBackFacing() && (s1 > 0))  )	// entering the material from the beginning of the line that is to be drawn
+                        if (s1 > 0) // entering the material from the beginning of the line that is to be drawn
                             if (s1 > 0)
+                        {
+                            // see if the start point of the line is at a corner of the bounded plane
+                            var lineDir = vecUtils.vecSubtract(3, pt1, pt0);
+                            vecUtils.vecNormalize(3, lineDir);
+                            var dist = vecUtils.vecDist( 3, pt0, bp1 );
+                            var bp2, bv0, bv1, cross1, cross2, cross3;
+                            if ( MathUtils.fpSign(dist) == 0)
                             {
-                                // see if the start point of the line is at a corner of the bounded plane
-                                var lineDir = vecUtils.vecSubtract(3, pt1, pt0);
-                                vecUtils.vecNormalize(3, lineDir);
-                                var dist = vecUtils.vecDist( 3, pt0, bp1 );
-                                var bp2, bv0, bv1, cross1, cross2, cross3;
-                                if ( MathUtils.fpSign(dist) == 0)
+                                bp2 = boundaryPts[(i+1) % 4];
+                                bv0 = vecUtils.vecSubtract(3, bp2, bp1);
+                                bv1 = vecUtils.vecSubtract(3, bp0, bp1);
+                                cross1 = vecUtils.vecCross(3, bv0, lineDir);
+                                cross2 = vecUtils.vecCross(3, lineDir, bv1);
+                                cross3 = vecUtils.vecCross(3, bv0, bv1);
+                                if ( (MathUtils.fpSign(vecUtils.vecDot(3, cross1, cross3)) == 0) && (MathUtils.fpSign(vecUtils.vecDot(3, cross2, cross3)) == 0))
                                 {
-                                    bp2 = boundaryPts[(i+1) % 4];
-                                    bv0 = vecUtils.vecSubtract(3, bp2, bp1);
-                                    bv1 = vecUtils.vecSubtract(3, bp0, bp1);
-                                    cross1 = vecUtils.vecCross(3, bv0, lineDir);
-                                    cross2 = vecUtils.vecCross(3, lineDir, bv1);
-                                    cross3 = vecUtils.vecCross(3, bv0, bv1);
-                                    if ( (MathUtils.fpSign(vecUtils.vecDot(3, cross1, cross3)) == 0) && (MathUtils.fpSign(vecUtils.vecDot(3, cross2, cross3)) == 0))
-                                    {
-                                        gotEnter = true;
-                                        this.addIntersection( plane, t, 1 );
-                                    }
-                                }
-                                else if (MathUtils.fpSign( vecUtils.vecDist(3, pt0, bp0)) === 0)
-                                {
-                                    bp2 = boundaryPts[(i+2) % 4];
-                                    bv0 = vecUtils.vecSubtract(3, bp2, bp0);
-                                    bv1 = vecUtils.vecSubtract(3, bp1, bp0);
-                                    cross1 = vecUtils.vecCross(3, bv0, lineDir);
-                                    cross2 = vecUtils.vecCross(3, lineDir, bv1);
-                                    cross3 = vecUtils.vecCross(3, bv0, bv1);
-                                    if ( (MathUtils.fpSign(vecUtils.vecDot(3, cross1, cross3)) == 0) && (MathUtils.fpSign(vecUtils.vecDot(3, cross2, cross3)) == 0))
-                                    {
-                                        gotEnter = true;
-                                        this.addIntersection( plane, t, 1 );
-                                    }
-                                }
-                                else
-                                {
-                                    // check if the line is on the edge of the boundary or goes to the interior
                                     gotEnter = true;
                                     this.addIntersection( plane, t, 1 );
                                 }
                             }
+                            else if (MathUtils.fpSign( vecUtils.vecDist(3, pt0, bp0)) === 0)
+                            {
+                                bp2 = boundaryPts[(i+2) % 4];
+                                bv0 = vecUtils.vecSubtract(3, bp2, bp0);
+                                bv1 = vecUtils.vecSubtract(3, bp1, bp0);
+                                cross1 = vecUtils.vecCross(3, bv0, lineDir);
+                                cross2 = vecUtils.vecCross(3, lineDir, bv1);
+                                cross3 = vecUtils.vecCross(3, bv0, bv1);
+                                if ( (MathUtils.fpSign(vecUtils.vecDot(3, cross1, cross3)) == 0) && (MathUtils.fpSign(vecUtils.vecDot(3, cross2, cross3)) == 0))
+                                {
+                                    gotEnter = true;
+                                    this.addIntersection( plane, t, 1 );
+                                }
+                            }
+                            else
+                            {
+                                // check if the line is on the edge of the boundary or goes to the interior
+                                gotEnter = true;
+                                this.addIntersection( plane, t, 1 );
+                            }
                         }
+                    }
                     }
                     else if ( (MathUtils.fpSign(t) > 0) && (MathUtils.fpCmp(t,1.0) <= 0))
                     {
@@ -440,7 +441,7 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
                         if ((MathUtils.fpSign(dot0) > 0) && (MathUtils.fpSign(dot1) < 0))
                         {
                             // determine if the line is entering or exiting
-                            if (s0 <= 0)		// entering
+                            if (s0 <= 0)        // entering
                             {
                                 if (!gotEnter)
                                 {
@@ -456,7 +457,7 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
                                     this.addIntersection( plane, t, -1 );
                                 }
                             }
-                            else	// s0 == 0
+                            else    // s0 == 0
                             {
                                 // TODO
                             }
@@ -481,7 +482,7 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
                             }
                             else if (s0 > 0)
                             {
-                                var v = vecUtils.vecSubtract(3, pt0, pt1);	// note the reversed order from the previous case
+                                var v = vecUtils.vecSubtract(3, pt0, pt1);  // note the reversed order from the previous case
                                 if ((MathUtils.fpSign(vecUtils.vecCross(3, v0,v)) > 0) && (MathUtils.fpSign(vecUtils.vecCross(3, v,v1)) > 0))
                                 {
                                     gotEnter = true;
@@ -509,7 +510,7 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
                             }
                             else if (s0 > 0)
                             {
-                                var v = vecUtils.vecSubtract(3, pt0, pt1);	// note the reversed order from the previous case
+                                var v = vecUtils.vecSubtract(3, pt0, pt1);  // note the reversed order from the previous case
                                 if ((MathUtils.fpSign(vecUtils.vecCross(3, v0,v)) > 0) && (MathUtils.fpSign(vecUtils.vecCross(3, v,v1)) > 0))
                                 {
                                     gotEnter = true;
@@ -588,12 +589,12 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
             {
                 var pt0 = pt1;
                 var pt1 = boundaryPts[i];
-                //var	vec0 = pt1.subtract( pt0 ),
-                //	vec1 =  pt.subtract( pt0 );
+                //var   vec0 = pt1.subtract( pt0 ),
+                //  vec1 =  pt.subtract( pt0 );
                 var vec0 = vecUtils.vecSubtract(3, pt1, pt0),
                     vec1 = vecUtils.vecSubtract(pt, pt0);
 
-    //			var cross = vec0.cross( vec1 );
+    //          var cross = vec0.cross( vec1 );
                 var cross = vecUtils.vecCross(3, vec0, vec1);
                 var inside;
                 if (backFacing)

@@ -31,8 +31,8 @@ POSSIBILITY OF SUCH DAMAGE.
 ////////////////////////////////////////////////////////////////////////
 //
 
-var Montage = 		        require("montage/core/core").Montage,
-    Component = 	require("montage/ui/component").Component,
+var Montage =               require("montage/core/core").Montage,
+    Component =     require("montage/ui/component").Component,
     ClipboardUtil = require("js/clipboard/util").ClipboardUtil,
     World =         require("js/lib/drawing/world").World;
 
@@ -267,7 +267,10 @@ var ElementsClipboardAgent = exports.ElementsClipboardAgent = Montage.create(Com
                 styles = null;
             }
 
+            var addDelegate = this.application.ninja.elementMediator.addDelegate;
+            this.application.ninja.elementMediator.addDelegate = null;
             this.application.ninja.elementMediator.addElements(canvas, styles, false);
+            this.application.ninja.elementMediator.addDelegate = addDelegate;
 
             worldData = sourceCanvas.elementModel.shapeModel ? sourceCanvas.elementModel.shapeModel.GLWorld.exportJSON(): null;
             if(worldData)
@@ -349,7 +352,7 @@ var ElementsClipboardAgent = exports.ElementsClipboardAgent = Montage.create(Com
 
     pastePositioned:{
         value: function(element, styles, fromCopy){// for now can wok for both in-place and centered paste
-            var modObject = [], x,y, newX, newY, counter;
+            var modObject = [], x,y, newX, newY, counter, self = this;
 
             if((typeof fromCopy === "undefined") || (fromCopy && fromCopy === true)){
                 counter = this.pasteCounter;
@@ -362,11 +365,22 @@ var ElementsClipboardAgent = exports.ElementsClipboardAgent = Montage.create(Com
             newX = styles ? ("" + (styles.left + (25 * counter)) + "px") : "100px";
             newY = styles ? ("" + (styles.top + (25 * counter)) + "px") : "100px";
 
+            var addDelegate = this.application.ninja.elementMediator.addDelegate;
+            this.application.ninja.elementMediator.addDelegate = null;
             if(!styles || (styles && !styles.position)){
                 this.application.ninja.elementMediator.addElements(element, null, false);
             }else if(styles && (styles.position === "absolute")){
+                if((element.tagName === "IMG") || (element.getAttribute("type") === "image/svg+xml")){
+                    element.onload = function(){
+                        element.onload = null;
+                        //refresh selection
+                        self.application.ninja.stage.needsDraw = true;
+                    }
+                }
+
                 this.application.ninja.elementMediator.addElements(element, {"top" : newY, "left" : newX}, false);//displace
             }
+            this.application.ninja.elementMediator.addDelegate = addDelegate;
         }
     },
 

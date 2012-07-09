@@ -28,7 +28,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
 
-var Montage = 			require("montage/core/core").Montage,
+var Montage =           require("montage/core/core").Montage,
     CanvasController = require("js/controllers/elements/canvas-controller").CanvasController,
     njModule = require("js/lib/NJUtils"),
     World = require("js/lib/drawing/world").World,
@@ -300,7 +300,7 @@ exports.ShapesController = Montage.create(CanvasController, {
                         return null;
                     }
                     break;
-                
+
 
                 case "strokeMaterial":
                     var sm = el.elementModel.shapeModel.GLGeomObj.getStrokeMaterial();
@@ -882,15 +882,12 @@ exports.ShapesController = Montage.create(CanvasController, {
         value: function(m)
         {
             var css,
-                colorObj;
-            if(m === "Linear Gradient")
-            {
-                css = "-webkit-gradient(linear, left top, right top, from(rgb(255, 0, 0)), color-stop(0.3, rgb(0, 255, 0)), color-stop(0.6, rgb(0, 0, 255)), to(rgb(0, 255, 255)))";
-            }
-            else if(m === "Radial Gradient")
-            {
-                css = "-webkit-radial-gradient(50% 50%, ellipse cover, rgb(255, 0, 0) 0%, rgb(0, 255, 0) 30%, rgb(0, 0, 255) 60%, rgb(0, 255, 255) 100%)";
-            }
+                colorObj,
+                material;
+
+            material = MaterialsModel.getMaterial(m);
+
+            css = material.getGradientData();
 
             if(css)
             {
