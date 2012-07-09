@@ -33,26 +33,17 @@ var Component = require("montage/ui/component").Component;
 
 var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
-    /* ===- Begin Models ==== */
+
     hasTemplate:{
         value: true
     },
 
-    trackEditorProperty:{
-        value:""
-    },
-
-    animatedElement:{
-        value:null
-    },
-
-    isSubproperty:{
-        value:true
-    },
+    /* Begin: Models */
 
     _propTweenRepetition:{
         value:null
     },
+
     propTweenRepetition:{
         get:function () {
             return this._propTweenRepetition;
@@ -65,6 +56,7 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
     _propTweens:{
         value:[]
     },
+
     propTweens:{
         serializable:true,
         get:function () {
@@ -78,6 +70,7 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
     _propTrackData:{
         value:false
     },
+
     propTrackData:{
         serializable:true,
         get:function () {
@@ -89,6 +82,65 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                 this.setData();
             }
         }
+    },
+    _trackID:{
+        value:null
+    },
+
+    trackID:{
+        serializable:true,
+        get:function () {
+            return this._trackID;
+        },
+        set:function (value) {
+            if (value !== this._trackID) {
+                this._trackID = value;
+            }
+        }
+    },
+
+    _trackType:{
+        value:null
+    },
+
+    trackType:{
+        serializable:true,
+        get:function () {
+            return this._trackType;
+        },
+        set:function (value) {
+            if (value !== this._trackType) {
+                this._trackType = value;
+            }
+        }
+    },
+
+    _styleIndex:{
+        value:null
+    },
+
+    styleIndex:{
+        serializable:true,
+        get:function () {
+            return this._styleIndex;
+        },
+        set:function (value) {
+            if (value !== this._styleIndex) {
+                this._styleIndex = value;
+            }
+        }
+    },
+
+    trackEditorProperty:{
+        value:""
+    },
+
+    animatedElement:{
+        value:null
+    },
+
+    isSubproperty:{
+        value:true
     },
 
     nextKeyframe:{
@@ -111,49 +163,8 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
         value:0
     },
 
-    _trackID:{
+    timelineTrack:{
         value:null
-    },
-    trackID:{
-        serializable:true,
-        get:function () {
-            return this._trackID;
-        },
-        set:function (value) {
-            if (value !== this._trackID) {
-                this._trackID = value;
-            }
-        }
-    },
-
-    _trackType:{
-        value:null
-    },
-    trackType:{
-        serializable:true,
-        get:function () {
-            return this._trackType;
-        },
-        set:function (value) {
-            if (value !== this._trackType) {
-                this._trackType = value;
-            }
-        }
-    },
-
-    _styleIndex:{
-        value:null
-    },
-    styleIndex:{
-        serializable:true,
-        get:function () {
-            return this._styleIndex;
-        },
-        set:function (value) {
-            if (value !== this._styleIndex) {
-                this._styleIndex = value;
-            }
-        }
     },
 
     setData:{
@@ -170,40 +181,51 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
             this.needsDraw = true;
         }
     },
-    /* ===- End Models ==== */
 
-    /* ===- Begin Draw Cycle ==== */
+    /* End: Models */
+
+    /* Begin: Draw Cycle */
     prepareForDraw:{
-        value:function () {
+        value:function(){
             this.element.addEventListener("click", this, false);
-            this.trackID = this.parentComponent.parentComponent.parentComponent.parentComponent.trackID;
-            this.animatedElement = this.parentComponent.parentComponent.parentComponent.parentComponent.animatedElement;
+            this.timelineTrack = this.parentComponent.parentComponent.parentComponent.parentComponent;
+            this.trackID = this.timelineTrack.trackID;
+            this.animatedElement = this.timelineTrack.animatedElement;
             this.ninjaStylesContoller = this.application.ninja.stylesController;
         }
     },
 
     didDraw:{
         value:function () {
-            if (this.currentKeyframeRule) {
+            if(this.currentKeyframeRule){
                 this.retrieveStoredStyleTweens();
             }
         }
     },
-    /* ===- End Draw Cycle ==== */
 
-    /* ===- Begin Event Handlers ==== */
+    /* End: Draw Cycle */
+
+    /* Begin: Event Handlers */
+
     handleClick:{
         value:function (ev) {
+
+            var selectIndex ,
+                currentSelectedStyleIndex;
+
             if (ev.shiftKey) {
+
                 if (this.trackType == "position") {
-                    this.parentComponent.parentComponent.parentComponent.parentComponent.handleNewTween(ev);
+                    this.timelineTrack.handleNewTween(ev);
                 }
+
                 if (this.propTweens.length < 1) {
-                    var selectIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID),
-                    	currentSelectedStyleIndex = this.getCurrentSelectedStyleIndex(selectIndex);
+
+                    selectIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID);
+                    currentSelectedStyleIndex = this.getCurrentSelectedStyleIndex(selectIndex);
 
                     if (this.trackType == "style") {
-                    	if (this.application.ninja.timeline.arrLayers[selectIndex].layerData.arrLayerStyles[currentSelectedStyleIndex].editorProperty == null) {
+                        if (this.application.ninja.timeline.arrLayers[selectIndex].layerData.arrLayerStyles[currentSelectedStyleIndex].editorProperty == null) {
                             console.log("Please enter a style property for this track before adding keyframes.");
                             return;
                         } else {
@@ -213,7 +235,6 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                         this.addPropAnimationRuleToElement(ev);
                         this.updatePropKeyframeRule();
                     } else if (this.trackType == "position") {
-
                     }
                 } else {
                     this.handleNewPropTween(ev);
@@ -227,10 +248,15 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
     handleNewPropTween:{
         value:function (ev) {
+            var findXOffset,
+                targetElementOffset,
+                position;
+
             if (ev.offsetX > this.propTweens[this.propTweens.length - 1].tweenData.keyFramePosition) {
                 this.insertPropTween(ev.offsetX);
             } else {
-                var findXOffset = function (obj) {
+                // An easy function that adds up offsets and scrolls and returns the page x value of an element
+                findXOffset = function (obj) {
                     var curleft = 0;
                     if (obj.offsetParent) {
                         do {
@@ -239,55 +265,67 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                         } while (obj = obj.offsetParent);
                     }
                     return curleft;
-                }
-                var targetElementOffset = findXOffset(ev.currentTarget),
-                    position = event.pageX - targetElementOffset;
+                };
+                targetElementOffset = findXOffset(ev.currentTarget);
+                position = event.pageX - targetElementOffset;
 
                 this.splitPropTweenAt(position - 18);
             }
         }
     },
-    /* ===- End Event Handlers ==== */
 
-    /* ===- Begin Controllers ==== */
+    /* End: Event Handlers */
+
+    /* Begin: Controllers */
+
     getCurrentSelectedStyleIndex: {
-    	value: function(layerIndex) {
-    		var returnVal = false,
-    			i = 0,
-    			arrLayerStylesLength = this.application.ninja.timeline.arrLayers[layerIndex].layerData.arrLayerStyles.length;
-    		for (i = 0; i < arrLayerStylesLength; i++) {
-    			var currItem =  this.application.ninja.timeline.arrLayers[layerIndex].layerData.arrLayerStyles[i];
-    			if (currItem.isSelected === true) {
-    				returnVal = i;
-    			}
-    		}
-    		return returnVal;
-    	}
+        value: function(layerIndex) {
+            var returnVal = false,
+                i = 0,
+                arrLayerStylesLength = this.application.ninja.timeline.arrLayers[layerIndex].layerData.arrLayerStyles.length,
+                currItem;
+            for (i = 0; i < arrLayerStylesLength; i++) {
+                currItem =  this.application.ninja.timeline.arrLayers[layerIndex].layerData.arrLayerStyles[i];
+                if (currItem.isSelected === true) {
+                    returnVal = i;
+                }
+            }
+            return returnVal;
+        }
     },
 
     insertPropTween:{
         value:function(clickPos){
-            var selectedIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID);
-            // this.application.ninja.timeline.selectLayer(selectedIndex, true); // Deprecated.
-            this.application.ninja.timeline.selectLayers([selectedIndex]);
-            this.application.ninja.timeline.updateStageSelection();
+            var selectedIndex,
+                currentMillisecPerPixel,
+                currentMillisec,
+                propVal,
+                newTween;
 
-            var currentMillisecPerPixel = Math.floor(this.application.ninja.timeline.millisecondsOffset / 80);
-            var currentMillisec = currentMillisecPerPixel * clickPos;
+            selectedIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID);
+            this.application.ninja.timeline.selectLayer(selectedIndex, true);
+
+            currentMillisecPerPixel = Math.floor(this.application.ninja.timeline.millisecondsOffset / 80);
+            currentMillisec = currentMillisecPerPixel * clickPos;
             this.trackDuration = currentMillisec;
 
-            var newTween = {};
+            /* Creating a newTween Object */
+            newTween = {};
             newTween.tweenData = {};
             newTween.tweenData.tweenedProperties = [];
 
-            // TODO - check for color values vs px values and set the correct default
-            var propVal = this.ninjaStylesContoller.getElementStyle(this.animatedElement, this.trackEditorProperty);
+            /* Getting the Property Style for the animatedElement */
+
+            propVal = this.ninjaStylesContoller.getElementStyle(this.animatedElement, this.trackEditorProperty);
             if(propVal == null){
                 propVal = "1px";
             }
             newTween.tweenData.tweenedProperties[this.trackEditorProperty] = propVal;
 
             if (clickPos == 0) {
+
+                /* Setting the tweenData Properties for the first Keyframe */
+
                 newTween.tweenData.spanWidth = 0;
                 newTween.tweenData.keyFramePosition = 0;
                 newTween.tweenData.keyFrameMillisec = 0;
@@ -318,14 +356,20 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                 tweensLength = this.propTweens.length - 1,
                 prevTween,
                 nextTween,
-                splitTweenIndex;
+                splitTweenIndex,
+                newTweenToInsert;
+
+            /* Traverse through the property tweens array */
 
             for (i = 0; i < tweensLength; i++) {
                 prevTween = this.propTweens[i].tweenData.keyFramePosition;
                 nextTween = this.propTweens[i + 1].tweenData.keyFramePosition;
                 if (position > prevTween && position < nextTween) {
 
+                    /* Insert a new tween at this index */
                     splitTweenIndex = i + 1;
+
+                    /* Update the next tween to have new span position and width */
 
                     this.propTweens[i + 1].tweenData.spanPosition = position;
                     this.propTweens[i + 1].spanPosition = position;
@@ -339,7 +383,8 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                     }
                     this.propTweenRepetition.childComponents[nextComponentIndex].setData();
 
-                    var newTweenToInsert = {};
+                    /* Create a new Tween and splice it into the model */
+                    newTweenToInsert = {};
                     newTweenToInsert.tweenData = {};
                     newTweenToInsert.tweenData.spanWidth = position - prevTween;
                     newTweenToInsert.tweenData.keyFramePosition = position;
@@ -363,8 +408,21 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
     retrieveStoredStyleTweens:{
         value:function(){
-            var percentValue, fraction, splitValue;
-            var currentMilliSec, currentMilliSecPerPixel, clickPosition, tempTiming, tempTimingFloat, trackTiming, i = 0;
+            var j,k,i,percentValue,
+                fraction,
+                splitValue,
+                styleLength,
+                firstChar,
+                currProp,
+                propVal ,
+                currentMilliSec,
+                currentMilliSecPerPixel,
+                clickPosition,
+                tempTiming,
+                tempTimingFloat,
+                trackTiming,
+                keyframeStyles,
+                newTween;
 
             if (this.animatedElement !== undefined) {
                 this.animationName = this.currentKeyframeRule.name;
@@ -373,30 +431,36 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                     trackTiming = this.application.ninja.stylesController.getElementStyle(this.animatedElement, "-webkit-animation-duration");
                     this.nextKeyframe = 0;
 
+                    /* Traverse through the currentKeyFrameRule for the animatedElement */
+
                     for (i = 0; this.currentKeyframeRule[i]; i++) {
-                        var newTween = {};
+                        newTween = {};
                         newTween.tweenData = {};
 
-                        var j, styleLength = this.currentKeyframeRule[i].style.length, keyframeStyles = [];
+                        styleLength = this.currentKeyframeRule[i].style.length;
+                        keyframeStyles = [];
 
+                        /* Traversering through the style of the currentKeyFrameRule of the animatedElement */
                         for (j = 0; j < styleLength; j++) {
-                            // check for vendor prefixes and skip them for now
-                            var firstChar = this.currentKeyframeRule[i].style[j].charAt(0);
+
+                            firstChar = this.currentKeyframeRule[i].style[j].charAt(0);
                             if (firstChar === "-") {
                                 break;
                             } else {
-                                var currProp = this.currentKeyframeRule[i].style[j];
-                                var propVal = this.currentKeyframeRule[i].style[currProp];
+                                currProp = this.currentKeyframeRule[i].style[j];
+                                propVal = this.currentKeyframeRule[i].style[currProp];
                                 keyframeStyles.push([currProp, propVal]);
                             }
                         }
 
                         newTween.tweenData.tweenedProperties = [];
-                        for (var k in keyframeStyles) {
+                        for (k in keyframeStyles) {
                             newTween.tweenData.tweenedProperties[keyframeStyles[k][0]] = keyframeStyles[k][1];
                         }
 
                         if (this.currentKeyframeRule[i].keyText === "0%") {
+
+                            /* Setting the tweenData Property for only the first Keyframe */
                             newTween.tweenData.spanWidth = 0;
                             newTween.tweenData.keyFramePosition = 0;
                             newTween.tweenData.keyFrameMillisec = 0;
@@ -405,6 +469,7 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                             this.propTweens.push(newTween);
                         }
                         else {
+
                             tempTiming = trackTiming.split("s");
                             tempTimingFloat = parseFloat(tempTiming[0]);
                             this.trackDuration = tempTimingFloat * 1000;
@@ -430,15 +495,24 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
     updatePropKeyframeRule:{
         value:function(){
+            var keyframeString,
+                keyMill,
+                trackDur,
+                keyframePercent,
+                keyframePropertyString,
+                prop;
+
             this.ninjaStylesContoller.deleteRule(this.currentKeyframeRule);
-            var keyframeString = "@-webkit-keyframes " + this.animationName + " {";
-            for (var i = 0; i < this.propTweens.length; i++) {
-                var keyMill = parseInt(this.propTweens[i].tweenData.keyFrameMillisec);
-                // trackDur should be parseFloat rounded to significant digits
-                var trackDur = parseInt(this.trackDuration);
-                var keyframePercent = Math.round((keyMill / trackDur) * 100) + "%";
-                var keyframePropertyString = " " + keyframePercent + " {";
-                for(var prop in this.propTweens[i].tweenData.tweenedProperties){
+
+            // build the new keyframe string
+            keyframeString = "@-webkit-keyframes " + this.animationName + " {";
+
+            for (i = 0; i < this.propTweens.length; i++) {
+                keyMill = parseInt(this.propTweens[i].tweenData.keyFrameMillisec);
+                trackDur = parseInt(this.trackDuration);
+                keyframePercent = Math.round((keyMill / trackDur) * 100) + "%";
+                keyframePropertyString = " " + keyframePercent + " {";
+                for(prop in this.propTweens[i].tweenData.tweenedProperties){
                     keyframePropertyString += prop + ": " + this.propTweens[i].tweenData.tweenedProperties[prop] + ";";
                 }
                 keyframePropertyString += "}";
@@ -452,35 +526,49 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
     addPropAnimationRuleToElement:{
         value:function(tweenEvent){
-            var currentStyleValue = this.ninjaStylesContoller.getElementStyle(this.animatedElement, this.trackEditorProperty);
+
+            /* Adding the style property as an animation rule to the animatedElement */
+
+            var currentStyleValue,
+                currentAnimationNameString,
+                newAnimationNames,
+                currentAnimationDuration,
+                newAnimationDuration,
+                currentIterationCount,
+                newIterationCount,
+                initRule;
+
+            /* Retrieveing the current style value on the animatedElement */
+            currentStyleValue = this.ninjaStylesContoller.getElementStyle(this.animatedElement, this.trackEditorProperty);
             if (currentStyleValue == null) {
                 currentStyleValue = "1px";
             }
             this.propTweens[0].tweenData.tweenedProperties[this.trackEditorProperty] = currentStyleValue;
             this.animationName = this.animatedElement.classList[0] + "_" + this.trackEditorProperty;
-            var currentAnimationNameString = this.parentComponent.parentComponent.parentComponent.parentComponent.animationNamesString;
-            var newAnimationNames = "";
+            currentAnimationNameString = this.timelineTrack.animationNamesString;
+            newAnimationNames = "";
             if(currentAnimationNameString.length == 0){
                 newAnimationNames = this.animationName;
             } else {
                 newAnimationNames = currentAnimationNameString + "," + this.animationName;
             }
-            var currentAnimationDuration = this.ninjaStylesContoller.getElementStyle(this.animatedElement, "-webkit-animation-duration");
-            var newAnimationDuration = currentAnimationDuration + "," + currentAnimationDuration;
-            var currentIterationCount = this.ninjaStylesContoller.getElementStyle(this.animatedElement, "-webkit-animation-iteration-count");
-            var newIterationCount = currentIterationCount + ",1";
+            currentAnimationDuration = this.ninjaStylesContoller.getElementStyle(this.animatedElement, "-webkit-animation-duration");
+            newAnimationDuration = currentAnimationDuration + "," + currentAnimationDuration;
+            currentIterationCount = this.ninjaStylesContoller.getElementStyle(this.animatedElement, "-webkit-animation-iteration-count");
+            newIterationCount = currentIterationCount + ",1";
 
-            this.parentComponent.parentComponent.parentComponent.parentComponent.animationNamesString = newAnimationNames;
+            this.timelineTrack.animationNamesString = newAnimationNames;
 
             this.ninjaStylesContoller.setElementStyle(this.animatedElement, "-webkit-animation-name", newAnimationNames);
             this.ninjaStylesContoller.setElementStyle(this.animatedElement, "-webkit-animation-duration", newAnimationDuration);
             this.ninjaStylesContoller.setElementStyle(this.animatedElement, "-webkit-animation-fill-mode", "forwards");
             this.ninjaStylesContoller.setElementStyle(this.animatedElement, "-webkit-animation-iteration-count", newIterationCount);
 
-            var initRule = "@-webkit-keyframes " + this.animationName + " { 0% {" + this.trackEditorProperty + ": " + currentStyleValue + ";} 100% {" + this.trackEditorProperty + ": " + currentStyleValue + ";} }";
+            /* Creating the animation rule */
+            initRule = "@-webkit-keyframes " + this.animationName + " { 0% {" + this.trackEditorProperty + ": " + currentStyleValue + ";} 100% {" + this.trackEditorProperty + ": " + currentStyleValue + ";} }";
             this.currentKeyframeRule = this.ninjaStylesContoller.addRule(initRule);
             this.insertPropTween(tweenEvent.offsetX);
         }
     }
-    /* ===- End Controllers ==== */
+    /* End: Controllers */
 });
