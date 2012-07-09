@@ -1,97 +1,78 @@
 /* <copyright>
- This file contains proprietary software owned by Motorola Mobility, Inc.<br/>
- No rights, expressed or implied, whatsoever to this software are provided by Motorola Mobility, Inc. hereunder.<br/>
- (c) Copyright 2011 Motorola Mobility, Inc.  All Rights Reserved.
- </copyright> */
+Copyright (c) 2012, Motorola Mobility, Inc
+All Rights Reserved.
+BSD License.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+  - Redistributions of source code must retain the above copyright notice,
+    this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+  - Neither the name of Motorola Mobility nor the names of its contributors
+    may be used to endorse or promote products derived from this software
+    without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+</copyright> */
 
 var Montage = require("montage/core/core").Montage;
 var Component = require("montage/ui/component").Component;
+var Collapser = require("js/panels/Timeline/Collapser").Collapser;
 var Hintable = require("js/components/hintable.reel").Hintable;
+var LayerStyle = require("js/panels/Timeline/Style.reel").LayerStyle;
+var DynamicText = require("montage/ui/dynamic-text.reel").DynamicText;
+var defaultEventManager = require("montage/core/event/event-manager").defaultEventManager;
 var nj = require("js/lib/NJUtils").NJUtils;
 var ElementsMediator = require("js/mediators/element-mediator").ElementMediator;
 
 var Layer = exports.Layer = Montage.create(Component, {
+
+    dynamicLayerTag: {
+        value: null,
+        serializable: true
+    },
+
+    positionCollapser: {
+        value: null,
+        serializable: true
+    },
+
+    transformCollapser: {
+        value: null,
+        serializable: true
+    },
+
+    styleCollapser: {
+        value: null,
+        serializable: true
+    },
+
+    clickerMain: {
+        value: null,
+        serializable: true
+    },
+
+    myLabel: {
+        value: null,
+        serializable: true
+    },
     
     /* Begin: Models */
-
-	_dynamicLayerTag: {
-		value: null
-	},
-    dynamicLayerTag: {
-        serializable: true,
-        get: function() {
-        	return this._dynamicLayerTag;
-        },
-        set: function(newVal) {
-        	this._dynamicLayerTag = newVal;
-        }
-    },
-
-	_positionCollapser: {
-		value: null
-	},
-    positionCollapser: {
-        serializable: true,
-        get: function() {
-        	return this._positionCollapser;
-        },
-        set: function(newVal) {
-        	this._positionCollapser = newVal;
-        }
-    },
-
-	_transformCollapser: {
-		value: null
-	},
-    transformCollapser: {
-        serializable: true,
-        get: function() {
-        	return this._transformCollapser;
-        },
-        set: function(newVal) {
-        	this._transformCollapser = newVal;
-        }
-    },
-
-	_styleCollapser: {
-		value: null
-	},
-    styleCollapser: {
-        serializable: true,
-        get: function() {
-        	return this._styleCollapser;
-        },
-        set: function(newVal) {
-        	this._styleCollapser = newVal;
-        }
-    },
-
-	_clickerMain: {
-		value: null
-	},
-    clickerMain: {
-        serializable: true,
-        get: function() {
-        	return this._clickerMain;
-        },
-        set: function(newVal) {
-        	this._clickerMain = newVal;
-        }
-    },
-
-	_myLabel: {
-		value: null
-	},
-    myLabel: {
-        serializable: true,
-        get: function() {
-        	return this._myLabel;
-        },
-        set: function(newVal) {
-        	this._myLabel = newVal;
-        }
-    },
    
+	/* Main collapser model: the main collapser for the layer */
     _mainCollapser : {
     	value: false
     },
@@ -105,6 +86,7 @@ var Layer = exports.Layer = Montage.create(Component, {
         serializable: true
     },
     
+    /* Style models: the array of styles, and the repetition that uses them */
     _arrLayerStyles : {
 	    value: []
     },
@@ -117,7 +99,6 @@ var Layer = exports.Layer = Montage.create(Component, {
     		this._arrLayerStyles = newVal;
     	}
     },
-    
     _styleRepetition : {
     	value: false
     },
@@ -130,7 +111,6 @@ var Layer = exports.Layer = Montage.create(Component, {
     		this._styleRepetition = newVal;
     	}
     },
-    
     _styleCounter : {
     	value: 0
     },
@@ -143,7 +123,6 @@ var Layer = exports.Layer = Montage.create(Component, {
             this._styleCounter = newVal;
         }
     },
-    
     _selectedStyleIndex: {
     	value: false
     },
@@ -161,14 +140,15 @@ var Layer = exports.Layer = Montage.create(Component, {
     		}
     	}
     },
-    
     _storedStyleIndex : {
         value: false
     },
 
+    /* Layer models: the name, ID, and selected and animation booleans for the layer */
     _layerName:{
     	value: ""
     },
+    
     layerName:{
     	serializable: true,
         get:function(){
@@ -193,10 +173,10 @@ var Layer = exports.Layer = Montage.create(Component, {
 	    	this.needsDraw = true;
         }
     },
-    
     _layerID:{
     	value: "Default Layer ID"
     },
+
     layerID:{
     	serializable: true,
         get:function(){
@@ -247,7 +227,8 @@ var Layer = exports.Layer = Montage.create(Component, {
     		this.layerData.stageElement = newVal;
     	}
     },
-
+    
+    
     _elementsList : {
     	value: []
     },
@@ -260,10 +241,12 @@ var Layer = exports.Layer = Montage.create(Component, {
     		this._elementsList = newVal;
     	}
     },
-
+    
+    /* Position and Size hottext values */
     _dtextPositionX : {
         value:null
     },
+
     dtextPositionX:{
     	serializable: true,
         get:function(){
@@ -280,6 +263,7 @@ var Layer = exports.Layer = Montage.create(Component, {
     _dtextPositionY : {
         value:null
     },
+
     dtextPositionY:{
     	serializable: true,
         get:function(){
@@ -297,6 +281,7 @@ var Layer = exports.Layer = Montage.create(Component, {
     _dtextScaleX : {
         value:null
     },
+
     dtextScaleX:{
     	serializable: true,
         get:function(){
@@ -314,6 +299,7 @@ var Layer = exports.Layer = Montage.create(Component, {
     _dtextScaleY : {
         value:null
     },
+
     dtextScaleY:{
     	serializable: true,
         get:function(){
@@ -328,9 +314,11 @@ var Layer = exports.Layer = Montage.create(Component, {
         }
     },
     
+    /* isSelected: whether or not the layer is currently selected. */
     _isSelected:{
         value: false
     },
+
     isSelected:{
         get:function(){
             return this._isSelected;
@@ -354,6 +342,9 @@ var Layer = exports.Layer = Montage.create(Component, {
         }
     },
     
+    /* isActive:  Whether or not the user is actively clicking within the layer; used to communicate state with
+     * TimelinePanel.
+     */
     _isActive: {
     	value: false
     },
@@ -368,9 +359,11 @@ var Layer = exports.Layer = Montage.create(Component, {
     	}
     },
     
+    
     _isAnimated:{
         value: false
     },
+
     isAnimated:{
         get:function(){
             return this._isAnimated;
@@ -380,10 +373,10 @@ var Layer = exports.Layer = Montage.create(Component, {
             this.layerData.isAnimated = value;
         }
     },
-    
     _isVisible:{
         value: true
     },
+
     isVisible:{
         get:function(){
             return this._isVisible;
@@ -404,6 +397,7 @@ var Layer = exports.Layer = Montage.create(Component, {
     _isLock:{
         value: false
     },
+
     isLock:{
         get:function(){
             return this._isLock;
@@ -411,14 +405,16 @@ var Layer = exports.Layer = Montage.create(Component, {
         set:function(value){
             if (this._isLock !== value) {
                 this._isLock = value;
-				this.layerData.isLock = value;
+
             }
+            this.layerData.isLock = value;
         }
     },
 
     _isHidden:{
         value: false
     },
+
     isHidden:{
         get:function(){
             return this._isHidden;
@@ -426,8 +422,9 @@ var Layer = exports.Layer = Montage.create(Component, {
         set:function(value){
             if (this._isHidden !== value) {
                 this._isHidden = value;
-				this.layerData._isHidden = value;
+
             }
+            this.layerData._isHidden = value;
         }
     },
 
@@ -464,6 +461,7 @@ var Layer = exports.Layer = Montage.create(Component, {
     	set: function(newVal) {
 			this._isMainCollapsed = newVal;
 			this.layerData.isMainCollapsed = newVal;
+
     	}
     },
     
@@ -494,7 +492,6 @@ var Layer = exports.Layer = Montage.create(Component, {
 			this.layerData.isStyleCollapsed = newVal;
     	}
     },
-    
     _bypassAnimation : {
     	value: false
     },
@@ -519,6 +516,7 @@ var Layer = exports.Layer = Montage.create(Component, {
     _layerData:{
         value:{}
     },
+
     layerData:{
     	serializable: true,
         get:function(){
@@ -605,7 +603,7 @@ var Layer = exports.Layer = Montage.create(Component, {
         	// Initialize myself
 			this.init();
 			
-        	// Make it editable
+        	// Make it editable!
         	this._layerEditable = Hintable.create();
         	this._layerEditable.element = this.titleSelector;
         	this.titleSelector.identifier = "selectorEditable";
@@ -638,7 +636,6 @@ var Layer = exports.Layer = Montage.create(Component, {
 			this.element.addEventListener("dragstart", this.handleDragstart.bind(this), false);
 			this.element.addEventListener("drop", this.handleDrop.bind(this), false);
 
-			// Register event handler for element change
             this.eventManager.addEventListener("elementChange",this,false);
 
             this.leftControl.identifier = "left";
@@ -667,16 +664,17 @@ var Layer = exports.Layer = Montage.create(Component, {
 
     draw: {
     	value: function() {
-    		// Update layer selection?
     		var boolHasClass = this.element.classList.contains("layerSelected");
             if (this.isSelected && !boolHasClass) {
+            	//console.log('Layer.draw, adding selection for layer ', this.layerName)
             	this.element.classList.add("layerSelected");
             	
             }
 			if (!this.isSelected && boolHasClass) {
+            	//console.log('Layer.draw, removing selection for layer ', this.layerName)
             	this.element.classList.remove("layerSelected");
             }
-            // then enable or disable the delete style button as appropriate
+            // Enable or disable the delete style button as appropriate
             if (this.isSelected) {
             	if (this.selectedStyleIndex !== false) {
             		this.selectStyle(this.selectedStyleIndex);
@@ -694,8 +692,8 @@ var Layer = exports.Layer = Montage.create(Component, {
     },
     didDraw: {
     	value: function() {
+    		// console.log("Layer.didDraw: Layer "+ this.layerID );
     		if (this._isFirstDraw === true) {
-    			// First draw of layer since instantiation; collapse/expand things as needed.
     			this._isFirstDraw = false;
     			this.layerData._isFirstDraw = false;
 	    		
@@ -714,12 +712,15 @@ var Layer = exports.Layer = Montage.create(Component, {
 					this.styleCollapser.myContent.classList.remove(this.styleCollapser.collapsedClass);
 					this.styleCollapser.clicker.classList.remove(this.styleCollapser.collapsedClass);
 	    		}
+    			
     		}
     	}
     },
 	/* End: Draw cycle */
 	
 	/* Begin: Controllers */
+	
+	// Initialize a just-created layer
 	init: {
 		value: function() {
 			// Get some selectors.
@@ -729,22 +730,28 @@ var Layer = exports.Layer = Montage.create(Component, {
         	this.buttonDeleteStyle = this.element.querySelector(".button-delete");
 		}
 	},
-	
 	addStyle : {
 		value: function(styleProperty, existingRule) {
 			// Add a new style rule.  It should be added above the currently selected rule, 
 			// Or at the end, if no rule is selected.
 
 			var newLength = 0, 
+				// mySelection = 0,
+				// newStyle = LayerStyle.create(),
 				newStyle = {},
 				newEvent = document.createEvent("CustomEvent");
-
+			/*
+			this.isStyleCollapsed = false;
+			this.layerData.isStyleCollapsed = false;
+			this.triggerOutgoingBinding();
+			*/
+			
 			newEvent.initCustomEvent("layerEvent", false, true);
 			newEvent.layerEventLocale = "styles";
 			newEvent.layerEventType = "newStyle";
 			newEvent.layerID = this.layerID;
             newEvent.styleIndex = this.styleCounter;
-			newEvent.styleID = this.layerID + "@" + this.styleCounter;
+			newEvent.styleID = this.layerID + "@" + this.styleCounter; // is this property needed?
 			
 			newStyle.styleID = newEvent.styleID;
 			newStyle.whichView = "hintable";
@@ -766,6 +773,8 @@ var Layer = exports.Layer = Montage.create(Component, {
 
 			// Set up the event info and dispatch the event
             this.styleCounter += 1;
+			// newEvent.styleSelection = mySelection;
+			//defaultEventManager.dispatchEvent(newEvent);
 			
 			// Dispatch the event to the TimelineTrack component associated with this Layer.
 			var myIndex = false,
@@ -787,6 +796,7 @@ var Layer = exports.Layer = Montage.create(Component, {
 
 	deleteStyle : {
 		value: function() {
+		
 			// Only delete a style if we have one or more styles, and one of them is selected
 			if ((this.arrLayerStyles.length > 0) && (this.selectedStyleIndex !== false)) {
 				var newEvent = document.createEvent("CustomEvent");
@@ -818,7 +828,6 @@ var Layer = exports.Layer = Montage.create(Component, {
 			}	
 		}
 	},
-	
 	selectStyle : {
 		value: function(styleIndex) {
     		// Select a style based on its index.
@@ -849,9 +858,24 @@ var Layer = exports.Layer = Montage.create(Component, {
                 this.selectedStyleIndex = styleIndex;
                 this._storedStyleIndex = styleIndex;
             }
+            
+            
+            
+    		/*
+    		// Next, update this.styleRepetition.selectedIndexes.
+    		if (styleIndex !== false) {
+    			//this.styleRepetition.selectedIndexes = [styleIndex];
+    			this.buttonDeleteStyle.classList.remove("disabled");
+    		} else {
+    			//this.styleRepetition.selectedIndexes = null;
+    			if (typeof(this.buttonDeleteStyle) !== "undefined") {
+    				this.buttonDeleteStyle.classList.add("disabled");
+    			}
+    		}
+    		*/
+			
 		}
 	},
-	
     getActiveStyleIndex : {
     	value: function() {
     		// Searches through the styles and looks for one that has
@@ -1046,25 +1070,28 @@ var Layer = exports.Layer = Montage.create(Component, {
 
     handleLeftChange: {
         value: function(event) {
+            var prevPosition;
+            if(this.application.ninja.timeline.selectedStyle==="left" ||this.application.ninja.timeline.selectedStyle==="master" ){
+                if(!event.wasSetByCode) {
+                    if(this.savedPosition) prevPosition = [this.savedPosition + "px"];
+                        this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "left", [this.leftControl.value + "px"] , "Change", "timeline", prevPosition);
+                        this.savedPosition = null;
+                }
 
-        var prevPosition;
-            if(!event.wasSetByCode) {
-                if(this.savedPosition) prevPosition = [this.savedPosition + "px"];
-                    this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "left", [this.leftControl.value + "px"] , "Change", "timeline", prevPosition);
-                    this.savedPosition = null;
             }
         }
     },
 
     handleTopChange: {
         value: function(event) {
-        var prevPosition;
+            var prevPosition;
+            if(this.application.ninja.timeline.selectedStyle==="top" ||this.application.ninja.timeline.selectedStyle==="master" ){
+                if(!event.wasSetByCode) {
+                    if(this.savedPosition) prevPosition = [this.savedPosition + "px"];
 
-            if(!event.wasSetByCode) {
-                if(this.savedPosition) prevPosition = [this.savedPosition + "px"];
-
-                this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "top", [this.topControl.value + "px"] , "Change", "timeline", prevPosition);
-                this.savedPosition = null;
+                    this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "top", [this.topControl.value + "px"] , "Change", "timeline", prevPosition);
+                    this.savedPosition = null;
+                }
             }
         }
     },
@@ -1072,12 +1099,13 @@ var Layer = exports.Layer = Montage.create(Component, {
     handleWidthChange:{
         value: function(event) {
             var prevPosition;
+            if(this.application.ninja.timeline.selectedStyle==="width" ||this.application.ninja.timeline.selectedStyle==="master" ){
+                if(!event.wasSetByCode) {
+                    if(this.savedPosition) prevPosition = [this.savedPosition + "px"];
 
-            if(!event.wasSetByCode) {
-                if(this.savedPosition) prevPosition = [this.savedPosition + "px"];
-
-                this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "width", [this.dtextScaleX + "px"] , "Change", "timeline", prevPosition);
-                this.savedPosition = null;
+                    this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "width", [this.dtextScaleX + "px"] , "Change", "timeline", prevPosition);
+                    this.savedPosition = null;
+                }
             }
         }
     },
@@ -1085,12 +1113,13 @@ var Layer = exports.Layer = Montage.create(Component, {
     handleHeightChange:{
         value: function(event) {
             var prevPosition;
+            if(this.application.ninja.timeline.selectedStyle==="height" ||this.application.ninja.timeline.selectedStyle==="master" ){
+                if(!event.wasSetByCode) {
+                    if(this.savedPosition) prevPosition = [this.savedPosition + "px"];
 
-            if(!event.wasSetByCode) {
-                if(this.savedPosition) prevPosition = [this.savedPosition + "px"];
-
-                this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "height", [this.dtextScaleY + "px"] , "Change", "timeline", prevPosition);
-                this.savedPosition = null;
+                    this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "height", [this.dtextScaleY + "px"] , "Change", "timeline", prevPosition);
+                    this.savedPosition = null;
+                }
             }
         }
     },
@@ -1098,9 +1127,11 @@ var Layer = exports.Layer = Montage.create(Component, {
     handleLeftChanging: {
         value: function(event) {
 
-            if(!event.wasSetByCode) {
-                if(!this.savedPosition) this.savedPosition = this.leftPosition;
-                this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "left", [this.leftControl.value + "px"] , "Changing", "timeline");
+            if(this.application.ninja.timeline.selectedStyle==="left" ||this.application.ninja.timeline.selectedStyle==="master" ){
+                if(!event.wasSetByCode) {
+                    if(!this.savedPosition) this.savedPosition = this.leftPosition;
+                    this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "left", [this.leftControl.value + "px"] , "Changing", "timeline");
+                }
             }
 
         }
@@ -1108,31 +1139,37 @@ var Layer = exports.Layer = Montage.create(Component, {
 
     handleTopChanging: {
         value: function(event) {
-
-            if(!event.wasSetByCode) {
-                if(!this.savedPosition) this.savedPosition = this.topPosition;
-                this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "top", [this.topControl.value + "px"] , "Changing", "timeline");
+            if(this.application.ninja.timeline.selectedStyle==="top" ||this.application.ninja.timeline.selectedStyle==="master" ){
+                if(!event.wasSetByCode) {
+                    if(!this.savedPosition) this.savedPosition = this.topPosition;
+                    this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "top", [this.topControl.value + "px"] , "Changing", "timeline");
+                }
             }
+
         }
     },
 
     handleWidthChanging:{
         value: function(event) {
-
-            if(!event.wasSetByCode) {
-                if(!this.savedPosition) this.savedPosition = this.dtextScaleX;
-                this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "width", [this.dtextScaleX + "px"] , "Changing", "timeline");
+            if(this.application.ninja.timeline.selectedStyle==="width" ||this.application.ninja.timeline.selectedStyle==="master" ){
+                if(!event.wasSetByCode) {
+                    if(!this.savedPosition) this.savedPosition = this.dtextScaleX;
+                    this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "width", [this.dtextScaleX + "px"] , "Changing", "timeline");
+                }
             }
+
         }
     },
 
     handleHeightChanging:{
         value: function(event) {
-
-            if(!event.wasSetByCode) {
-                if(!this.savedPosition) this.savedPosition = this.dtextScaleY;
-                this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "height", [this.dtextScaleY + "px"] , "Changing", "timeline");
+            if(this.application.ninja.timeline.selectedStyle==="height" ||this.application.ninja.timeline.selectedStyle==="master" ){
+                if(!event.wasSetByCode) {
+                    if(!this.savedPosition) this.savedPosition = this.dtextScaleY;
+                    this.application.ninja.elementMediator.setProperty([this.layerData.stageElement], "height", [this.dtextScaleY + "px"] , "Changing", "timeline");
+                }
             }
+
         }
     },
 
@@ -1333,7 +1370,41 @@ var Layer = exports.Layer = Montage.create(Component, {
             this.layerData.isHidden = !this.layerData.isHidden;
 
         }
+    },
+
+
+	/* End: Event handlers */
+	
+	/* Begin: Logging routines */
+    _boolDebug: {
+    	enumerable: false,
+    	value: false // set to true to enable debugging to console; false for turning off all debugging.
+    },
+    boolDebug: {
+    	get: function() {
+    		return this._boolDebug;
+    	},
+    	set: function(boolDebugSwitch) {
+    		this._boolDebug = boolDebugSwitch;
+    	}
+    },
+    log: {
+    	value: function(strMessage) {
+    		if (this.boolDebug) {
+    			console.log(this.getLineNumber() + ": " + strMessage);
+    		}
+    	}
+    },
+    getLineNumber: {
+    	value: function() {
+			try {
+			   throw new Error('bazinga')
+			}catch(e){
+				return e.stack.split("at")[3].split(":")[2];
+			}
+    	}
     }
 
-	/* End: Event handlers */
+	/* End: Event handlers */
+
 });
