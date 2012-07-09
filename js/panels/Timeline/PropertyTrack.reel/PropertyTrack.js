@@ -9,10 +9,12 @@ var Component = require("montage/ui/component").Component;
 
 var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
-    /* Begin: Models */
+
     hasTemplate:{
         value: true
     },
+
+    /* Begin: Models */
 
     _propTweenRepetition:{
         value:null
@@ -283,9 +285,12 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
             currentMillisec = currentMillisecPerPixel * clickPos;
             this.trackDuration = currentMillisec;
 
+            /* Creating a newTween Object */
             newTween = {};
             newTween.tweenData = {};
             newTween.tweenData.tweenedProperties = [];
+
+            /* Getting the Property Style for the animatedElement */
 
             propVal = this.ninjaStylesContoller.getElementStyle(this.animatedElement, this.trackEditorProperty);
             if(propVal == null){
@@ -294,6 +299,9 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
             newTween.tweenData.tweenedProperties[this.trackEditorProperty] = propVal;
 
             if (clickPos == 0) {
+
+                /* Setting the tweenData Properties for the first Keyframe */
+
                 newTween.tweenData.spanWidth = 0;
                 newTween.tweenData.keyFramePosition = 0;
                 newTween.tweenData.keyFrameMillisec = 0;
@@ -327,12 +335,17 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                 splitTweenIndex,
                 newTweenToInsert;
 
+            /* Traverse through the property tweens array */
+
             for (i = 0; i < tweensLength; i++) {
                 prevTween = this.propTweens[i].tweenData.keyFramePosition;
                 nextTween = this.propTweens[i + 1].tweenData.keyFramePosition;
                 if (position > prevTween && position < nextTween) {
 
+                    /* Insert a new tween at this index */
                     splitTweenIndex = i + 1;
+
+                    /* Update the next tween to have new span position and width */
 
                     this.propTweens[i + 1].tweenData.spanPosition = position;
                     this.propTweens[i + 1].spanPosition = position;
@@ -346,6 +359,7 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                     }
                     this.propTweenRepetition.childComponents[nextComponentIndex].setData();
 
+                    /* Create a new Tween and splice it into the model */
                     newTweenToInsert = {};
                     newTweenToInsert.tweenData = {};
                     newTweenToInsert.tweenData.spanWidth = position - prevTween;
@@ -393,12 +407,15 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                     trackTiming = this.application.ninja.stylesController.getElementStyle(this.animatedElement, "-webkit-animation-duration");
                     this.nextKeyframe = 0;
 
+                    /* Traverse through the currentKeyFrameRule for the animatedElement */
+
                     for (i = 0; this.currentKeyframeRule[i]; i++) {
                         newTween = {};
                         newTween.tweenData = {};
 
                         styleLength = this.currentKeyframeRule[i].style.length, keyframeStyles = [];
 
+                        /* Traversering through the style of the currentKeyFrameRule of the animatedElement */
                         for (j = 0; j < styleLength; j++) {
 
                             firstChar = this.currentKeyframeRule[i].style[j].charAt(0);
@@ -417,6 +434,8 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                         }
 
                         if (this.currentKeyframeRule[i].keyText === "0%") {
+
+                            /* Setting the tweenData Property for only the first Keyframe */
                             newTween.tweenData.spanWidth = 0;
                             newTween.tweenData.keyFramePosition = 0;
                             newTween.tweenData.keyFrameMillisec = 0;
@@ -425,6 +444,7 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                             this.propTweens.push(newTween);
                         }
                         else {
+
                             tempTiming = trackTiming.split("s");
                             tempTimingFloat = parseFloat(tempTiming[0]);
                             this.trackDuration = tempTimingFloat * 1000;
@@ -481,6 +501,9 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
     addPropAnimationRuleToElement:{
         value:function(tweenEvent){
+
+            /* Adding the style property as an animation rule to the animatedElement */
+
             var currentStyleValue,
                 currentAnimationNameString,
                 newAnimationNames,
@@ -490,6 +513,7 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                 newIterationCount,
                 initRule;
 
+            /* Retrieveing the current style value on the animatedElement */
             currentStyleValue = this.ninjaStylesContoller.getElementStyle(this.animatedElement, this.trackEditorProperty);
             if (currentStyleValue == null) {
                 currentStyleValue = "1px";
@@ -515,6 +539,7 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
             this.ninjaStylesContoller.setElementStyle(this.animatedElement, "-webkit-animation-fill-mode", "forwards");
             this.ninjaStylesContoller.setElementStyle(this.animatedElement, "-webkit-animation-iteration-count", newIterationCount);
 
+            /* Creating the animation rule */
             initRule = "@-webkit-keyframes " + this.animationName + " { 0% {" + this.trackEditorProperty + ": " + currentStyleValue + ";} 100% {" + this.trackEditorProperty + ": " + currentStyleValue + ";} }";
             this.currentKeyframeRule = this.ninjaStylesContoller.addRule(initRule);
             this.insertPropTween(tweenEvent.offsetX);
