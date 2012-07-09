@@ -9,6 +9,7 @@ var Component = require("montage/ui/component").Component;
 
 var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
+    /* Begin: Models */
     hasTemplate:{
         value: true
     },
@@ -155,6 +156,9 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
         }
     },
 
+    /* End: Models */
+
+    /* Begin: Draw Cycle */
     prepareForDraw:{
         value:function(){
             this.element.addEventListener("click", this, false);
@@ -173,10 +177,16 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
         }
     },
 
+    /* End: Draw Cycle */
+
+    /* Begin: Event Handlers */
+
     handleClick:{
         value:function (ev) {
 
-            var selectIndex , currentSelectedStyleIndex;
+            var selectIndex ,
+                currentSelectedStyleIndex;
+
             if (ev.shiftKey) {
 
                 if (this.trackType == "position") {
@@ -212,7 +222,10 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
     handleNewPropTween:{
         value:function (ev) {
-            var findXOffset, targetElementOffset, position;
+            var findXOffset,
+                targetElementOffset,
+                position;
+
             if (ev.offsetX > this.propTweens[this.propTweens.length - 1].tweenData.keyFramePosition) {
                 this.insertPropTween(ev.offsetX);
             } else {
@@ -235,6 +248,10 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
         }
     },
 
+    /* End: Event Handlers */
+
+    /* Begin: Controllers */
+
     getCurrentSelectedStyleIndex: {
         value: function(layerIndex) {
             var returnVal = false,
@@ -253,7 +270,12 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
     insertPropTween:{
         value:function(clickPos){
-            var selectedIndex, currentMillisecPerPixel, currentMillisec, propVal
+            var selectedIndex,
+                currentMillisecPerPixel,
+                currentMillisec,
+                propVal,
+                newTween;
+
             selectedIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID);
             this.application.ninja.timeline.selectLayer(selectedIndex, true);
 
@@ -261,7 +283,7 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
             currentMillisec = currentMillisecPerPixel * clickPos;
             this.trackDuration = currentMillisec;
 
-            var newTween = {};
+            newTween = {};
             newTween.tweenData = {};
             newTween.tweenData.tweenedProperties = [];
 
@@ -302,7 +324,8 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                 tweensLength = this.propTweens.length - 1,
                 prevTween,
                 nextTween,
-                splitTweenIndex;
+                splitTweenIndex,
+                newTweenToInsert;
 
             for (i = 0; i < tweensLength; i++) {
                 prevTween = this.propTweens[i].tweenData.keyFramePosition;
@@ -323,7 +346,7 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                     }
                     this.propTweenRepetition.childComponents[nextComponentIndex].setData();
 
-                    var newTweenToInsert = {};
+                    newTweenToInsert = {};
                     newTweenToInsert.tweenData = {};
                     newTweenToInsert.tweenData.spanWidth = position - prevTween;
                     newTweenToInsert.tweenData.keyFramePosition = position;
@@ -347,8 +370,21 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
     retrieveStoredStyleTweens:{
         value:function(){
-            var percentValue, fraction, splitValue, styleLength, firstChar, currProp, propVal ;
-            var currentMilliSec, currentMilliSecPerPixel, clickPosition, tempTiming, tempTimingFloat, trackTiming, j, k, i = 0;
+            var j,k,i,percentValue,
+                fraction,
+                splitValue,
+                styleLength,
+                firstChar,
+                currProp,
+                propVal ,
+                currentMilliSec,
+                currentMilliSecPerPixel,
+                clickPosition,
+                tempTiming,
+                tempTimingFloat,
+                trackTiming,
+                keyframeStyles,
+                newTween;
 
             if (this.animatedElement !== undefined) {
                 this.animationName = this.currentKeyframeRule.name;
@@ -358,7 +394,7 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                     this.nextKeyframe = 0;
 
                     for (i = 0; this.currentKeyframeRule[i]; i++) {
-                        var newTween = {};
+                        newTween = {};
                         newTween.tweenData = {};
 
                         styleLength = this.currentKeyframeRule[i].style.length, keyframeStyles = [];
@@ -414,6 +450,13 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
     updatePropKeyframeRule:{
         value:function(){
+            var keyframeString,
+                keyMill,
+                trackDur,
+                keyframePercent,
+                keyframePropertyString,
+                prop;
+
             this.ninjaStylesContoller.deleteRule(this.currentKeyframeRule);
 
             // build the new keyframe string
@@ -438,8 +481,14 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
 
     addPropAnimationRuleToElement:{
         value:function(tweenEvent){
-            var currentStyleValue, currentAnimationNameString, newAnimationNames, currentAnimationDuration, newAnimationDuration, currentIterationCount;
-            var newIterationCount, initRule;
+            var currentStyleValue,
+                currentAnimationNameString,
+                newAnimationNames,
+                currentAnimationDuration,
+                newAnimationDuration,
+                currentIterationCount,
+                newIterationCount,
+                initRule;
 
             currentStyleValue = this.ninjaStylesContoller.getElementStyle(this.animatedElement, this.trackEditorProperty);
             if (currentStyleValue == null) {
@@ -471,5 +520,5 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
             this.insertPropTween(tweenEvent.offsetX);
         }
     }
-    /* ===- End Controllers ==== */
+    /* End: Controllers */
 });

@@ -13,7 +13,7 @@ var Span = exports.Span = Montage.create(Component, {
         value: true
     },
 
-	// BEGIN: Models
+	/* Begin: Models */
     _spanWidth:{
         value:0
     },
@@ -79,8 +79,10 @@ var Span = exports.Span = Montage.create(Component, {
     		}
     	}
     },
+
+    /* End: Models */
 	
-	// BEGIN: draw cycle
+	/* Begin: Draw Cycle */
 	prepareForDraw: {
 		value: function() {
 			this.init();
@@ -89,7 +91,9 @@ var Span = exports.Span = Montage.create(Component, {
 	
     draw:{
         value: function(){
-            var containerWidth , choiceWidth;
+            var containerWidth ,
+                choiceWidth;
+
             this.element.style.width = this.spanWidth + "px";
 
             if ((this.spanWidth <= 70) && (this.spanWidth >0)) {
@@ -123,18 +127,9 @@ var Span = exports.Span = Montage.create(Component, {
         }
     },
 
-	// BEGIN: Controllers
-	init: {
-		value: function() {
-			this.easing_choice.addEventListener("click", this.handleEasingChoiceClick.bind(this), false);
-		}
-	},
-	
-    highlightSpan:{
-        value: function(){
-            this.isHighlighted = true;
-        }
-    },
+    /* End: Draw Cycle */
+
+    /* Begin : Event Handlers */
     
     handleEasingChoiceClick: {
     	value: function(event) {
@@ -181,9 +176,27 @@ var Span = exports.Span = Montage.create(Component, {
     		this.hideEasingMenu();
     	}
     },
+
+    /* End : Event Handlers */
+
+    /* Begin: Controllers */
+    init: {
+        value: function() {
+            this.easing_choice.addEventListener("click", this.handleEasingChoiceClick.bind(this), false);
+        }
+    },
+
+    highlightSpan:{
+        value: function(){
+            this.isHighlighted = true;
+        }
+    },
+
     hideEasingMenu: {
     	value: function() {
     		this.application.ninja.timeline.easingMenu.hide();
     	}
     }
+
+    /* End : Controllers */
 });
