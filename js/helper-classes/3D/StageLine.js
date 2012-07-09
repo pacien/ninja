@@ -9,6 +9,7 @@ No rights, expressed or implied, whatsoever to this software are provided by Mot
 //      The line class represents a line intersected with all planes on the scene
 ///////////////////////////////////////////////////////////////////////
 var vecUtils = require("js/helper-classes/3D/vec-utils").VecUtils;
+var viewUtils = require( "js/helper-classes/3D/view-utils").ViewUtils;
 var LinePlaneIntersectRec = require("js/helper-classes/3D/LinePlaneIntersectRec").LinePlaneIntersectRec;
 
 var StageLine = exports.StageLine = Object.create(Object.prototype, {
@@ -109,6 +110,7 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
 							// determine if the intersection is on a front side (no intersection) of the polygons
 							//var ctr = [ 0.5*(boundaryPts[0][0] + boundaryPts[2][0]),  0.5*(boundaryPts[0][1] + boundaryPts[2][1]),  0.5*(boundaryPts[0][2] + boundaryPts[2][2]) ];
 							//var vec = vecUtils.vecSubtract(3, pt, ctr );
+							this.edgeIsFrontFacing2( plane   );
 							if ( !this.edgeIsFrontFacing(boundaryPts, planeEq, plane.isBackFacing(), onEdge[0], onEdge[1]) )
 							{
 								// take the dot product between the line and the normal to the plane
@@ -187,6 +189,15 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
 					}
 				}
 			}
+		}
+	},
+
+	edgeIsFrontFacing2:
+	{
+		value: function( plane )
+		{
+			var elt = plane._elt;
+			var bounds = viewUtils.getElementViewBounds3D( elt );
 		}
 	},
 
