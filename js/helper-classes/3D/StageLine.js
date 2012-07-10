@@ -240,8 +240,9 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
             }
 
             // boundary points (line points: lPt0, lPt1)
-            var bPt0, bPt1, bPt2, bVec, bVec0, bVec1, lVec;
+            var bPt0, bPt1, bPt2, bVec, bVec0, bVec1, lVec, d;
 
+            var planeEq = plane.getPlaneEq();
             if (MathUtils.fpSign(t) == 0)
             {
                 // get the 3 relevant points.  The line goes through pt1.
@@ -260,6 +261,9 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
 					rtnVal = true;
 				else if (plane.isBackFacing() && (MathUtils.fpSign(c0) > 0) && (MathUtils.fpSign(c1) > 0))
 					rtnVal = true;
+
+                d = vecUtils.vecDot(3, lPt1, planeEq) + planeEq[3];
+                if (rtnVal && (MathUtils.fpSign(d) > 0))  rtnVal = false;
             }
             else
             {
@@ -268,13 +272,12 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
                 bVec = vecUtils.vecSubtract(3, bPt1, bPt0);
                 lVec = vecUtils.vecSubtract(3, lPt1, lPt0);
 
-                var planeEq = plane.getPlaneEq();
+                var backFacing = plane.isBackFacing();
                 var bNormal = vecUtils.vecCross(3, planeEq, bVec);
                 var dot = vecUtils.vecDot(3, bNormal, lVec);
-                if (MathUtils.fpSign(dot) < 0)
+                if ((!backFacing && (MathUtils.fpSign(dot) < 0)) || (backFacing && (MathUtils.fpSign(dot) > 0)))
                 {
-                    var d = vecUtils.vecDot(3, lPt1, planeEq) + planeEq[3];
-                    if (plane.isBackFacing())  d = -d;
+                    d = vecUtils.vecDot(3, lPt1, planeEq) + planeEq[3];
                     if (MathUtils.fpSign(d) < 0)  rtnVal = true;
                 }
             }
