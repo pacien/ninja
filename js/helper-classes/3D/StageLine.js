@@ -273,7 +273,7 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
                 lVec = vecUtils.vecSubtract(3, lPt1, lPt0);
 
                 var backFacing = plane.isBackFacing();
-                var bNormal = vecUtils.vecCross(3, planeEq, bVec);
+                var bNormal = vecUtils.vecCross(3, [0,0,1], bVec);
                 var dot = vecUtils.vecDot(3, bNormal, lVec);
                 if ((!backFacing && (MathUtils.fpSign(dot) < 0)) || (backFacing && (MathUtils.fpSign(dot) > 0)))
                 {
