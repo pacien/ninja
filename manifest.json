@@ -8,6 +8,7 @@
     }
   },
   "icons": {
+    "16": "ninja_icon_16.png",
     "128": "ninja_icon_128.png"
   },
   "permissions": [
@@ -15,7 +16,7 @@
     "notifications",
     "webRequest",
     "webRequestBlocking",
-    "http://ninja/*",
+    "http://tetsubo.org/*",
     "clipboardRead",
     "clipboardWrite"
   ],
@@ -25,6 +26,5 @@
     }
   },
   "minimum_chrome_version": "20.0.1132.47",
-  "offline_enabled": true,
-  "update_url": "http://ninjateam.am.mot.com/NinjaApp/update.xml"
+  "offline_enabled": true
 }
