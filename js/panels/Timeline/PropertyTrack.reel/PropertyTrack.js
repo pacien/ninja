@@ -192,6 +192,7 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
             this.trackID = this.timelineTrack.trackID;
             this.animatedElement = this.timelineTrack.animatedElement;
             this.ninjaStylesContoller = this.application.ninja.stylesController;
+            this.eventManager.addEventListener("tlZoomSlider", this, false);
         }
     },
 
@@ -274,6 +275,45 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
         }
     },
 
+    handleTlZoomSlider: {
+        value: function(event) {
+
+            var currentMilliSecPerPixel , currentMilliSec , clickPos,thingToPush;
+            var i = 0,
+                tweensLength = this.propTweens.length;
+
+            for (i = 0; i < tweensLength; i++) {
+
+                if (i === 0) {
+                    // Exception: 0th item does not depend on anything
+                    // If 0th tween is draggable, this will need to be fixed.
+                    this.propTweens[i].tweenData.spanWidth=0;
+                    this.propTweens[i].tweenData.spanPosition=0;
+                    this.propTweens[i].tweenData.keyFramePosition=0;
+                    this.propTweens[i].tweenData.keyFrameMillisec=0;
+
+                } else {
+                    var prevKeyFramePosition = this.propTweens[i - 1].tweenData.keyFramePosition,
+                        myObj = {},
+                        thing = {};
+
+                    currentMilliSecPerPixel = Math.floor(this.application.ninja.timeline.millisecondsOffset / 80);
+                    currentMilliSec = this.propTweens[i].tweenData.keyFrameMillisec;
+                    clickPos = currentMilliSec / currentMilliSecPerPixel;
+
+                    for (thing in this.propTweens[i].tweenData) {
+                        myObj[thing] = this.propTweens[i].tweenData[thing];
+                    }
+                    myObj.spanWidth = clickPos - prevKeyFramePosition;
+                    myObj.keyFramePosition = clickPos;
+                    myObj.spanPosition = clickPos - (clickPos - prevKeyFramePosition);
+
+                    this.propTweens[i].tweenData = myObj;
+                }
+            }
+        }
+    },
+
     /* End: Event Handlers */
 
     /* Begin: Controllers */
@@ -303,7 +343,7 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                 newTween;
 
             selectedIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID);
-            this.application.ninja.timeline.selectLayer(selectedIndex, true);
+            this.application.ninja.timeline.selectLayers([selectedIndex]);
 
             currentMillisecPerPixel = Math.floor(this.application.ninja.timeline.millisecondsOffset / 80);
             currentMillisec = currentMillisecPerPixel * clickPos;
