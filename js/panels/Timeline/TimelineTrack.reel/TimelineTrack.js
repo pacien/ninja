@@ -645,7 +645,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
 	            var selectedIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID);
 	            // this.application.ninja.timeline.selectLayer(selectedIndex, true); // deprecated
 	            this.application.ninja.timeline.selectLayers([selectedIndex]);
-	            this.application.ninja.timeine.updateStageSelection();
+	            this.application.ninja.timeline.updateStageSelection();
                 if (this.tweens.length < 1) {
                     this.insertTween(0);
                     this.addAnimationRuleToElement(ev);

@@ -303,7 +303,7 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
                 newTween;
 
             selectedIndex = this.application.ninja.timeline.getLayerIndexByID(this.trackID);
-            this.application.ninja.timeline.selectLayer(selectedIndex, true);
+            this.application.ninja.timeline.selectLayers([selectedIndex]);
 
             currentMillisecPerPixel = Math.floor(this.application.ninja.timeline.millisecondsOffset / 80);
             currentMillisec = currentMillisecPerPixel * clickPos;
