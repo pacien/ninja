@@ -19,7 +19,7 @@ If you're already familiar with using Git, GitHub, you can clone master branch o
 3.  In the Chrome browser, go to chrome://chrome/extensions/
 4.  Turn on Developer mode.
 5.  Load unpacked extension... and browse to your cloned master branch.
-6.  Copy Ninja app ID.
+6.  Copy Ninja app ID from the Extensions page under the app name.
 7. On Windows:
     Click Start menu icon and type regedit
     Browse to HKEY_CURRENT_USER/Software/Motorola Mobility/Ninja Local Cloud/Options
