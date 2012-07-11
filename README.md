@@ -36,7 +36,7 @@ If you're already familiar with using Git, GitHub, you can clone master branch o
 10. Launch Ninja Local Cloud
 11. Click Copy button to copy the Ninja Local Cloud URL.
 12. New tab in Chrome and launch the Ninja app.
-13. Paste in the Ninja Local Cloud URL that you copied in step 11 in the Cloud Service dialog.
+13. Paste in the Ninja Local Cloud URL that you copied in step 11 in the Cloud Service dialog in Ninja.
 14. Click the TEST button, you should see the green text that said "Connected to Ninja Local Cloud".
 15. Ninja is opened with no document.  You should be able to do File > New File and select Basic HTML, give it a name and click browse to the directory.  By default, files will be saved in Ninja Projects folder in user documents.  As long as Ninja Local Cloud is running, you will not see the Cloud Service Dialog next time you launch.
 
@@ -48,6 +48,6 @@ If you're already familiar with using Git, GitHub, you can clone master branch o
 3.  In the Cloud Service dialog, download the Ninja Local Cloud app.
 4.  Launch Ninja Local Cloud
 5.  Click Copy button to copy the Ninja Local Cloud URL.
-6.  Paste in the Ninja Local Cloud URL that you copied in step 5 in the Cloud Service dialog.
+6.  Paste in the Ninja Local Cloud URL that you copied in step 5 in the Cloud Service dialog in Ninja.
 7.  Click the TEST button, you should see the green text that said "Connected to Ninja Local Cloud".
 8.  Ninja is opened with no document.  You should be able to do File > New File and select Basic HTML, give it a name and click browse to the directory.  By default, files will be saved in Ninja Projects folder in user documents.  As long as Ninja Local Cloud is running, you will not see the Cloud Service Dialog next time you launch.
