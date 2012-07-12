@@ -57,7 +57,7 @@ var Material = function GLMaterial( world ) {
     // vertex deformation variables
     this._hasVertexDeformation = false;
     this._vertexDeformationRange = [0, 0, 1, 1];    // (xMin, yMin, xMax, yMax)
-	this._vertexDeformationTolerance = 0.02;
+	this._vertexDeformationTolerance = 0.1;
 
     // RDGE variables
     this._shader = null;

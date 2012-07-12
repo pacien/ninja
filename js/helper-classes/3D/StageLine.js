@@ -34,6 +34,7 @@ POSSIBILITY OF SUCH DAMAGE.
 //      The line class represents a line intersected with all planes on the scene
 ///////////////////////////////////////////////////////////////////////
 var vecUtils = require("js/helper-classes/3D/vec-utils").VecUtils;
+var viewUtils = require( "js/helper-classes/3D/view-utils").ViewUtils;
 var LinePlaneIntersectRec = require("js/helper-classes/3D/LinePlaneIntersectRec").LinePlaneIntersectRec;
 
 var StageLine = exports.StageLine = Object.create(Object.prototype, {
@@ -96,7 +97,7 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
             if (minPt[2] > plane.getZMax())           return;
 
             // get the boundary points for the plane
-            var boundaryPts = plane.getBoundaryPoints();
+            var boundaryPts = plane.getBoundaryPoints().slice();
 
             // get the points and direction vector for the current line
             var pt0 = this.getPoint0(),  pt1 = this.getPoint1();
@@ -115,7 +116,8 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
 
                     // see if the intersection point is contained in the bounds
                     //var contains = this.boundaryContainsPoint( boundaryPts, plane.isBackFacing(), pt );
-                    var contains = MathUtils.boundaryContainsPoint( boundaryPts, pt, plane.isBackFacing() );
+                    var onEdge = [];
+                    var contains = MathUtils.boundaryContainsPoint( boundaryPts, pt, plane.isBackFacing(), onEdge );
                     if (contains == MathUtils.INSIDE)
                     {
                         // add the intersection
@@ -130,23 +132,40 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
                     {
                         if (MathUtils.fpCmp(t,1.0) < 0)
                         {
-                            // take the dot product between the line and the normal to the plane
-                            // to determine the change in visibility
-                            var vec = vecUtils.vecSubtract( 3, pt1, pt0 );
-                            var dot = vecUtils.vecDot( 3, vec, plane.getPlaneEq() );
-                            var sign = MathUtils.fpSign( dot );
-                            if (sign == 0)
-                                throw new Error( "coplanar intersection being treated as not coplanar" );
-                            if (!plane.isBackFacing())
+                            // determine if the intersection is on a front side (no intersection) of the polygons
+                            //var ctr = [ 0.5*(boundaryPts[0][0] + boundaryPts[2][0]),  0.5*(boundaryPts[0][1] + boundaryPts[2][1]),  0.5*(boundaryPts[0][2] + boundaryPts[2][2]) ];
+                            //var vec = vecUtils.vecSubtract(3, pt, ctr );
+                            if (this.edgeGoesBehindPlane( plane, boundaryPts, onEdge[0], onEdge[1],  pt0, pt1  ))
                             {
-                                if (sign < 0)
-                                    this.addIntersection( plane, t, 1 );
+                                this.addIntersection( plane, t, 1 );
                             }
-                            else
+                            else if (this.edgeGoesBehindPlane( plane, boundaryPts, onEdge[0], onEdge[1],  pt1, pt0  ))
                             {
-                                if (sign > 0)
-                                    this.addIntersection( plane, t, -1 );
+                                this.addIntersection( plane, t, -1 );
                             }
+
+                            /*
+                            if ( !this.edgeIsFrontFacing(boundaryPts, planeEq, plane.isBackFacing(), onEdge[0], onEdge[1]) )
+                            {
+                                // take the dot product between the line and the normal to the plane
+                                // to determine the change in visibility
+                                var vec = vecUtils.vecSubtract( 3, pt1, pt0 );
+                                var dot = vecUtils.vecDot( 3, vec, planeEq );
+                                var sign = MathUtils.fpSign( dot );
+                                if (sign == 0)
+                                    throw new Error( "coplanar intersection being treated as not coplanar" );
+                                if (!plane.isBackFacing())
+                                {
+                                    if (sign < 0)
+                                        this.addIntersection( plane, t, 1 );
+                                }
+                                else
+                                {
+                                    if (sign > 0)
+                                        this.addIntersection( plane, t, -1 );
+                                }
+                            }
+                            */
                         }
                     }
                 }
@@ -208,18 +227,122 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
         }
     },
 
+    edgeGoesBehindPlane:
+    {
+        value: function( plane, boundaryPts, iEdge, t,  lPt0, lPt1 )
+        {
+            var rtnVal = false;
+
+            if ( MathUtils.fpCmp(t,1.0) == 0 )
+            {
+                iEdge = (iEdge + 1) % 4;
+                t = 0.0;
+            }
+
+            // boundary points (line points: lPt0, lPt1)
+            var bPt0, bPt1, bPt2, bVec, bVec0, bVec1, lVec, d;
+
+            var planeEq = plane.getPlaneEq();
+            if (MathUtils.fpSign(t) == 0)
+            {
+                // get the 3 relevant points.  The line goes through pt1.
+                bPt0  = boundaryPts[(iEdge+3)%4].slice();
+                bPt1  = boundaryPts[iEdge].slice();
+                bPt2  = boundaryPts[(iEdge+1)%4].slice();
+                bVec0 = vecUtils.vecSubtract(2, bPt0, bPt1);
+                bVec1 = vecUtils.vecSubtract(2, bPt2, bPt1);
+                lVec  = vecUtils.vecSubtract(2, lPt1, bPt1);
+
+                var c0 = vecUtils.vecCross(2, bVec1, lVec),
+                    c1 = vecUtils.vecCross(2, lVec, bVec0);
+//                if ((MathUtils.fpSign(c0) < 0) && (MathUtils.fpSign(c1) < 0))
+//                    rtnVal = true;
+				if (!plane.isBackFacing() && (MathUtils.fpSign(c0) < 0) && (MathUtils.fpSign(c1) < 0))
+					rtnVal = true;
+				else if (plane.isBackFacing() && (MathUtils.fpSign(c0) > 0) && (MathUtils.fpSign(c1) > 0))
+					rtnVal = true;
+
+                d = vecUtils.vecDot(3, lPt1, planeEq) + planeEq[3];
+                if (rtnVal && (MathUtils.fpSign(d) > 0))  rtnVal = false;
+            }
+            else
+            {
+                bPt0 = boundaryPts[iEdge].slice();
+                bPt1 = boundaryPts[(iEdge+1)%4].slice();
+                bVec = vecUtils.vecSubtract(3, bPt1, bPt0);
+                lVec = vecUtils.vecSubtract(3, lPt1, lPt0);
+
+                var backFacing = plane.isBackFacing();
+                var bNormal = vecUtils.vecCross(3, [0,0,1], bVec);
+                var dot = vecUtils.vecDot(3, bNormal, lVec);
+                if ((!backFacing && (MathUtils.fpSign(dot) < 0)) || (backFacing && (MathUtils.fpSign(dot) > 0)))
+                {
+                    d = vecUtils.vecDot(3, lPt1, planeEq) + planeEq[3];
+                    if (MathUtils.fpSign(d) < 0)  rtnVal = true;
+                }
+            }
+
+            return rtnVal;
+        }
+    },
+
+    edgeIsFrontFacing: 
+    {
+        value: function(boundaryPts, planeNormal, backfacing, iEdge, t)
+        {
+            var frontFacing = false;
+            if (MathUtils.fpCmp(t,1.0) == 0)
+            {
+                iEdge = (iEdge + 1) % 4;
+                t = 0.0;
+            }
+
+            var pt0 = boundaryPts[iEdge].slice(),
+                pt1 = boundaryPts[(iEdge+1)%4].slice();
+
+            var ctr = [ 0.5*(boundaryPts[0][0] + boundaryPts[2][0]),  0.5*(boundaryPts[0][1] + boundaryPts[2][1]),  0.5*(boundaryPts[0][2] + boundaryPts[2][2]) ],
+                mid = MathUtils.interpolateLine3D( pt0, pt1, 0.5 );
+            var vec = vecUtils.vecSubtract( 3, mid, ctr );
+
+            if (MathUtils.fpSign(t) == 0)
+            {
+                // if the edge already calculated is back facing, check the preceeding edge
+                if (vec[2] > 0)
+                {
+                    frontFacing = true;
+                }
+                else
+                {
+                    var ptm1 = boundaryPts[(iEdge+3)%4].slice();
+                    mid = MathUtils.interpolateLine3D( ptm1, pt0, 0.5 );
+                    vec = vecUtils.vecSubtract( 3, mid, ctr );
+                    if (vec[2] > 0)  frontFacing = true;
+                }
+            }
+            else
+            {
+                var cross = VecUtils.vecCross( 3,  planeNormal,  vecUtils.vecSubtract(3, pt1, pt0) );
+                if ((!backfacing && (cross[2] > 0)) || (backfacing && (cross[2] < 0)))  frontFacing = true;
+            }
+
+            return frontFacing;
+        }
+    },
+
     doCoplanarIntersection: {
         value: function( plane )
         {
             // get the boundary points for the plane
-            var boundaryPts = plane.getBoundaryPoints();
+            var boundaryPts = plane.getBoundaryPoints().slice();
             var planeEq = plane.getPlaneEq();
 
-            if (plane.isBackFacing())
+            var backFacing = plane.isBackFacing();
+            if (backFacing)
             {
                 var tmp;
                 tmp = boundaryPts[0];  boundaryPts[0] = boundaryPts[3];  boundaryPts[3] = tmp;
                 tmp = boundaryPts[1];  boundaryPts[1] = boundaryPts[2];  boundaryPts[2] = tmp;
+                vecUtils.vecNegate(4,  planeEq);
             }
 
             var pt0 = this.getPoint0(),
@@ -246,19 +369,27 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
 
                 if (s0 != s1)
                 {
-                    var t = Math.abs(d0)/( Math.abs(d0) + Math.abs(d1) );
-					if (MathUtils.fpSign(t) === 0)
+                    if (backFacing)
                     {
-						// the first point of the line is on the (infinite) extension of a side of the boundary.
-						// Make sure the point (pt0) is within the range of the polygon edge
-						var vt0 = vecUtils.vecSubtract(3, pt0, bp0),
-							vt1 = vecUtils.vecSubtract(3, bp1, pt0);
-						var dt0 = vecUtils.vecDot(3, vec, vt0),
-							dt1 = vecUtils.vecDot(3, vec, vt1);
-						var st0 = MathUtils.fpSign(dt0),  st1 = MathUtils.fpSign(dt1);
-						if ((st0 >= 0) && (st1 >= 0))
-						{
+                        s0 = -s0;
+                        s1 = -s1;
+                    }
+
+                    var t = Math.abs(d0)/( Math.abs(d0) + Math.abs(d1) );
+                    if (MathUtils.fpSign(t) === 0)
+                    {
+                        // the first point of the line is on the (infinite) extension of a side of the boundary.
+                        // Make sure the point (pt0) is within the range of the polygon edge
+                        var vt0 = vecUtils.vecSubtract(3, pt0, bp0),
+                            vt1 = vecUtils.vecSubtract(3, bp1, pt0);
+                        var dt0 = vecUtils.vecDot(3, vec, vt0),
+                            dt1 = vecUtils.vecDot(3, vec, vt1);
+                        var st0 = MathUtils.fpSign(dt0),  st1 = MathUtils.fpSign(dt1);
+                        if ((st0 >= 0) && (st1 >= 0))
+                        {
+                            //if (  (plane.isBackFacing() && (s1 < 0)) || (!plane.isBackFacing() && (s1 > 0))  )	// entering the material from the beginning of the line that is to be drawn
                         if (s1 > 0) // entering the material from the beginning of the line that is to be drawn
+                            if (s1 > 0)
                         {
                             // see if the start point of the line is at a corner of the bounded plane
                             var lineDir = vecUtils.vecSubtract(3, pt1, pt0);
@@ -301,7 +432,7 @@ var StageLine = exports.StageLine = Object.create(Object.prototype, {
                             }
                         }
                     }
-					}
+                    }
                     else if ( (MathUtils.fpSign(t) > 0) && (MathUtils.fpCmp(t,1.0) <= 0))
                     {
                         // get the point where the line crosses the edge of the element plane
