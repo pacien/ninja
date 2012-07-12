@@ -509,6 +509,10 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     },
         set:function (newVal) {
             if (newVal !== this._millisecondsOffset) {
+
+                var tempValue = (1/newVal) * 1000000;
+                newVal = tempValue;
+
                 this._millisecondsOffset= newVal;
                 this.drawTimeMarkers();
                 NJevent('tlZoomSlider',this);
