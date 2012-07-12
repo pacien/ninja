@@ -65,7 +65,7 @@ var TwistVertMaterial = function TwistVertMaterial()
 
     this.hasVertexDeformation = function () { return this._hasVertexDeformation; };
     this._hasVertexDeformation = true;
-    this._vertexDeformationTolerance = 0.02; // should be a property
+    this._vertexDeformationTolerance = 0.1; // should be a property
 
     ///////////////////////////////////////////////////////////////////////
     // Material Property Accessors

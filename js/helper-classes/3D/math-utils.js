@@ -809,7 +809,7 @@ var MathUtilsClass = exports.MathUtilsClass = Object.create(Object.prototype, {
     },
 
     boundaryContainsPoint: {
-        value: function( bounds,  targetPt,  backFacing )
+        value: function( bounds,  targetPt,  backFacing,  onParams )
         {
             var pt = targetPt.slice(0);
             while (pt.length > 2)  pt.pop();
@@ -842,7 +842,14 @@ var MathUtilsClass = exports.MathUtilsClass = Object.create(Object.prototype, {
                     var t = VecUtils.vecMag(2, vec1)/VecUtils.vecMag(2, vec0);
 					var dot = VecUtils.vecDot(2, vec0, vec1);
                     if ((this.fpSign(dot) >= 0) && (this.fpSign(t) >= 0) && (this.fpCmp(t,1.0) <= 0))
+					{
+						if (onParams)
+						{
+							onParams[0] = (i+3) % 4;
+							onParams[1] = t;
+						}
                         return this.ON;
+					}
                     else
                         return this.OUTSIDE;
                 }
