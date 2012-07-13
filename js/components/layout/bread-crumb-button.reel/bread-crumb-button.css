@@ -28,3 +28,48 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
+
+.breadcrumbComp {
+    float: left;
+    margin: 3px -10px 0 0;
+}
+
+.breadcrumbButton {
+    color: #FFF;
+    float: left;
+    background: rgb(80, 80, 80);
+    border: none;
+    padding: 0 8px 0 14px;
+    height: 20px;
+    margin: 0;
+    border-top: 1px solid rgb(60, 60, 60);
+    border-left: 1px solid rgb(60, 60, 60);
+    border-bottom: 1px solid rgb(60, 60, 60);
+    cursor: pointer; 
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.breadcrumbButton:active, .breadcrumbButton:hover, .breadcrumbButton:focus {
+    -webkit-box-shadow: none !important;
+    outline: none !important;
+}
+
+.breadcrumbTipMask
+{
+    display: block;
+    width: 11px;
+    height: 20px;
+    float: left;
+    overflow: hidden;
+}
+
+.breadcrumbTip {
+    display: block;
+    width: 14px;
+    height: 14px;
+    margin: 3px 0 0 -7px;
+    -webkit-transform: rotate(45deg);
+    background: rgb(80, 80, 80);
+    border-top: 1px solid rgb(60, 60, 60);
+    border-right: 1px solid rgb(60, 60, 60);
+}
