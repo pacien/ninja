@@ -174,6 +174,7 @@ exports.GradientPicker = Montage.create(Component, {
                 button.stop = stop;
                 tooltip.stop = stop;
 				holder.stop = stop;
+				stop.stop = stop;
                 stop.button = button;
                 //Adding stop to container
                 this.trackChips.appendChild(stop);
