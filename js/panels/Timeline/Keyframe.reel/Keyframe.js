@@ -119,14 +119,21 @@ var Keyframe = exports.Keyframe = Montage.create(Component, {
 		value: function(event) {
             event.dataTransfer.setData('Text', 'Keyframe');
             var i = 0,
-            	tweenRepetitionLength = this.parentComponent.parentComponent.parentComponent.tweenRepetition.childComponents.length,
+            	tweenRepetitionLength,
+            	myTrack,
             	myIndex = null;
+            if (typeof(this.parentComponent.parentComponent.parentComponent.tweenRepetition) !== "undefined") {
+                myTrack = this.parentComponent.parentComponent.parentComponent;
+            } else {
+                myTrack = this.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent;
+            }
+            tweenRepetitionLength = myTrack.tweenRepetition.childComponents.length;
             for (i = 0; i < tweenRepetitionLength; i++) {
-            	if (this.parentComponent.parentComponent.parentComponent.tweenRepetition.childComponents[i].uuid === this.parentComponent.uuid) {
+            	if (myTrack.tweenRepetition.childComponents[i].uuid === this.parentComponent.uuid) {
             		myIndex = i;
             	}
             }
-            this.parentComponent.parentComponent.parentComponent.draggingIndex = myIndex;
+            myTrack.draggingIndex = myIndex;
             this.selectKeyframe();
 		}
 	},
@@ -151,7 +158,7 @@ var Keyframe = exports.Keyframe = Montage.create(Component, {
                 return;
             }
             this.isSelected=true;
-            this.element.style.left = (this.position - 6) + "px";
+            //this.element.style.left = (this.position - 6) + "px"; Moved to draw cycle.
             this.application.ninja.timeline.selectedStyle = this.parentComponent.parentComponent.parentComponent.trackEditorProperty;
             this.parentComponent.selectTween();
         }
@@ -160,7 +167,7 @@ var Keyframe = exports.Keyframe = Montage.create(Component, {
     deselectKeyframe:{
         value:function () {
             this.isSelected = false;
-            this.element.style.left = (this.position - 5) + "px";
+            // this.element.style.left = (this.position - 5) + "px"; Moved to draw cycle
         }
     }
     // ==== End Controllers

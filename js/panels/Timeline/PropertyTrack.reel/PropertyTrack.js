@@ -193,6 +193,11 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
             this.animatedElement = this.timelineTrack.animatedElement;
             this.ninjaStylesContoller = this.application.ninja.stylesController;
             this.eventManager.addEventListener("tlZoomSlider", this, false);
+            
+                        // Drag and Drop event handlers
+            this.element.addEventListener("dragstart", this.handleKeyframeDragstart.bind(this), false);
+            this.element.addEventListener("dragend", this.handleKeyframeDragstart.bind(this), false);
+            this.element.addEventListener("drop", this.handleKeyframeDragstart.bind(this), false);
         }
     },
 
@@ -207,6 +212,13 @@ var PropertyTrack = exports.PropertyTrack = Montage.create(Component, {
     /* End: Draw Cycle */
 
     /* Begin: Event Handlers */
+   
+    handleKeyframeDragstart: {
+        value: function(event) {
+            event.stopPropagation();
+            return false;
+        }
+    },
 
     handleClick:{
         value:function (ev) {

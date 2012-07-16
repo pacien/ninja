@@ -985,9 +985,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             this.layout_tracks = this.element.querySelector(".layout-tracks");
             this.layout_markers = this.element.querySelector(".layout_markers");
             
-            // Bind the event handler for the document close events
-            this.eventManager.addEventListener("closeDocument", this.handleDocumentChange.bind(this), false);
-            
             // Bind drag and drop event handlers
             this.container_layers.addEventListener("dragstart", this.handleLayerDragStart.bind(this), false);
             this.container_layers.addEventListener("dragend", this.handleLayerDragEnd.bind(this), false);
@@ -1631,12 +1628,6 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             if(this.currentDocument && this.currentDocument.model.getProperty("domContainer")) {
                 this.currentSelectedContainer = this.currentDocument.model.getProperty("domContainer");
             }
-        }
-    },
-
-    handleDocumentChange:{
-        value:function () {
-
         }
     },
 

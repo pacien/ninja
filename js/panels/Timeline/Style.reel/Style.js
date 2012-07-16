@@ -232,7 +232,7 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
     	set: function(newVal) {
     		if (this._whichView !== newVal) {
     			if ((newVal !== "hintable") && (newVal !== "propval")) {
-    				this.log("Error: Unknown view -"+newVal+"- requested for style.js.");
+    				console.log("Error: Unknown view -"+newVal+"- requested for style.js.");
     				return;
     			}
     			this._whichView = newVal;
