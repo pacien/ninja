@@ -87,7 +87,7 @@ exports.Breadcrumb = Montage.create(Component, {
 
     prepareForDraw: {
         value: function() {
-            this.breadcrumbBt.addEventListener("action", this, false);
+            this.addEventListener("action", this, false);
             this.addPropertyChangeListener("currentDocument.model.domContainer", this)
         }
     },

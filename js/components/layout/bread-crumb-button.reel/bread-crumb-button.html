@@ -32,51 +32,33 @@ POSSIBILITY OF SUCH DAMAGE.
 <html lang="en">
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <link rel="stylesheet" type="text/css" href="bread-crumb.css">
+        <link rel="stylesheet" type="text/css" href="bread-crumb-button.css">
 
 
         <script type="text/montage-serialization">
             {
                 "owner": {
-                    "prototype": "js/components/layout/bread-crumb.reel[Breadcrumb]",
-                    "properties": {
-                        "element": {"#": "breadcrumbTrail"}
-                    }
-                },
-
-                "breadcrumbButton": {
                     "prototype": "js/components/layout/bread-crumb-button.reel",
                     "properties": {
-                        "element": {"#": "breadcrumbButton"}
-                    },
-                    "bindings": {
-                        "label": {"<-": "@buttonsList.objectAtCurrentIteration.label"},
-                        "value": {"<-": "@buttonsList.objectAtCurrentIteration.nodeUuid"}
+                        "element": {"#": "breadcrumb_container"}
+
                     }
                 },
 
-                "buttonsListController": {
-                    "prototype": "montage/ui/controller/array-controller",
-                    "bindings": {
-                        "content": {"<->": "@owner.containerElements"}
-                    }
-                },
-
-                "buttonsList": {
-                    "prototype": "montage/ui/repetition.reel",
+                "breadCrumbButton": {
+                    "prototype": "montage/ui/native/button.reel",
                     "properties": {
-                        "element": {"#": "breadcrumb_container"},
-                        "contentController": {"@": "buttonsListController"}
-                    }
-                },
-
-                "disable": {
-                    "prototype": "montage/ui/condition.reel",
-                    "properties": {
-                        "element": {"#": "disabledCondition"}
+                        "element": {"#": "breadcrumb_button"}
                     },
+                    "listeners": [
+                        {
+                            "type": "action",
+                            "listener": {"@": "owner"}
+                        }
+                    ],
                     "bindings": {
-                        "condition": {"<-": "@owner.disabled"}
+                        "label": {"<-": "@owner.label"},
+                        "value": {"<-": "@owner.value"}
                     }
                 }
             }
@@ -85,12 +67,10 @@ POSSIBILITY OF SUCH DAMAGE.
     </head>
     <body>
 
-        <section data-montage-id="breadcrumbTrail" class="breadcrumbTrail">
-            <div data-montage-id="breadcrumb_container">
-                <div data-montage-id="breadcrumbButton"></div>
-            </div>
-            <div data-montage-id="disabledCondition" class="panelDisabled"></div>
-        </section>
+        <div data-montage-id="breadcrumb_container" class="breadcrumbComp">
+            <button data-montage-id="breadcrumb_button" class="breadcrumbButton"></button>
+            <span class="breadcrumbTipMask"><span class="breadcrumbTip"></span></span>
+        </div>
 
     </body>
 </html>

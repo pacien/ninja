@@ -29,21 +29,35 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
 
-.breadcrumbTrail {
+var Montage = require("montage/core/core").Montage,
+    Component = require("montage/ui/component").Component;
 
-    background-color: #282828;
-    height: 26px;
-    position:relative;
-    -webkit-box-flex: 0;
-}
+exports.BreadCrumbButton = Montage.create(Component, {
 
-.mainContentContainer section.breadcrumbTrail {
-    border:0;
-    margin:0;
-    border-bottom:1px solid #000;
-    margin-bottom:1px;
-}
+    _label: {
+        value: null
+    },
 
-.breadcrumbTrail div:first-child {
-    margin-left: 2px;
-}
+    label: {
+        get: function() {
+            return this._label;
+        },
+        set: function(value) {
+            this._label = value
+        }
+    },
+
+    _value: {
+        value: null
+    },
+
+    value: {
+        get: function() {
+            return this._value;
+        },
+        set: function(value) {
+            this._value = value;
+        }
+    }
+});
+

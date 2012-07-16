@@ -29,62 +29,90 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 </copyright> -->
+
 <html>
 
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" type="text/css" href="document-bar.css">
+    <head>
+        
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        
+        <link rel="stylesheet" type="text/css" href="document-bar.css">
 
-    <script type="text/montage-serialization">
-        {
-            "hottext1": {
-                "prototype": "js/components/hottextunit.reel[HotTextUnit]",
-                "properties": {
-                    "element": {"#": "zoomControlHT"},
-                    "minValue":25,
-                    "maxValue" :2000,
-                    "stepSize" :5,
-                    "acceptableUnits" : ["%"],
-                    "units" : "%"
+        <script type="text/montage-serialization">
+            {
+                "hottext1": {
+                    "prototype": "js/components/hottextunit.reel[HotTextUnit]",
+                    "properties": {
+                        "element": {"#": "zoomControlHT"},
+                        "minValue":25,
+                        "maxValue" :2000,
+                        "stepSize" :5,
+                        "acceptableUnits" : ["%"],
+                        "units" : "%"
+                    },
+                    "bindings": {
+                        "value": {
+                            "boundObject": {"@": "owner"},
+                            "boundObjectPropertyPath": "zoomFactor",
+                            "oneway": false
+                        }
+                    }
                 },
-                "bindings": {
-                    "value": {
-                        "boundObject": {"@": "owner"},
-                        "boundObjectPropertyPath": "zoomFactor",
-                        "oneway": false
+    
+                "disable": {
+                    "prototype": "montage/ui/condition.reel",
+                    "properties": {
+                        "element": {"#": "disabledCondition"}
+                    },
+                    "bindings": {
+                        "condition": {"<-": "@owner.disabled"}
+                    }
+                },
+    
+                "owner": {
+                    "prototype": "js/components/layout/document-bar.reel",
+                    "properties": {
+                        "element": {"#": "documentBar"},
+                        "zoomControl": {"@": "hottext1"}
                     }
                 }
-            },
-
-            "disable": {
-                "prototype": "montage/ui/condition.reel",
-                "properties": {
-                    "element": {"#": "disabledCondition"}
-                },
-                "bindings": {
-                    "condition": {"<-": "@owner.disabled"}
-                }
-            },
-
-            "owner": {
-                "prototype": "js/components/layout/document-bar.reel",
-                "properties": {
-                    "element": {"#": "documentBar"},
-                    "zoomControl": {"@": "hottext1"}
-                }
             }
-        }
-    </script>
+        </script>
 
+    </head>
 
-</head>
-
-<body>
-    <div data-montage-id="documentBar">
-        <input class="zoomHotText label" data-montage-id="zoomControlHT"/>
-        <span class="design-view disable" data-montage-id="design">Design View</span>
-        <span class="code-view disable" data-montage-id="code">Code View</span>
-        <div data-montage-id="disabledCondition" class="panelDisabled"></div>
-    </div>
-</body>
+    <body>
+        
+        <div data-montage-id="documentBar">
+            
+            <section>
+            
+                <div class="zoomicon"></div>
+            
+                <input data-montage-id="zoomControlHT" class="zoomHotText label" />
+                
+            </section>
+            
+            <section>
+                
+                <div class="viewicon viewdesign"></div>
+                
+                <button class="btn_view">Design</button>
+                
+            </section>
+            
+            <section class="inactive">
+                
+                <div class="viewicon viewcode"></div>
+                
+                <button class="btn_view">Code</button>
+                
+            </section>
+        
+            <div data-montage-id="disabledCondition" class="panelDisabled"></div>
+        
+        </div>
+        
+    </body>
+    
 </html>
