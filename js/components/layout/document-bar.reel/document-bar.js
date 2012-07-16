@@ -29,140 +29,115 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
 
-var Montage = require("montage/core/core").Montage;
-var Component = require("montage/ui/component").Component;
-
+////////////////////////////////////////////////////////////////////////
+//
+var Montage =   require("montage/core/core").Montage,
+    Component = require("montage/ui/component").Component;
+////////////////////////////////////////////////////////////////////////
+//
 exports.DocumentBar = Montage.create(Component, {
-
-    _currentDocument: {
-        enumerable: false,
-        value: null
-    },
-
+    ////////////////////////////////////////////////////////////////////
+    //
+    _currentDocument: {value: null},
+    ////////////////////////////////////////////////////////////////////
+    //
     currentDocument: {
-        enumerable: false,
-        get: function() {
-            return this._currentDocument;
-        },
+        get: function() {return this._currentDocument;},
         set: function(value) {
+            //
             if (value === this._currentDocument) {
                 return;
             }
-
+            //
             this._currentDocument = value;
-
             this.disabled = !this._currentDocument;
-
-            if(this._currentDocument && this._currentDocument.currentView === "design") {
-                this.visible = true;
-            } else if(this._currentDocument && this._currentDocument.currentView === "code") {
-                this.visible = false;
+            //          
+            if(this._currentDocument && this._currentDocument.model && this._currentDocument.model.currentView === this._currentDocument.model.views.design) {
+                this.btnCode.setAttribute('class', 'inactive');
+                this.btnDesign.removeAttribute('class');
+            } else if(this._currentDocument && this._currentDocument.model && this._currentDocument.model.currentView === this._currentDocument.model.views.code) {
+                this.btnDesign.setAttribute('class', 'inactive');
+                this.btnCode.removeAttribute('class');
             }
+            //
+            this.visible = true;
         }
     },
-
+    ////////////////////////////////////////////////////////////////////
+    //
     _visible: {
         value: false
     },
-
+    ////////////////////////////////////////////////////////////////////
+    //
     visible: {
-        get: function() {
-            return this._visible;
-        },
+        get: function() {return this._visible;},
         set: function(value) {
+            //
             if(this._visible !== value) {
                 this._visible = value;
                 this.needsDraw = true;
             }
         }
     },
-
-    designView: {
-        value: null
-    },
-
-    codeView: {
-        value: null
-    },
-
+    ////////////////////////////////////////////////////////////////////
+    //
     zoomControl: {
         value: null,
         serializable: true
     },
-
-    _type: {
-        value: null
-    },
-
-    type: {
-        enumerable: false,
-        get: function() { return this._type; },
-        set: function(value) {
-            if (this._type === value) {
-                return;
-            }
-
-            this._type = value;
-            this.needsDraw = true;
-
-        }
-    },
-
-    _currentView: {
-        value: null
-    },
-
-    currentView: {
-        get: function() { return this._currentView},
-        set: function(value) {
-            if (this._currentView === value) {
-                return;
-            }
-
-            this._currentView = value;
-            this.needsDraw = true;
-        }
-    },
-
+    ////////////////////////////////////////////////////////////////////
+    //
     _zoomFactor: {
         value: 100
     },
-
+    ////////////////////////////////////////////////////////////////////
+    //
     zoomFactor: {
-        get: function() { return this._zoomFactor; },
-
-        set: function(value)
-        {
-            if(value !== this._zoomFactor)
-            {
+        get: function() {return this._zoomFactor;},
+        set: function(value) {
+            if(value !== this._zoomFactor) {
+                //
                 this._zoomFactor = value;
-                if (!this._firstDraw)
-                {
+                //
+                if (!this._firstDraw) {
                     this.application.ninja.stage.setZoom(value);
                 }
             }
         }
     },
-
+    ////////////////////////////////////////////////////////////////////
+    //
+    prepareForDraw: {
+        value: function() {
+            //
+            this.btnCode.addEventListener('click', this.showViewCode.bind(this), false);
+            this.btnDesign.addEventListener('click', this.showViewDesign.bind(this), false);
+        }
+    },
+    ////////////////////////////////////////////////////////////////////
+    //
+    willDraw: {
+        value: function() {
+            //
+            this.btnCode.setAttribute('class', 'inactive');
+            this.btnDesign.setAttribute('class', 'inactive');
+            //
+            if (this._currentDocument && this._currentDocument.model && this._currentDocument.model.currentView) {
+                //
+                if (this._currentDocument.model.currentView === this._currentDocument.model.views.design) {
+                    this.btnDesign.removeAttribute('class');
+                } else if (this._currentDocument.model.currentView === this._currentDocument.model.views.code) {
+                    this.btnCode.removeAttribute('class');
+                }
+            }
+        }
+    },
+    ////////////////////////////////////////////////////////////////////
+    //
     draw: {
         value: function() {
-            /*
-            if(this.type === "htm" || this.type === "html") {
-                this.designView.classList.add("active");
-                this.codeView.classList.add("active");
-
-                if(this.currentView === "design") {
-                    this.designView.classList.add("selected");
-                    if(this.codeView.classList.contains("selected")) this.codeView.classList.toggle("selected");
-                } else {
-                    this.codeView.classList.add("selected");
-                    if(this.designView.classList.contains("selected")) this.designView.classList.toggle("selected");
-                }
-
-            } else if(this.type) {
-                this.designView.classList.remove("active");
-            }
-            */
+            //
             if(this.visible) {
                 this.element.style.display = "block";
             } else {
@@ -171,37 +146,57 @@ exports.DocumentBar = Montage.create(Component, {
 
         }
     },
-
-    prepareForDraw: {
+    ////////////////////////////////////////////////////////////////////
+    //
+    didDraw: {
         value: function() {
-//            this.designView.addEventListener("click", this, false);
-//            this.codeView.addEventListener("click", this, false);
-
+            //
         }
     },
-
+    ////////////////////////////////////////////////////////////////////
+    //
     _disabled: {
         value: true
     },
-
+    ////////////////////////////////////////////////////////////////////
+    //
     disabled: {
-        get: function() {
-            return this._disabled;
-        },
+        get: function() {return this._disabled;},
         set: function(value) {
+            //
             if(value !== this._disabled) {
                 this._disabled = value;
             }
         }
     },
-
-
-    handleClick: {
-        value: function(event) {
-            if(event._event.target.id === this.currentView) return;
-
-            this.currentView = event._event.target.id;
-            this.application.ninja.documentController.stage.stageView.switchDesignDocViews(event._event.target.id);//switch between design view
+    ////////////////////////////////////////////////////////////////////
+    //
+    showViewDesign: {
+        value: function () {
+            //
+            if (this._currentDocument.model.currentView !== 'design') {
+                //
+                this._currentDocument.model.switchViewTo('design');
+                this.btnCode.setAttribute('class', 'inactive');
+                this.btnDesign.removeAttribute('class');
+            }
+        }
+    },
+    ////////////////////////////////////////////////////////////////////
+    //
+    showViewCode: {
+        value: function () {
+            //
+            if (this._currentDocument.model.currentView !== 'code') {
+                //
+                this._currentDocument.model.switchViewTo('code');
+                this.btnDesign.setAttribute('class', 'inactive');
+                this.btnCode.removeAttribute('class');
+            }
         }
     }
+    ////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
 });
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////

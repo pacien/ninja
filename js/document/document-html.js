@@ -130,6 +130,8 @@ exports.HtmlDocument = Montage.create(Component, {
             this._observer = null;
         }
     },
+    ////////////////////////////////////////////////////////////////////
+    //
     handleViewReady: {
         value: function(mObjects) {
             this.model.mObjects = mObjects;
