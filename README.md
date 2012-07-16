@@ -21,17 +21,17 @@ If you're already familiar with using Git, GitHub, you can clone master branch o
 5.  Load unpacked extension... and browse to your cloned master branch.
 6.  Copy Ninja app ID from the Extensions page under the app name.
 7. On Windows:
-    Click Start menu icon and type regedit
-    Browse to HKEY_CURRENT_USER/Software/Motorola Mobility/Ninja Local Cloud/Options
-    Right click and select New > String value
-    Type 'Local Ninja Origin' no quotes 
-    Double click on Local Ninja Origin and paste in the ID copied in step 6 in the Value data field. Close Registry Editor.
+    Click Start menu icon and type regedit.
+    Browse to HKEY_CURRENT_USER/Software/Motorola Mobility/Ninja Local Cloud/Options.
+    Right click and select New > String value.
+    Type 'Local Ninja Origin' no quotes.
+    Double click on Local Ninja Origin and paste in the Ninja app ID copied in step 6 from the Chrome extensions page in the Value data field. Close Registry Editor.
 8. On Mac:
     Launch Finder.
-    Double click on /Library/Preferences/com.MotorolaMobility.Ninja-Local-Cloud.plist
-    Click on Add Child Type 'Local Ninja Origin' no quotes 
-    For value, paste in the ID copied in step 6. 
-    Save (File > Save or Cmd S) Close Property List Editor
+    Double click on /Users/\<user\>/Library/Preferences/com.MotorolaMobility.Ninja-Local-Cloud.plist.
+    Click on Add Child Type 'Local Ninja Origin' no quotes.
+    For value, paste in the Ninja app ID copied in step 6 from the Chrome extensions page.
+    Save (File > Save or Cmd S) Close Property List Editor.
 9.  Quit Ninja Local Cloud
 10. Launch Ninja Local Cloud
 11. Click Copy button to copy the Ninja Local Cloud URL.
