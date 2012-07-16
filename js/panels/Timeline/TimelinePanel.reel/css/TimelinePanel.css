@@ -132,7 +132,7 @@ POSSIBILITY OF SUCH DAMAGE.
 .timeline-dnd-helper { -webkit-transform: scale(0.9, 0.9); }
 
 /* line 308, ../scss/TimelinePanel.scss */
-.tl_slider { width: 65px; height: 5px; background: none; float: left; margin-left: 5%; visibility: hidden; }
+.tl_slider { width: 65px; height: 5px; background: none; float: left; margin-left: 5%;}
 
 /* Configuration menu */
 /* line 318, ../scss/TimelinePanel.scss */
