@@ -38,6 +38,12 @@ var Montage =               require("montage/core/core").Montage,
 
 var ExternalAppsClipboardAgent = exports.ExternalAppsClipboardAgent = Montage.create(Component, {
 
+    //count how many times pasted
+    //used to move multiple pastes of same copy
+    pasteCounter:{
+        value: 0
+    },
+
     paste:{
         value: function(clipboardEvent){
             var clipboardData = clipboardEvent.clipboardData,
@@ -57,16 +63,14 @@ var ExternalAppsClipboardAgent = exports.ExternalAppsClipboardAgent = Montage.cr
                         }catch(e){
                             console.log(""+e.stack);
                         }
-                        this.application.ninja.selectionController.selectElements(imageElement);
                         this.application.ninja.currentDocument.model.needsSave = true;
-
                     }
                 }
             }
 
             try{
                 if(!!htmlData || !!textData){
-                    this.pasteHtml(htmlData, textData);
+                    this.doPasteHtml(htmlData, textData);
                 }
             }catch(e){
                 console.log(""+e.stack);
@@ -108,16 +112,16 @@ var ExternalAppsClipboardAgent = exports.ExternalAppsClipboardAgent = Montage.cr
                 //Adding element once it is loaded
                 element.onload = function () {
                     element.onload = null;
-                    self.application.ninja.elementMediator.addElements(element, rules, true);
+                    self.application.ninja.elementMediator.addElements(element, rules, true/*notify*/, false /*callAddDelegate*/);
                 };
                 //Setting rules of element
                 rules = {
                     'position': 'absolute',
-                    'top' : '100px',
-                    'left' : '100px'
+                    'top' : '0px',
+                    'left' : '0px'
                 };
                 //
-                self.application.ninja.elementMediator.addElements(element, rules, false);
+                self.application.ninja.elementMediator.addElements(element, rules, false/*notify*/, false /*callAddDelegate*/);
             } else {
                 //HANDLE ERROR ON SAVING FILE TO BE ADDED AS ELEMENT
             }
@@ -126,119 +130,37 @@ var ExternalAppsClipboardAgent = exports.ExternalAppsClipboardAgent = Montage.cr
         }
     },
 
-    //paste from external applicaitons
-    pasteHtml:{
+    doPasteHtml:{
         value: function(htmlData, textData){
-            var i=0, j=0,
-                pasteDataObject=null,
-                pastedElements = [],
-                node = null, nodeList = null,
-                styles = null,
-                divWrapper = null,
-                spanWrapper = null,
-                metaEl = null,
-                self = this;
+            var divWrapper = null, data = null;
 
             if(htmlData){
-
                 //cleanse HTML
+                htmlData = htmlData.replace(/\<meta [^>]+>/gi, ""); // Remove the meta tag.
+                htmlData = htmlData.replace(/\<script [^>]+>/g," "); // Remove the script tag.
+            }
 
-                htmlData.replace(/[<script]/g," ");
+            textData = textData.replace(/\<script [^>]+>/g," "); // Remove any script tag.
 
+
+            data = htmlData ? htmlData : textData;
+
+            if (data && data.length) {
+                //deselect current selections
                 this.application.ninja.selectedElements.length = 0;
                 NJevent("selectionChange", {"elements": this.application.ninja.selectedElements, "isDocument": true} );
 
-                try{
-                    nodeList = ClipboardUtil.deserializeHtmlString(htmlData);//this removes html and body tags
-                }
-                catch(e){
-                    console.log(""+e.stack);
-                }
+                divWrapper = document.application.njUtils.make("div", null, this.application.ninja.currentDocument);
+                this.application.ninja.elementMediator.addElements(divWrapper, {"height": "68px",
+                                                                                "left": "0px",
+                                                                                "position": "absolute",
+                                                                                "top": "0px",
+                                                                                "width": "161px"});
 
-                for(i=0; i < nodeList.length; i++){
-                    if(nodeList[i].tagName === "META") {
-                        nodeList[i] = null;
-                    }
-                    else if (nodeList[i].tagName === "CANVAS"){
-                        //can't paste external canvas for lack of all metadata
-                        nodeList[i] = null;
-                    }
-                    else if((nodeList[i].nodeType === 3) || (nodeList[i].tagName === "A")){
-                        node = nodeList[i].cloneNode(true);
+                divWrapper.innerHTML = data;
 
-                        divWrapper = document.application.njUtils.make("div", null, this.application.ninja.currentDocument);
-                        spanWrapper = document.application.njUtils.make("span", null, this.application.ninja.currentDocument);
-                        spanWrapper.appendChild(node);
-                        divWrapper.appendChild(spanWrapper);
-                        styles = {"position":"absolute", "top":"100px", "left":"100px"};
-
-                        this.pastePositioned(divWrapper, styles);
-
-                        nodeList[i] = null;
-                        pastedElements.push(divWrapper);
-
-                    }else if(nodeList[i].tagName === "SPAN"){
-                        node = nodeList[i].cloneNode(true);
-
-                        divWrapper = document.application.njUtils.make("div", null, this.application.ninja.currentDocument);
-                        divWrapper.appendChild(node);
-                        styles =  {"position":"absolute", "top":"100px", "left":"100px"};
-
-                        this.pastePositioned(divWrapper, styles);
-
-                        nodeList[i] = null;
-                        pastedElements.push(divWrapper);
-                    }
-                    else {
-                        node = nodeList[i].cloneNode(true);
-
-                        //get class string while copying .... generate styles from class
-                        styles = {"position":"absolute", "top":"100px", "left":"100px"};
-
-                        this.pastePositioned(node, styles);
-
-                        nodeList[i] = null;
-                        pastedElements.push(node);
-                    }
-
-                }
-
-                nodeList = null;
-
-
-            }else if(textData){
-                node = ClipboardUtil.deserializeHtmlString("<div><span>"+ textData +"</span></div>")[0];
-                styles = {"position":"absolute", "top":"100px", "left":"100px"};
-                this.pastePositioned(node, styles);
-            }
-
-            NJevent("elementAdded", pastedElements);
-            this.application.ninja.currentDocument.model.needsSave = true;
-
-        }
-    },
-
-    pastePositioned:{
-        value: function(element, styles, fromCopy){// for now can wok for both in-place and centered paste
-            var modObject = [], x,y, newX, newY, counter;
-
-            if((typeof fromCopy === "undefined") || (fromCopy && fromCopy === true)){
-                counter = this.pasteCounter;
-            }else{
-                counter = this.pasteCounter - 1;
-            }
-
-            x = styles ? ("" + styles.left + "px") : "100px";
-            y = styles ? ("" + styles.top + "px") : "100px";
-            newX = styles ? ("" + (styles.left + (25 * counter)) + "px") : "100px";
-            newY = styles ? ("" + (styles.top + (25 * counter)) + "px") : "100px";
-
-            if(!styles || (styles && !styles.position)){
-                this.application.ninja.elementMediator.addElements(element, null, false);
-            }else if(styles && (styles.position === "absolute")){
-                this.application.ninja.elementMediator.addElements(element, {"top" : newY, "left" : newX}, false);//displace
+                this.application.ninja.currentDocument.model.needsSave = true;
             }
         }
     }
-
 });
