@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
     -webkit-box-flex: 0;
 }
 
-.mainContentContainer > section.breadcrumbTrail {
+.mainContentContainer section.breadcrumbTrail {
     border:0;
     margin:0;
     border-bottom:1px solid #000;
