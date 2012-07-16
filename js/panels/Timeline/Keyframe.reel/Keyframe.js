@@ -119,14 +119,21 @@ var Keyframe = exports.Keyframe = Montage.create(Component, {
 		value: function(event) {
             event.dataTransfer.setData('Text', 'Keyframe');
             var i = 0,
-            	tweenRepetitionLength = this.parentComponent.parentComponent.parentComponent.tweenRepetition.childComponents.length,
+            	tweenRepetitionLength,
+            	myTrack,
             	myIndex = null;
+            if (typeof(this.parentComponent.parentComponent.parentComponent.tweenRepetition) !== "undefined") {
+                myTrack = this.parentComponent.parentComponent.parentComponent;
+            } else {
+                myTrack = this.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent;
+            }
+            tweenRepetitionLength = myTrack.tweenRepetition.childComponents.length;
             for (i = 0; i < tweenRepetitionLength; i++) {
-            	if (this.parentComponent.parentComponent.parentComponent.tweenRepetition.childComponents[i].uuid === this.parentComponent.uuid) {
+            	if (myTrack.tweenRepetition.childComponents[i].uuid === this.parentComponent.uuid) {
             		myIndex = i;
             	}
             }
-            this.parentComponent.parentComponent.parentComponent.draggingIndex = myIndex;
+            myTrack.draggingIndex = myIndex;
             this.selectKeyframe();
 		}
 	},
