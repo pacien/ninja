@@ -37,15 +37,13 @@ POSSIBILITY OF SUCH DAMAGE.
     -webkit-box-flex: 0;
 }
 
-.mainContentContainer > section.breadcrumbTrail {
+.mainContentContainer section.breadcrumbTrail {
     border:0;
     margin:0;
     border-bottom:1px solid #000;
     margin-bottom:1px;
 }
-.breadcrumbTrail button.nj-skinned {
-    float: left;
-    width: 60px;
-    margin: 2px;
-}
 
+.breadcrumbTrail div:first-child {
+    margin-left: 2px;
+}

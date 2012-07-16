@@ -28,46 +28,88 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
+
+.timelineResizer {
+    background: -webkit-radial-gradient(center, ellipse cover, rgba(100, 100, 100, .9) 40%, rgba(100, 100, 100, .4) 50%, rgba(100, 100, 100, 0) 51%), -webkit-radial-gradient(center, ellipse cover, rgba(100, 100, 100, .9) 40%, rgba(100, 100, 100, .4) 50%, rgba(100, 100, 100, 0) 51%), -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(60, 60, 60)), color-stop(70%, rgb(30, 30, 30)), color-stop(100%, rgb(25, 25, 25))), -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(10, 10, 10)), color-stop(50%, rgb(20, 20, 20)), color-stop(100%, rgb(10, 10, 10))) !important;
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat !important;
+    background-position: 49.5% center, 50.5% center, center center, left top !important;
+    background-size: 5px 5px, 5px 5px, 3% 100%, 100% 100%;
+}
+
 .documentBar {
-    position: relative;
-    overflow: hidden;
-    color: white;
+    background: rgb(40, 40, 40);
+    height: 20px !important;
+    color: #FFF;
+    font-size: 11px;
 }
 
-.documentBar .active {
-    text-decoration: underline;
+.documentBar section{
+    background: rgb(60, 60, 60);
+    float: left;
+    height: 100%;
+    padding: 0px 4px;
+    border-right: 2px solid #000;
+}
+
+.documentBar .zoomicon {
+    background-image: url('../../../../images/tools/Tool-Zoom.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 75%;
+    width: 18px;
+    height: 18px;
+    float: left;
+}
+
+.documentBar .zoomHotText {
+    font-size: 11px;
+    width: 40px;
+    margin: 0 0 0 2px;
+    text-align: center;
+}
+
+.documentBar .btn_view {
+    display: block;
+    background: none;
+    margin: 3px 0 0 0;
+    padding: 0;
+    border: none;
+    color: #FFF;
+    width: 44px;
+    text-transform: uppercase;
+    text-align: left;
+    float: left;
     cursor: pointer;
-    color: #666666;
+    font-size: 11px;
 }
 
-.documentBar .active:hover {
-    color: #ffffff;
+.documentBar .viewicon {
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 16px;
+    height: 16px;
+    margin: 2px 4px 0 0;
+    float: left;
 }
 
-.documentBar .selected {
-    text-decoration: underline;
-    cursor: default;
-    color: #ffffff;
+.documentBar .viewcode {
+    background-image: url('../../../../images/optionsbar/text/AlignLeft.png');
+    background-size: 80%;
 }
 
-.documentBar .selected {
-    color: #ffffff;
+.documentBar .viewdesign {
+    background-image: url('../../../../js/panels/Color/colorpanelpopup.reel/img/icon_bitmap.png');
+    background-size: 90%;
 }
 
-.documentBar span{
-    text-decoration: none;
-    cursor: pointer;
-    color: #3a3a3a;
+.documentBar section.inactive .viewicon{
+    opacity: .5;
 }
 
-.documentBar .zoomHotText span {
-    color: white;
+.documentBar section.inactive button {
+    opacity: .5;
 }
 
-.documentBar .enable{
-    color: #d7d7d7;
-}
-
-.documentBar .disable{
-    color: #3a3a3a;
+.documentBar section.inactive button:hover {
+    opacity: 1;
 }

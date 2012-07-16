@@ -1,5 +1,3 @@
-@charset "UTF-8";
-
 /* <copyright>
 Copyright (c) 2012, Motorola Mobility LLC.
 All Rights Reserved.
@@ -31,39 +29,35 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
 
+var Montage = require("montage/core/core").Montage,
+    Component = require("montage/ui/component").Component;
 
-// ninja.scss
-// Main SCSS file for ninja, compiled by SASS into the file ninja.css.
+exports.BreadCrumbButton = Montage.create(Component, {
 
+    _label: {
+        value: null
+    },
 
-// Import theme settings
-@import "imports/themes/default/colors";
-@import "imports/themes/default/fonts";
-@import "imports/themes/default/mixins";
+    label: {
+        get: function() {
+            return this._label;
+        },
+        set: function(value) {
+            this._label = value
+        }
+    },
 
-// Import generic mixins and styles
-@import "imports/scss/mixins";
-@import "imports/scss/Base";
+    _value: {
+        value: null
+    },
 
-// Import everything else
-@import "imports/scss/MainWindow";
-@import "imports/scss/Stage";
-@import "imports/scss/PanelUI";
-@import "imports/scss/MenuUI";
-@import "imports/scss/Tools";
-@import "imports/scss/toolbar";
-@import "imports/scss/UserContent";
-@import "imports/scss/ScrollBars";
-@import "imports/scss/Components";
-@import "imports/scss/MontageOverrides";
-@import "imports/scss/Workspace";
+    value: {
+        get: function() {
+            return this._value;
+        },
+        set: function(value) {
+            this._value = value;
+        }
+    }
+});
 
-body {
-}
-
-
-// Codemirror
-//@import "imports/codemirror/_codemirror";
-//@import "imports/codemirror/_javascript";
-//@import "imports/codemirror/_css";
-/*77*/
