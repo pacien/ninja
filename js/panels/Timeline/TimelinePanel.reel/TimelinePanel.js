@@ -505,11 +505,13 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     },
     millisecondsOffset:{
         get:function () {
+
             return this._millisecondsOffset;
     },
         set:function (newVal) {
             if (newVal !== this._millisecondsOffset) {
 
+                this.tempValue  = newVal;
                 var tempValue = (1/newVal) * 1000000;
                 newVal = tempValue;
 
@@ -1697,6 +1699,22 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             this.container_tracks.style.width = (this.end_hottext.value * 80) + "px";
             this.master_track.style.width = (this.end_hottext.value * 80) + "px";
             this.time_markers.style.width = (this.end_hottext.value * 80) + "px";
+            if (this.timeMarkerHolder) {
+                this.time_markers.removeChild(this.timeMarkerHolder);
+            }
+            this.drawTimeMarkers();
+        }
+    },
+
+    zoomTrackContainerWidthChange:{
+        value:function () {
+
+            this.tempValue = this.tempValue/1000;
+            this.tempValue *= 30;
+
+            this.container_tracks.style.width = (this.tempValue * 80) + "px";
+            this.master_track.style.width = (this.tempValue * 80) + "px";
+            this.time_markers.style.width = (this.tempValue * 80) + "px";
             if (this.timeMarkerHolder) {
                 this.time_markers.removeChild(this.timeMarkerHolder);
             }

@@ -396,3 +396,26 @@ POSSIBILITY OF SUCH DAMAGE.
 .layer-hidden {
 	display: none;
 }
+
+.tl_slider {
+    width: 127px;
+    height:5px;
+    float: left;
+    clear: none;
+    margin: 2px 0px 0px 0px;
+}
+
+.slider-track {
+    background: #29292;
+    width: 127px
+},
+
+.sliderClass {
+    float: left;
+    width: 127px
+}
+
+.sliderClass .knob {
+    background: url(../images/knob.png) no-repeat transparent center center;
+    margin-bottom: 2px;
+}

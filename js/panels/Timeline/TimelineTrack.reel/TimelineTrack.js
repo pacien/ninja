@@ -627,8 +627,12 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
 		            myObj.spanPosition = clickPos - (clickPos - prevKeyFramePosition);
 
 		            this.tweens[i].tweenData = myObj;
+
+
 	        	}
 	        }
+            this.application.ninja.timeline.zoomTrackContainerWidthChange();
+
 		}
 	},
 
