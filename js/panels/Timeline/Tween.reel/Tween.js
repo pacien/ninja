@@ -229,7 +229,13 @@ var Tween = exports.Tween = Montage.create(Component, {
     prepareForDraw:{
         value:function(){
             if(this.initSelect){
-                this.keyframe.selectKeyframe();
+                // Select our new keyframe only if our parent is a main track.
+                // TODO: When we decouple all property tracks, this will go away.
+                if (typeof(this.parentComponent.parentComponent.trackType) === "undefined") {
+                    if (this.tweenID > 0) {
+                        this.keyframe.selectKeyframe();
+                    }
+                }
                 this.initSelect = false;
             }
         }
