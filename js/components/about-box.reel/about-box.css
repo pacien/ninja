@@ -42,7 +42,7 @@ POSSIBILITY OF SUCH DAMAGE.
 .mainAboutBoxContainer
 {
     width: 580px;
-    height: 420px;
+    height: 430px;
 
     border-radius: 3px;
 
@@ -67,7 +67,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #aboutBoxTextBlock
 {
     position: relative;
-    margin: 30px;
+    margin: 0px 30px;
 }
 
 #aboutBoxTextBlock p:first-child
