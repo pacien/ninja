@@ -91,6 +91,8 @@ exports.BaseDocumentModel = Montage.create(Component, {
     _selection: {
         value: []
     },
+    ////////////////////////////////////////////////////////////////////
+    //
     domContainer: {
         value: null
     },
@@ -120,7 +122,8 @@ exports.BaseDocumentModel = Montage.create(Component, {
     libs: {
         value: null
     },
-
+    ////////////////////////////////////////////////////////////////////
+    //
     _mObjects: {
             value: []
         },
@@ -138,6 +141,23 @@ exports.BaseDocumentModel = Montage.create(Component, {
     switchViewTo: {
         value: function (view) {
             //
+            switch (view) {
+                case 'design':
+                    //
+                    if (this.views.design) this.views.design.show();
+                    if (this.views.code) this.views.code.hide();
+                    this.currentView = this.views.design;
+                    break;
+                case 'code':
+                    //
+                    if (this.views.code) this.views.code.show();
+                    if (this.views.design) this.views.design.hide();
+                    this.currentView = this.views.code;
+                    break;
+                default:
+                    //Error
+                    break;
+            }
         }
     },
     ////////////////////////////////////////////////////////////////////
