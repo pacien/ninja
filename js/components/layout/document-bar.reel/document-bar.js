@@ -171,6 +171,14 @@ exports.DocumentBar = Montage.create(Component, {
     },
     ////////////////////////////////////////////////////////////////////
     //
+    renderDesignView: {
+        value: function () {
+            //Reloading in design view (with updates from other view)
+            this.reloadView('design', this.fileTemplate);
+        }
+    },
+    ////////////////////////////////////////////////////////////////////
+    //
     showViewDesign: {
         value: function () {
             //
@@ -179,11 +187,14 @@ exports.DocumentBar = Montage.create(Component, {
                 this._currentDocument.model.switchViewTo('design');
                 this.btnCode.setAttribute('class', 'inactive');
                 this.btnDesign.removeAttribute('class');
+                //this._currentDocument.model.file.content.body = '<div class="test">hello</div><div class="test">hello</div>';
+                var render = this.renderDesignView.bind(this._currentDocument);
+                render();
             }
         }
     },
     ////////////////////////////////////////////////////////////////////
-    //
+    //TODO: Implement code with that updates the file template through the ninja document parser
     showViewCode: {
         value: function () {
             //

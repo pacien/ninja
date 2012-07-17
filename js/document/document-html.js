@@ -76,7 +76,7 @@ exports.HtmlDocument = Montage.create(Component, {
     ////////////////////////////////////////////////////////////////////
     //
     init: {
-        value:function(file, context, callback, view, template) {
+        value: function(file, context, callback, view, template) {
             //Storing callback data for loaded dispatch
             this.loaded.callback = callback;
             this.loaded.context = context;
@@ -122,6 +122,44 @@ exports.HtmlDocument = Montage.create(Component, {
         }
     },
     ////////////////////////////////////////////////////////////////////
+    //TODO: Make into one method to use here and one init
+    reloadView: {
+        value: function (view, template) {
+            //
+            this.model.parentContainer.removeChild(this.model.views.design.iframe);
+            //Initiliazing views and hiding
+            if (this.model.views.design.initialize(this.model.parentContainer)) {
+                //Hiding iFrame, just initiliazing
+                this.model.views.design.hide();
+                //Setting the iFrame property for reference in helper class
+                this.model.webGlHelper.iframe = this.model.views.design.iframe;
+            } else {
+                //ERROR: Design View not initialized
+            }
+            //
+            if (view === 'design') {
+                //TODO: Remove reference and use as part of model
+                this.currentView = 'design';
+                //Setting current view object to design
+                this.model.currentView = this.model.views.design;
+                //Showing design iFrame
+                this.model.views.design.show();
+                this.model.views.design.iframe.style.opacity = 0;
+                this.model.views.design.content = this.model.file.content;
+                //TODO: Improve reference (probably through binding values)
+                this.model.views.design._webGlHelper = this.model.webGlHelper;
+                //Rendering design view, using observers to know when template is ready
+                this.model.views.design.render(function () {
+                    //Adding observer to know when template is ready
+                    this._observer = new WebKitMutationObserver(this.handleTemplateReady.bind(this));
+                    this._observer.observe(this.model.views.design.document.head, {childList: true});
+                }.bind(this), template, {viewCallback: this.handleViewReady, context: this});
+            } else {
+                //TODO: Identify default view (probably code)
+            }
+        }  
+    },
+    ////////////////////////////////////////////////////////////////////
     //
     handleTemplateReady: {
         value: function (e) {
@@ -140,7 +178,6 @@ exports.HtmlDocument = Montage.create(Component, {
             if(typeof this.model.domContainer !== "undefined") {
                 this.model.domContainer = this.model.documentRoot;
             }
-
             //Making callback after view is loaded
             this.loaded.callback.call(this.loaded.context, this);
         }
