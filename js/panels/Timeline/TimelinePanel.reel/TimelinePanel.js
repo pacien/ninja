@@ -1346,6 +1346,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             // We will no longer have multiple things selected, so wipe that info out
             // if it isn't already gone.
             this.currentLayersSelected = false;
+            this.currentElementsSelected = false;
 
 			for (i = arrElementsLength-1; i >= 0; i--) {
 				var thingToPush = this.createLayerTemplate();
@@ -1903,6 +1904,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
         		// This is a paste action, because event.detail has more than one item in it.
         		this.createStageElementsAt(true, event.detail);
         	}
+        	this.updateLayerSelection();
         }
     },
 
