@@ -52,8 +52,13 @@ var ExternalAppsClipboardAgent = exports.ExternalAppsClipboardAgent = Montage.cr
             i=0,
             imageMime, imageData, imageElement;
 
-            //handle image blobs
-            if(clipboardData.items &&  (clipboardData.items.length > 0)){
+            if(!!htmlData || !!textData){
+                try{
+                    this.doPasteHtml(htmlData, textData);
+                }catch(e){
+                    console.log(""+e.stack);
+                }
+            }else if(clipboardData.items &&  (clipboardData.items.length > 0)){//handle image blobs
                 for(i=0; i < clipboardData.items.length; i++ ){
                     if((clipboardData.items[i].kind === "file") && (clipboardData.items[i].type.indexOf("image") === 0)){//example type -> "image/png"
                         imageMime = clipboardData.items[i].type;
@@ -67,15 +72,6 @@ var ExternalAppsClipboardAgent = exports.ExternalAppsClipboardAgent = Montage.cr
                     }
                 }
             }
-
-            try{
-                if(!!htmlData || !!textData){
-                    this.doPasteHtml(htmlData, textData);
-                }
-            }catch(e){
-                console.log(""+e.stack);
-            }
-
         }
     },
 
@@ -134,14 +130,8 @@ var ExternalAppsClipboardAgent = exports.ExternalAppsClipboardAgent = Montage.cr
         value: function(htmlData, textData){
             var divWrapper = null, data = null;
 
-            if(htmlData){
-                //cleanse HTML
-                htmlData = htmlData.replace(/\<meta [^>]+>/gi, ""); // Remove the meta tag.
-                htmlData = htmlData.replace(/\<script [^>]+>/g," "); // Remove the script tag.
-            }
-
-            textData = textData.replace(/\<script [^>]+>/g," "); // Remove any script tag.
-
+            htmlData = this.sanitize(htmlData);
+            textData = this.sanitize(textData);
 
             data = htmlData ? htmlData : textData;
 
@@ -155,12 +145,40 @@ var ExternalAppsClipboardAgent = exports.ExternalAppsClipboardAgent = Montage.cr
                                                                                 "left": "0px",
                                                                                 "position": "absolute",
                                                                                 "top": "0px",
-                                                                                "width": "161px"});
+                                                                                "width": "161px"}, false);
 
                 divWrapper.innerHTML = data;
 
+                //hack to set the wrapper div's height and width as per the pasted content
+                var theclass = divWrapper.getAttribute("class");
+                //temporarily remove the class to find the computed styles for the pasted content
+                if(theclass){
+                    divWrapper.removeAttribute("class");
+                }
+                var height = divWrapper.ownerDocument.defaultView.getComputedStyle(divWrapper).getPropertyValue("height");
+                var width = divWrapper.ownerDocument.defaultView.getComputedStyle(divWrapper).getPropertyValue("width");
+
+                divWrapper.setAttribute("class", theclass);
+
+                this.application.ninja.stylesController.setElementStyle(divWrapper, "height", height);
+                this.application.ninja.stylesController.setElementStyle(divWrapper, "width", width);
+                //-end hack
+
+                NJevent("elementAdded", divWrapper);
+
                 this.application.ninja.currentDocument.model.needsSave = true;
             }
+        }
+    },
+
+    sanitize : {
+        value: function(data){
+            data = data.replace(/\<meta [^>]+>/gi, ""); // Remove meta tags
+            data = data.replace(/\<script [^>]+>/g," "); // Remove script tags
+            data = data.replace(/\<link [^>]+>/g," "); // Remove script tags
+            data = data.replace(/\<xml [^>]+>/g," "); // Remove script tags
+
+            return data;
         }
     }
 });
