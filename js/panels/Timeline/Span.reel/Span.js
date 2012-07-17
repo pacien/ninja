@@ -1,24 +1,25 @@
 /* <copyright>
-Copyright (c) 2012, Motorola Mobility, Inc
+Copyright (c) 2012, Motorola Mobility LLC.
 All Rights Reserved.
-BSD License.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
-  - Redistributions of source code must retain the above copyright notice,
-    this list of conditions and the following disclaimer.
-  - Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in the
-    documentation and/or other materials provided with the distribution.
-  - Neither the name of Motorola Mobility nor the names of its contributors
-    may be used to endorse or promote products derived from this software
-    without specific prior written permission.
+* Redistributions of source code must retain the above copyright notice,
+  this list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of Motorola Mobility LLC nor the names of its
+  contributors may be used to endorse or promote products derived from this
+  software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
 LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
 CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
 SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -29,7 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
 
 var Montage = require("montage/core/core").Montage,
-	Component = require("montage/ui/component").Component;
+    Component = require("montage/ui/component").Component;
 
 var Span = exports.Span = Montage.create(Component, {
 
@@ -51,39 +52,39 @@ var Span = exports.Span = Montage.create(Component, {
             this.needsDraw = true;
         }
     },
-    
+
     _isHighlighted: {
-    	value: false
+        value: false
     },
     isHighlighted: {
-    	get: function() {
-    		return this._isHighlighted;
-    	},
-    	set: function(newVal) {
-    		if (newVal !== this._isHighlighted) {
-    			this._isHighlighted = newVal;
-    			this.needsDraw = true;
-    		}
-    	}
+        get: function() {
+            return this._isHighlighted;
+        },
+        set: function(newVal) {
+            if (newVal !== this._isHighlighted) {
+                this._isHighlighted = newVal;
+                this.needsDraw = true;
+            }
+        }
     },
-    
+
     _areChoicesVisible: {
-    	value: false
+        value: false
     },
     areChoicesVisible: {
-    	get: function() {
-    		return this._areChoicesVisible;
-    	},
-    	set: function(newVal) {
-    		if (newVal !== this._areChoicesVisible) {
-    			this._areChoicesVisible = newVal;
-    			this.needsDraw = true;
-    		}
-    	}
+        get: function() {
+            return this._areChoicesVisible;
+        },
+        set: function(newVal) {
+            if (newVal !== this._areChoicesVisible) {
+                this._areChoicesVisible = newVal;
+                this.needsDraw = true;
+            }
+        }
     },
-    
+
     _easing: {
-    	value: "none"
+        value: "none"
     },
     easing: {
     	get: function() {
@@ -133,21 +134,21 @@ var Span = exports.Span = Montage.create(Component, {
             	this.easing_choice.style.width = choiceWidth + "px";
             	this.easing_choice.style.overflow = "hidden";
             }
-			if (this.spanWidth > 70) {
-            	this.container_easing.setAttribute("style", "");
-            	this.easing_choice.setAttribute("style", "");
+            if (this.spanWidth > 70) {
+                this.container_easing.setAttribute("style", "");
+                this.easing_choice.setAttribute("style", "");
             }
             
             if (this.isHighlighted === true) {
-            	this.element.classList.add("spanHighlight");
+                this.element.classList.add("spanHighlight");
             } else {
-            	this.element.classList.remove("spanHighlight");
+                this.element.classList.remove("spanHighlight");
             }
 
             if (this.easing_choice.innerText !== this.easing) {
-            	this.easing_choice.innerText = this.easing;
+                this.easing_choice.innerText = this.easing;
             }
-            
+
         }
     },
 
@@ -162,12 +163,12 @@ var Span = exports.Span = Montage.create(Component, {
     		this.application.ninja.timeline.easingMenu.anchor = this.easing_choice;
     		this.application.ninja.timeline.easingMenu.currentChoice = event.currentTarget.innerText;
 
-    		function findPos(obj) {
-    			var objReturn = {};
-    			objReturn.top = 0;
-    			objReturn.left = 0;
+            function findPos(obj) {
+                var objReturn = {};
+                objReturn.top = 0;
+                objReturn.left = 0;
 
-				if (obj.offsetParent) {
+                if (obj.offsetParent) {
 
 					do {
 						objReturn.left += obj.offsetLeft;
@@ -185,8 +186,8 @@ var Span = exports.Span = Montage.create(Component, {
     	}
     },
     handleEasingChoicesClick: {
-    	value: function(event) {
-    		event.stopPropagation();
+        value: function(event) {
+            event.stopPropagation();
 
             /* Un-highlight the old choice and highlight the new choice */
     		this.application.ninja.timeline.easingMenu.popup.contentEl.querySelector(".easing-selected").classList.remove("easing-selected");
