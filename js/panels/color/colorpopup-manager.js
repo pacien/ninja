@@ -284,7 +284,13 @@ exports.ColorPopupManager = Montage.create(Component, {
                 cvs = this._popupChipBtn.getElementsByTagName('canvas')[0],
                 rgb = this._popupChipBase.colorManager.rgb,
                 hsl = this._popupChipBase.colorManager.hsl,
-                alpha = this._popupChipBase.colorManager.alpha.value || this._popupChipBase.colorManager.alpha;
+                alpha;
+            //Checking for alpha value
+            if (!isNaN(this._popupChipBase.colorManager.alpha.value)) {
+                alpha =  this._popupChipBase.colorManager.alpha.value;
+            } else if (!isNaN(this._popupChipBase.colorManager.alpha)){
+                alpha = this._popupChipBase.colorManager.alpha;
+            }
             //
             this._popupChipBase._components.hex.value = this._popupChipBase.colorManager.hex;
             //
@@ -312,13 +318,13 @@ exports.ColorPopupManager = Montage.create(Component, {
             }
             //
             if (rgb) {
-                if (alpha) {
+                if (!isNaN(alpha)) {
                     this._popupChipBtn.color('rgb', {r: rgb.r, g: rgb.g, b: rgb.b, a: alpha, css: 'rgba('+rgb.r+', '+rgb.g+', '+rgb.b+', '+alpha+')'});
                 } else {
                     this._popupChipBtn.color('rgb', {r: rgb.r, g: rgb.g, b: rgb.b, a: 1, css: 'rgba('+rgb.r+', '+rgb.g+', '+rgb.b+', 1)'});
                 }
             } else if (!(e._event.mode && e._event.mode === 'nocolor')) {
-                if (alpha) {
+                if (!isNaN(alpha)) {
                     this._popupChipBtn.color('rgb', {r: 255, g: 255, b: 255, a: alpha, css: 'rgba(255, 255, 255, '+alpha+')'});
                 } else {
                     this._popupChipBtn.color('rgb', {r: 255, g: 255, b: 255, a: 1, css: 'rgba(255, 255, 255, 1)'});
@@ -339,7 +345,13 @@ exports.ColorPopupManager = Montage.create(Component, {
                 cvs = this._popupGradientChipBtn.getElementsByTagName('canvas')[0],
                 rgb = this._popupGradientChipBase.colorManager.rgb,
                 hsl = this._popupGradientChipBase.colorManager.hsl,
-                alpha = this._popupGradientChipBase.colorManager.alpha.value || this._popupGradientChipBase.colorManager.alpha;
+                alpha;
+            //Checking for alpha value
+            if (!isNaN(this._popupGradientChipBase.colorManager.alpha.value)) {
+                alpha =  this._popupGradientChipBase.colorManager.alpha.value;
+            } else if (!isNaN(this._popupGradientChipBase.colorManager.alpha)){
+                alpha = this._popupGradientChipBase.colorManager.alpha;
+            }
             //
             this._popupGradientChipBase._components.hex.value = this._popupGradientChipBase.colorManager.hex;
             //
@@ -367,13 +379,13 @@ exports.ColorPopupManager = Montage.create(Component, {
             }
             //
             if (rgb) {
-                if (alpha) {
+                if (!isNaN(alpha)) {
                     this._popupGradientChipBtn.color('rgb', {r: rgb.r, g: rgb.g, b: rgb.b, a: alpha, css: 'rgba('+rgb.r+', '+rgb.g+', '+rgb.b+', '+alpha+')'});
                 } else {
                     this._popupGradientChipBtn.color('rgb', {r: rgb.r, g: rgb.g, b: rgb.b, a: 1, css: 'rgba('+rgb.r+', '+rgb.g+', '+rgb.b+', 1)'});
                 }
             } else {
-                if (alpha) {
+                if (!isNaN(alpha)) {
                     this._popupGradientChipBtn.color('rgb', {r: 255, g: 255, b: 255, a: alpha, css: 'rgba(255, 255, 255, '+alpha+')'});
                 } else {
                     this._popupGradientChipBtn.color('rgb', {r: 255, g: 255, b: 255, a: 1, css: 'rgba(255, 255, 255, 1)'});
@@ -615,7 +627,7 @@ exports.ColorPopupManager = Montage.create(Component, {
                         hsv = this.colorManager.rgbToHsv(color.r, color.g, color.b);
                     }
                     //
-                    if (color && color.a && !e._target.base.props.panel) {
+                    if (color && !isNaN(color.a) && !e._target.base.props.panel) {
                         e._target.base.colorManager.alpha = color.a;
                         e._target.base._components.combo.slider.value = color.a*100;
                     } else if (!e._target.base.props.panel){
