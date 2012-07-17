@@ -406,10 +406,13 @@ POSSIBILITY OF SUCH DAMAGE.
     margin: 2px 0px 0px 0px;
 }
 
-.slider-track {
+.tl_slider .slider-track {
     background: #29292;
-    width: 127px
-},
+    width: 127px;
+    height: 4px;
+    border: 1px solid #000;
+    top: 3px;
+}
 
 .sliderClass {
     float: left;
