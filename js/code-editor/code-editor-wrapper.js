@@ -114,6 +114,8 @@ exports.CodeEditorWrapper = Montage.create(Component, {
     deserializedFromTemplate: {
         value: function() {
             this.codeEditor = CodeMirror;
+
+            //todo:load all avaialable themes
         }
     },
 
