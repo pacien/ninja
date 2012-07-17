@@ -50,26 +50,38 @@ var ExternalAppsClipboardAgent = exports.ExternalAppsClipboardAgent = Montage.cr
             htmlData = clipboardData.getData("text/html"),
             textData = clipboardData.getData("text/plain"),
             i=0,
-            imageMime, imageData, imageElement;
+            imageMime, imageData, imageElement, isImage = false, imageItem;
 
-            if(!!htmlData || !!textData){
+            if(clipboardData.items &&  (clipboardData.items.length > 0)){//handle image blobs
+                for(i=0; i < clipboardData.items.length; i++ ){
+                    if((clipboardData.items[i].kind === "file") && (clipboardData.items[i].type.indexOf("image") === 0)){//example type -> "image/png"
+                        isImage = true;
+                        if(clipboardData.items[i].type === "image/png"){
+                            imageItem = clipboardData.items[i];//grab the png image from clipboard
+                        }
+                        else if(i===0){
+                            imageItem = clipboardData.items[i];
+                        }
+                    }
+                }
+            }
+
+            if(isImage && imageItem){
+                imageMime = imageItem.type;
+                imageData = imageItem.getAsFile();
+                try{
+                    imageElement = this.pasteImageBinary(imageData);
+                }catch(e){
+                    console.log(""+e.stack);
+                }
+                this.application.ninja.currentDocument.model.needsSave = true;
+            }
+
+            if(!isImage && (!!htmlData || !!textData)){
                 try{
                     this.doPasteHtml(htmlData, textData);
                 }catch(e){
                     console.log(""+e.stack);
-                }
-            }else if(clipboardData.items &&  (clipboardData.items.length > 0)){//handle image blobs
-                for(i=0; i < clipboardData.items.length; i++ ){
-                    if((clipboardData.items[i].kind === "file") && (clipboardData.items[i].type.indexOf("image") === 0)){//example type -> "image/png"
-                        imageMime = clipboardData.items[i].type;
-                        imageData = clipboardData.items[i].getAsFile();
-                        try{
-                            imageElement = this.pasteImageBinary(imageData);
-                        }catch(e){
-                            console.log(""+e.stack);
-                        }
-                        this.application.ninja.currentDocument.model.needsSave = true;
-                    }
                 }
             }
         }
@@ -128,7 +140,7 @@ var ExternalAppsClipboardAgent = exports.ExternalAppsClipboardAgent = Montage.cr
 
     doPasteHtml:{
         value: function(htmlData, textData){
-            var divWrapper = null, data = null;
+            var divWrapper = null, data = null, theclass, height, width;
 
             htmlData = this.sanitize(htmlData);
             textData = this.sanitize(textData);
@@ -150,13 +162,13 @@ var ExternalAppsClipboardAgent = exports.ExternalAppsClipboardAgent = Montage.cr
                 divWrapper.innerHTML = data;
 
                 //hack to set the wrapper div's height and width as per the pasted content
-                var theclass = divWrapper.getAttribute("class");
+                theclass = divWrapper.getAttribute("class");
                 //temporarily remove the class to find the computed styles for the pasted content
                 if(theclass){
                     divWrapper.removeAttribute("class");
                 }
-                var height = divWrapper.ownerDocument.defaultView.getComputedStyle(divWrapper).getPropertyValue("height");
-                var width = divWrapper.ownerDocument.defaultView.getComputedStyle(divWrapper).getPropertyValue("width");
+                height = divWrapper.ownerDocument.defaultView.getComputedStyle(divWrapper).getPropertyValue("height");
+                width = divWrapper.ownerDocument.defaultView.getComputedStyle(divWrapper).getPropertyValue("width");
 
                 divWrapper.setAttribute("class", theclass);
 
