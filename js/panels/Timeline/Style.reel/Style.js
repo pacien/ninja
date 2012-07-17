@@ -438,12 +438,12 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
 	_showView : {
 		value: function() {
 			if (this.whichView === "hintable") {
-				this.containerHintable.classList.remove("hidden");
-				this.containerPropvals.classList.add("hidden");
+				this.containerHintable.classList.remove("hideme");
+				this.containerPropvals.classList.add("hideme");
 				this.myHintable.start();
 			} else {
-				this.containerHintable.classList.add("hidden");
-				this.containerPropvals.classList.remove("hidden");
+				this.containerHintable.classList.add("hideme");
+				this.containerPropvals.classList.remove("hideme");
 				this._showTweener();
 			}
 		}
@@ -466,9 +466,9 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
 			}
 
 			if (tweenable.tweener === "hottext" ) {
-				this.editorInputContainer.classList.add("hidden");
-				this.editorColorContainer.classList.add("hidden");
-				this.editorHottextContainer.classList.remove("hidden");
+				this.editorInputContainer.classList.add("hideme");
+				this.editorColorContainer.classList.add("hideme");
+				this.editorHottextContainer.classList.remove("hideme");
 				this.valueEditorHottext.acceptableUnits = [tweenable.units];
 				this.valueEditorHottext.units = tweenable.units;
 				this.valueEditorHottext.minValue = tweenable.min;
@@ -481,9 +481,9 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
                 this.valueEditorHottext.addEventListener("changing",this,false);
 				this.valueEditorHottext.needsDraw = true;
 			} else if (tweenable.tweener === "color" ) {
-				this.editorInputContainer.classList.add("hidden");
-				this.editorColorContainer.classList.remove("hidden");
-				this.editorHottextContainer.classList.add("hidden");
+				this.editorInputContainer.classList.add("hideme");
+				this.editorColorContainer.classList.remove("hideme");
+				this.editorHottextContainer.classList.add("hideme");
 
                 if(tweenable.colorType === "fill"){
                     this._isFill = true;
@@ -508,9 +508,9 @@ var LayerStyle = exports.LayerStyle = Montage.create(Component, {
                 }
 				// TODO: set up color chip here.
 			} else if (tweenable.tweener === "input"){
-				this.editorInputContainer.classList.remove("hidden");
-				this.editorColorContainer.classList.add("hidden");
-				this.editorHottextContainer.classList.add("hidden");
+				this.editorInputContainer.classList.remove("hideme");
+				this.editorColorContainer.classList.add("hideme");
+				this.editorHottextContainer.classList.add("hideme");
 				this.valueEditorInput.value = this.editorValue;
                 this.valueEditorInput.addEventListener("blur",this,false);
 			} else {
