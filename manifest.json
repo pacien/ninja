@@ -1,13 +1,14 @@
 {
-  "name": "Ninja",
+  "name": "Ninja Authoring Tool",
   "description": "Ninja HTML5 Authoring Tool - Alpha Release",
-  "version": "0.7.0.0",
+  "version": "0.8.0.0",
   "app": {
     "launch": {
       "local_path": "index.html"
     }
   },
   "icons": {
+    "16": "ninja_icon_16.png",
     "128": "ninja_icon_128.png"
   },
   "permissions": [
@@ -15,7 +16,7 @@
     "notifications",
     "webRequest",
     "webRequestBlocking",
-    "http://ninja/*",
+    "http://tetsubo.org/*",
     "clipboardRead",
     "clipboardWrite"
   ],
@@ -24,7 +25,6 @@
       "features": ["css3d", "webgl"]
     }
   },
-  "minimum_chrome_version": "18.0.1025.162",
-  "offline_enabled": true,
-  "update_url": "http://ninjateam.am.mot.com/NinjaApp/update.xml"
+  "minimum_chrome_version": "20.0.1132.47",
+  "offline_enabled": true
 }
