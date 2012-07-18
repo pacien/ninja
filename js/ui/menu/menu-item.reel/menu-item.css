@@ -129,12 +129,13 @@ POSSIBILITY OF SUCH DAMAGE.
     top: 0%;
     left: 100%;
     margin-top: 1px;
-    margin-left: 1px;
+    /*margin-left: 1px;*/
     float:left;
     font-family: 'Droid Sans', sans-serif !important;
     color: #ffffff;
     background: #494949;
     /*border:  1px solid #292929;*/
+    border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
     /*border-radius: 8px;*/

@@ -55,7 +55,7 @@ exports.MenuController = Montage.create(Component, {
 
             if(this._currentDocument && this._currentDocument.currentView === "design") {
                 document.application.model.show3dGrid = this._currentDocument.model.draw3DGrid;
-                this.topLevelMenu[2].entries[4].checked = this._currentDocument.model.draw3DGrid;
+                this.topLevelMenu[2].entries[5].checked = this._currentDocument.model.draw3DGrid;
             }
 
             if(!this._currentDocument) {
@@ -150,7 +150,7 @@ exports.MenuController = Montage.create(Component, {
 
     handlegrid: {
         value: function(value) {
-            this.topLevelMenu[2].entries[4].checked = !this.topLevelMenu[2].entries[4].checked;
+            this.topLevelMenu[2].entries[5].checked = !this.topLevelMenu[2].entries[5].checked;
             document.application.model.show3dGrid = this.topLevelMenu[2].entries[4].checked;
         }
     },
