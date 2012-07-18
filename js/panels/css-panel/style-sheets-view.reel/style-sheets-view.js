@@ -176,7 +176,7 @@ exports.StyleSheetsView = Montage.create(Component, {
         }
     },
 
-    handleStyleSheetModified : {
+    handleStyleSheetDirty : {
         value: function(e) {
             this.needsDraw = true;
         }
@@ -193,7 +193,7 @@ exports.StyleSheetsView = Montage.create(Component, {
     prepareForDraw : {
         value: function() {
             this.eventManager.addEventListener("styleSheetsReady", this, false);
-            this.eventManager.addEventListener("styleSheetModified", this, false);
+            this.eventManager.addEventListener("styleSheetDirty", this, false);
         }
     },
     draw : {

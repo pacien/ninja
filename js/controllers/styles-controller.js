@@ -1405,7 +1405,8 @@ var stylesController = exports.StylesController = Montage.create(Component, {
                 rel   : 'stylesheet',
                 id    : id || "",
                 media : 'screen',
-                title : 'Temp'
+                title : 'Temp',
+                'data-ninja-node' : 'true'
             });
 
             doc.head.appendChild(sheetElement);
@@ -1486,6 +1487,7 @@ var stylesController = exports.StylesController = Montage.create(Component, {
             ///// If the sheet doesn't already exist in the list of modified
             ///// sheets, dispatch dirty event and add the sheet to the list
             if(sheetSearch.length === 0) {
+                NJevent('styleSheetDirty', eventData);
                 this.dirtyStyleSheets.push({
                     document : sheet.ownerNode.ownerDocument,
                     stylesheet : sheet
