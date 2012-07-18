@@ -53,7 +53,7 @@ POSSIBILITY OF SUCH DAMAGE.
     -webkit-box-shadow: none;
 }
 
-.selected {
+.topMenuItem.selected {
     background-color: #222222;
 }
 

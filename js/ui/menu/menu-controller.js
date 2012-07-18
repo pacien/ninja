@@ -336,7 +336,8 @@ exports.MenuController = Montage.create(Component, {
                             "checked": false,
                             "submenu" : false,
                             "entries": [],
-                            "enabled": true,
+                            "enabled": false,
+                            "depend": "document",
                             "action":   "executeCut"
                         },
                         {
@@ -344,7 +345,8 @@ exports.MenuController = Montage.create(Component, {
                             "checked": false,
                             "submenu" : false,
                             "entries": [],
-                            "enabled": true,
+                            "enabled": false,
+                            "depend": "document",
                             "action":   "executeCopy"
                         },
                         {
@@ -352,7 +354,8 @@ exports.MenuController = Montage.create(Component, {
                             "checked": false,
                             "submenu" : false,
                             "entries": [],
-                            "enabled": true,
+                            "enabled": false,
+                            "depend": "document",
                             "action":   "executePaste"
                         }
                     ]
