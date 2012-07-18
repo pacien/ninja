@@ -511,7 +511,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
         set:function (newVal) {
             if (newVal !== this._millisecondsOffset) {
 
-                this.tempValue  = newVal;
+                this.zoomValue  = newVal;
                 var tempValue = (1/newVal) * 1000000;
                 newVal = tempValue;
 
@@ -1115,7 +1115,8 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
                 this.currentLayersSelected = this.application.ninja.currentDocument.tlCurrentLayersSelected;
                 this.currentElementsSelected = this.application.ninja.currentDocument.tlCurrentElementsSelected;
                 this._currentDocumentUuid = this.application.ninja.currentDocument.uuid;
-
+                this.millisecondsOffset = this.application.ninja.currentDocument.tlZoomSliderValue ;
+                this.zoom_slider.value = this.application.ninja.currentDocument.tlZoomSliderValue;
 
                 // Are we only showing animated layers?
 				if (this.application.ninja.currentDocument.boolShowOnlyAnimated) {
@@ -1706,12 +1707,17 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     zoomTrackContainerWidthChange:{
         value:function () {
 
-            this.tempValue = this.tempValue/1000;
-            this.tempValue *= 30;
+            if(this.application.ninja.currentDocument){
+                this.application.ninja.currentDocument.tlZoomSliderValue = this.zoomValue;
 
-            this.container_tracks.style.width = (this.tempValue * 80) + "px";
-            this.master_track.style.width = (this.tempValue * 80) + "px";
-            this.time_markers.style.width = (this.tempValue * 80) + "px";
+            }
+
+            this.zoomValue = this.zoomValue/1000;
+            this.zoomValue *= 30;
+
+            this.container_tracks.style.width = (this.zoomValue * 80) + "px";
+            this.master_track.style.width = (this.zoomValue * 80) + "px";
+            this.time_markers.style.width = (this.zoomValue * 80) + "px";
             if (this.timeMarkerHolder) {
                 this.time_markers.removeChild(this.timeMarkerHolder);
             }
