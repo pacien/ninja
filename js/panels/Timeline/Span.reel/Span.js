@@ -38,7 +38,7 @@ var Span = exports.Span = Montage.create(Component, {
         value: true
     },
 
-    // BEGIN: Models
+	/* Begin: Models */
     _spanWidth:{
         value:0
     },
@@ -87,70 +87,64 @@ var Span = exports.Span = Montage.create(Component, {
         value: "none"
     },
     easing: {
-        get: function() {
-            return this._easing;
-        },
-        set: function(newVal) {
-            if (newVal !== this._easing) {
-                if (typeof(newVal) === "undefined") {
-                    newVal = "none";
-                }
-                this._easing = newVal;
-                this.parentComponent.easing = this.easing;
-                this.parentComponent.tweenData.easing = this.easing;
-                this.parentComponent.setKeyframeEase(newVal);
-                this.needsDraw = true;
-            }
-        }
+    	get: function() {
+    		return this._easing;
+    	},
+    	set: function(newVal) {
+    		if (newVal !== this._easing) {
+    			if (typeof(newVal) === "undefined") {
+    				newVal = "none";
+    			}
+    			this._easing = newVal;
+                this.parentTween = this.parentComponent;
+                this.parentTween.easing = this.easing;
+                this.parentTween.tweenData.easing = this.easing;
+                this.parentTween.setKeyframeEase(newVal);
+    			this.needsDraw = true;
+    		}
+    	}
     },
 
-    // BEGIN: draw cycle
-    prepareForDraw: {
-        value: function() {
-            this.init();
-        }
-    },
-
+    /* End: Models */
+	
+	/* Begin: Draw Cycle */
+	prepareForDraw: {
+		value: function() {
+			this.init();
+		}
+	},
+	
     draw:{
         value: function(){
+            var containerWidth ,
+                choiceWidth;
+
             this.element.style.width = this.spanWidth + "px";
 
             if ((this.spanWidth <= 70) && (this.spanWidth >0)) {
-                var containerWidth = this.spanWidth -18,
-                    choiceWidth;
-                if (containerWidth < 0) {
-                    containerWidth = 0;
-                }
-                choiceWidth = containerWidth -3;
-                if (choiceWidth < 0) {
-                    choiceWidth = 0;
-                }
-                this.container_easing.style.width = containerWidth + "px";
-                this.easing_choice.style.width = choiceWidth + "px";
-                this.easing_choice.style.overflow = "hidden";
+            	    containerWidth = this.spanWidth -18
+            	if (containerWidth < 0) {
+            		containerWidth = 0;
+            	}
+            	choiceWidth = containerWidth -3;
+            	if (choiceWidth < 0) {
+            		choiceWidth = 0;
+            	}
+            	this.container_easing.style.width = containerWidth + "px";
+            	this.easing_choice.style.width = choiceWidth + "px";
+            	this.easing_choice.style.overflow = "hidden";
             }
             if (this.spanWidth > 70) {
                 this.container_easing.setAttribute("style", "");
                 this.easing_choice.setAttribute("style", "");
             }
-
-            // Highlight the span?
+            
             if (this.isHighlighted === true) {
                 this.element.classList.add("spanHighlight");
             } else {
                 this.element.classList.remove("spanHighlight");
             }
 
-            /*
-            // Hide or show the choices menu?
-            if (this.areChoicesVisible === true) {
-                this.easing_choices.style.display = "block";
-            } else {
-                this.easing_choices.style.display = "none";
-            }
-            */
-
-            // Change easing?
             if (this.easing_choice.innerText !== this.easing) {
                 this.easing_choice.innerText = this.easing;
             }
@@ -158,29 +152,16 @@ var Span = exports.Span = Montage.create(Component, {
         }
     },
 
-    // BEGIN: Controllers
-    init: {
-        value: function() {
-            this.easing_choice.addEventListener("click", this.handleEasingChoiceClick.bind(this), false);
-            //this.easing_choices.addEventListener("click", this.handleEasingChoicesClick.bind(this), false);
+    /* End: Draw Cycle */
 
-        }
-    },
-
-    highlightSpan:{
-        value: function(){
-            // Class add/remove should only be done in draw cycle.
-            // this.element.classList.add("spanHighlight");
-            this.isHighlighted = true;
-        }
-    },
-
+    /* Begin : Event Handlers */
+    
     handleEasingChoiceClick: {
-        value: function(event) {
-            event.stopPropagation();
-            //this.areChoicesVisible = true;
-            this.application.ninja.timeline.easingMenu.anchor = this.easing_choice;
-            this.application.ninja.timeline.easingMenu.currentChoice = event.currentTarget.innerText;
+    	value: function(event) {
+            var objPos;
+    		event.stopPropagation();
+    		this.application.ninja.timeline.easingMenu.anchor = this.easing_choice;
+    		this.application.ninja.timeline.easingMenu.currentChoice = event.currentTarget.innerText;
 
             function findPos(obj) {
                 var objReturn = {};
@@ -189,48 +170,59 @@ var Span = exports.Span = Montage.create(Component, {
 
                 if (obj.offsetParent) {
 
-                    do {
-                        objReturn.left += obj.offsetLeft;
-                        objReturn.top += obj.offsetTop;
-
-                    } while (obj = obj.offsetParent);
-                }
-                return objReturn;
-            }
-            var objPos = findPos(event.target);
-            this.application.ninja.timeline.easingMenu.top = objPos.top +38 - (this.application.ninja.timeline.layout_tracks.scrollTop);
-            this.application.ninja.timeline.easingMenu.left = objPos.left+18 - (this.application.ninja.timeline.layout_tracks.scrollLeft);
-            this.application.ninja.timeline.easingMenu.show();
-            this.application.ninja.timeline.easingMenu.callingComponent = this;
-        }
+					do {
+						objReturn.left += obj.offsetLeft;
+						objReturn.top += obj.offsetTop;
+	
+					} while (obj = obj.offsetParent);
+				}
+				return objReturn;
+			}
+			objPos = findPos(event.target);
+    		this.application.ninja.timeline.easingMenu.top = objPos.top +38 - (this.application.ninja.timeline.layout_tracks.scrollTop);
+    		this.application.ninja.timeline.easingMenu.left = objPos.left+18 - (this.application.ninja.timeline.layout_tracks.scrollLeft);
+    		this.application.ninja.timeline.easingMenu.show();
+    		this.application.ninja.timeline.easingMenu.callingComponent = this;
+    	}
     },
     handleEasingChoicesClick: {
         value: function(event) {
             event.stopPropagation();
 
-            // Remove the pointer to ourselves
-            //this.application.ninja.timeline.currentOpenSpanMenu = false;
+            /* Un-highlight the old choice and highlight the new choice */
+    		this.application.ninja.timeline.easingMenu.popup.contentEl.querySelector(".easing-selected").classList.remove("easing-selected");
+    		event.target.classList.add("easing-selected");
+    		
+    		/* Set the easing */
+    		this.easing = event.target.dataset.ninjaEase;
+            this.parentTween.easing = this.easing;
+            this.parentTween.tweenData.easing = this.easing;
+    		
+    		this.application.ninja.timeline.easingMenu.popup.contentEl.removeEventListener("click");
+    		this.hideEasingMenu();
+    	}
+    },
 
-            // Un-highlight the old choice and highlight the new choice
-            this.application.ninja.timeline.easingMenu.popup.contentEl.querySelector(".easing-selected").classList.remove("easing-selected");
-            event.target.classList.add("easing-selected");
+    /* End : Event Handlers */
 
-            // Set the easing
-            this.easing = event.target.dataset.ninjaEase;
-            this.parentComponent.easing = this.easing;
-            this.parentComponent.tweenData.easing = this.easing;
-
-            // Unbind the event handler
-            this.application.ninja.timeline.easingMenu.popup.contentEl.removeEventListener("click");
-
-            // Hide the menu.
-            this.hideEasingMenu();
+    /* Begin: Controllers */
+    init: {
+        value: function() {
+            this.easing_choice.addEventListener("click", this.handleEasingChoiceClick.bind(this), false);
         }
     },
-    hideEasingMenu: {
-        value: function() {
-            //this.areChoicesVisible = false;
-            this.application.ninja.timeline.easingMenu.hide();
+
+    highlightSpan:{
+        value: function(){
+            this.isHighlighted = true;
         }
+    },
+
+    hideEasingMenu: {
+    	value: function() {
+    		this.application.ninja.timeline.easingMenu.hide();
+    	}
     }
+
+    /* End : Controllers */
 });

@@ -36,6 +36,7 @@ var ElementsMediator = require("js/mediators/element-mediator").ElementMediator;
 
 var Tween = exports.Tween = Montage.create(Component, {
 
+    // ==== Begin Models
     keyframe: {
         value: null,
         serializable: true
@@ -195,17 +196,17 @@ var Tween = exports.Tween = Montage.create(Component, {
 
     },
 
-    draw:{
-        value:function () {
-            this.tweenspan.element.style.width = this.spanWidth + "px";
-            this.keyframe.element.style.left = (this.spanWidth -5) + "px";
-            this.tweenspan.spanWidth = this.spanWidth;
-            this.element.style.left = this.spanPosition + "px";
-            this.keyframe.position = this.spanWidth;
-            this.tweenspan.easing = this.easing;
-            if(this.isTweenAnimated){
-                this.tweenspan.highlightSpan();
-            }
+    _initSelect:{
+        value: null
+    },
+    initSelect:{
+        serializable:true,
+        get:function () {
+            return this._initSelect;
+        },
+        set:function (newVal) {
+            this._initSelect = newVal;
+            this.tweenData.initSelect = newVal;
         }
     },
 
@@ -219,25 +220,54 @@ var Tween = exports.Tween = Montage.create(Component, {
             this.tweenedProperties = this.tweenData.tweenedProperties;
             this.isTweenAnimated = this.tweenData.isTweenAnimated;
             this.easing = this.tweenData.easing;
+            this.initSelect = this.tweenData.initSelect;
             this.needsDraw = true;
         }
     },
+    // ==== End Models
 
+    // ==== Begin Draw cycle methods
+    prepareForDraw:{
+        value:function(){
+            if(this.initSelect){
+                // Select our new keyframe only if our parent is a main track.
+                // TODO: When we decouple all property tracks, this will go away.
+                if (typeof(this.parentComponent.parentComponent.trackType) === "undefined") {
+                    if (this.tweenID > 0) {
+                        this.keyframe.selectKeyframe();
+                    }
+                }
+                this.initSelect = false;
+            }
+        }
+    },
+
+    draw:{
+        value:function () {
+        	this.tweenspan.element.style.width = this.spanWidth + "px";
+            this.keyframe.element.style.left = (this.spanWidth -5) + "px";
+            this.tweenspan.spanWidth = this.spanWidth;
+            this.element.style.left = this.spanPosition + "px";
+            this.keyframe.position = this.spanWidth;
+            this.tweenspan.easing = this.easing;
+            if(this.isTweenAnimated){
+                this.tweenspan.highlightSpan();
+            }
+        }
+    },
+    // ==== End Draw cycle methods
+
+    // ==== Begin Event handlers
     handleElementChange:{
         value:function (event) {
-            // temp - testing var
-            var useAbsolute = true;
-
             if(event.detail.type === "cssChange"){
                 event.detail.source="cssPanelChange"
             }
-
             if (event.detail.source && event.detail.source !== "tween") {
 
                 if(this.parentComponent.parentComponent.isSubproperty){
                     this.setStyleTweenProperty(event.detail);
                 } else {
-                    // check for correct element selection
                     if (this.application.ninja.selectedElements[0] != this.parentComponent.parentComponent.animatedElement) {
                         console.log("Wrong element selected for this keyframe track");
                     } else {
@@ -247,61 +277,53 @@ var Tween = exports.Tween = Montage.create(Component, {
             }
         }
     },
+    // ==== End Event handlers
 
+    // ==== Begin Controllers
     setTweenProperties:{
         value:function (eventDetail) {
+        	if (eventDetail.source === "SelectionTool" || eventDetail.source === "timeline" || eventDetail.source === "pi" || eventDetail.source === "cssPanelChange") {
+	            if(this.parentComponent.parentComponent.animatedElement.offsetTop != this.tweenedProperties["top"]){
+	                this.tweenedProperties["top"] = this.parentComponent.parentComponent.animatedElement.offsetTop + "px";
+	            }
+	            if(this.parentComponent.parentComponent.animatedElement.offsetLeft != this.tweenedProperties["left"]){
+	                this.tweenedProperties["left"] = this.parentComponent.parentComponent.animatedElement.offsetLeft + "px";
+	            }
+	            if (this.parentComponent.parentComponent.animatedElement.offsetWidth != this.tweenedProperties["width"]){
+	                this.tweenedProperties["width"] = this.parentComponent.parentComponent.animatedElement.offsetWidth + "px";
+	            }
+	            if (this.parentComponent.parentComponent.animatedElement.offsetHeight != this.tweenedProperties["height"]){
+	                this.tweenedProperties["height"] = this.parentComponent.parentComponent.animatedElement.offsetHeight + "px";
+	            }
 
-            if (eventDetail.source === "SelectionTool" || eventDetail.source === "timeline" || eventDetail.source === "pi" || eventDetail.source === "cssPanelChange") {
-                if(this.parentComponent.parentComponent.animatedElement.offsetTop != this.tweenedProperties["top"]){
-                    this.tweenedProperties["top"] = this.parentComponent.parentComponent.animatedElement.offsetTop + "px";
-                }
-                if(this.parentComponent.parentComponent.animatedElement.offsetLeft != this.tweenedProperties["left"]){
-                    this.tweenedProperties["left"] = this.parentComponent.parentComponent.animatedElement.offsetLeft + "px";
-                }
-                if (this.parentComponent.parentComponent.animatedElement.offsetWidth != this.tweenedProperties["width"]){
-                    this.tweenedProperties["width"] = this.parentComponent.parentComponent.animatedElement.offsetWidth + "px";
-                }
-                if (this.parentComponent.parentComponent.animatedElement.offsetHeight != this.tweenedProperties["height"]){
-                    this.tweenedProperties["height"] = this.parentComponent.parentComponent.animatedElement.offsetHeight + "px";
-                }
-                // tell track to update css rule
-                this.parentComponent.parentComponent.updateKeyframeRule();
-                this.isTweenAnimated = true;
-            }
-
-            if (eventDetail.source === "translateTool") {
-                var arrMat = eventDetail.data.value[0].properties.mat,
-                    strTweenProperty = "perspective(1400) matrix3d(" + arrMat.join() + ")";
-
-                this.tweenedProperties["-webkit-transform"] = strTweenProperty;
-                this.parentComponent.parentComponent.updateKeyframeRule();
-                this.isTweenAnimated = true;
-            }
+	            this.parentComponent.parentComponent.updateKeyframeRule();
+	            this.isTweenAnimated = true;
+        	}
+			
+			if (eventDetail.source === "translateTool" || eventDetail.source === "rotateTool") {
+        		var arrMat = eventDetail.data.value[0].properties.mat,
+        			strTweenProperty = "perspective(1400) matrix3d(" + arrMat.join() + ")";
+        		
+        		this.tweenedProperties["-webkit-transform"] = strTweenProperty;
+        		this.parentComponent.parentComponent.updateKeyframeRule();
+        		this.isTweenAnimated = true;
+        	}
         }
     },
 
     setStyleTweenProperty:{
         value:function (eventDetail) {
-            //console.log("Setting style tween properties for: " + this.parentComponent.parentComponent.trackEditorProperty);
-            //console.log(eventDetail);
             if(eventDetail.type == "setProperties"){
-                // need to ignore top, left, width, and height
-                //console.log(eventDetail.data.value[0]);
                 this.tweenedProperties[this.parentComponent.parentComponent.trackEditorProperty] = eventDetail.data.value[0];
                 this.parentComponent.parentComponent.updatePropKeyframeRule();
-
             } else if(eventDetail.type == "setColor"){
                 var prop = this.parentComponent.parentComponent.trackEditorProperty;
                 this.tweenedProperties[prop] = eventDetail.data.value.color.css;
                 this.parentComponent.parentComponent.updatePropKeyframeRule();
-
             } else if(eventDetail.type == "setProperty"){
-                // need to ignore top, left, width, and height
-                //console.log(eventDetail.data.value[0]);
                 this.tweenedProperties[this.parentComponent.parentComponent.trackEditorProperty] = eventDetail.data.value[0];
                 this.parentComponent.parentComponent.updatePropKeyframeRule();
-
-            }else {
+            } else {
                 console.log("TWEEN Unhandled type - setStyleTweenProperty : " + eventDetail.type);
             }
         }
@@ -309,7 +331,6 @@ var Tween = exports.Tween = Montage.create(Component, {
 
     setKeyframeEase:{
         value:function(easeType){
-            // easeTypes - ease, ease-out, ease-in, ease-in-out, linear, cubic-bezier(x1, y1, x2, y2)
             this.tweenedProperties["-webkit-animation-timing-function"] = easeType;
             if(this.parentComponent.parentComponent.isSubproperty){
                 if(this.parentComponent.parentComponent.trackType == "position"){
@@ -324,18 +345,13 @@ var Tween = exports.Tween = Montage.create(Component, {
 
     selectTween:{
         value: function(){
-            // turn on event listener for element change
             this.eventManager.addEventListener("elementChange", this, false);
-
-            // select the containing layer
             var selectIndex = this.application.ninja.timeline.getLayerIndexByID(this.parentComponent.parentComponent.trackID);
-            this.application.ninja.timeline.selectLayer(selectIndex, true);
-
-            // tell timeline to deselect all other tweens and push this one into the selectedTweens in timeline
+            // this.application.ninja.timeline.selectLayer(selectIndex, true); // deprecated
+            this.application.ninja.timeline.selectLayers([selectIndex]);
+            this.application.ninja.timeline.updateStageSelection();
             this.application.ninja.timeline.deselectTweens();
             this.application.ninja.timeline.selectedTweens.push(this);
-
-            // update playhead position and time text
             this.application.ninja.timeline.playhead.style.left = (this.keyFramePosition - 2) + "px";
             this.application.ninja.timeline.playheadmarker.style.left = this.keyFramePosition + "px";
             var currentMillisecPerPixel = Math.floor(this.application.ninja.timeline.millisecondsOffset / 80);
@@ -343,13 +359,11 @@ var Tween = exports.Tween = Montage.create(Component, {
             this.application.ninja.timeline.updateTimeText(currentMillisec);
 
             if(this.parentComponent.parentComponent.isSubproperty){
-                // set property specific style on element
                 var currentValue = this.tweenedProperties[this.parentComponent.parentComponent.trackEditorProperty];
                 var el = this.parentComponent.parentComponent.animatedElement;
                 var prop = this.parentComponent.parentComponent.trackEditorProperty;
                 this.application.ninja.elementMediator.setProperty([el], prop, [currentValue], "Change", "tween");
             } else {
-                // move animated element to correct position on stage
                 var currentTop = this.tweenedProperties["top"];
                 var currentLeft = this.tweenedProperties["left"];
                 var currentWidth = this.tweenedProperties["width"];
@@ -365,10 +379,9 @@ var Tween = exports.Tween = Montage.create(Component, {
 
     deselectTween:{
         value:function(){
-            // turn off event listener for element change
             this.eventManager.removeEventListener("elementChange", this, false);
-            // deselect the keyframe for this tween
             this.keyframe.deselectKeyframe();
         }
     }
+    // ==== End Controllers
 });
