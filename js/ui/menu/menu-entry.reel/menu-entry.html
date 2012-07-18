@@ -38,42 +38,49 @@ POSSIBILITY OF SUCH DAMAGE.
         {
             "entriesController": {
                 "prototype": "montage/ui/controller/array-controller",
+                "bindings": {
+                    "content": {"<-": "@owner.entries"}
+                }
+            },
+
+            "menuHeaderButton": {
+                "prototype": "montage/ui/native/button.reel",
                 "properties": {
-                    "automaticallyOrganizeObjects": false
+                    "element": {"#": "menuHeaderButton"}
                 },
                 "bindings": {
-                    "content": {"<-": "@owner.data.entries"}
+                    "label": {"<-": "@owner.label"}
                 }
             },
 
             "repetition": {
                 "prototype": "montage/ui/repetition.reel",
                 "properties": {
-                    "element": { "#": "subEntries" }
-                },
-                "bindings": {
-                    "objects": {"<-": "@owner.data.entries"}
+                    "element": {"#": "subEntries"},
+                    "contentController": {"@": "entriesController"}
                 }
             },
 
             "menuItem": {
-                "prototype": "js/components/menu/menu-item.reel",
+                "prototype": "js/ui/menu/menu-item.reel",
                 "properties": {
                     "element": { "#": "menuEntryItem" }
                 },
                 "bindings": {
-                    "data": {"<-": "@repetition.objectAtCurrentIteration"},
-                    "enabled": {"<-": "@repetition.objectAtCurrentIteration.enabled"}
+                    "enabled": {"<-": "@repetition.objectAtCurrentIteration.enabled"},
+                    "checked": {"<-": "@repetition.objectAtCurrentIteration.checked"},
+                    "label": {"<-": "@repetition.objectAtCurrentIteration.label"},
+                    "submenu": {"<-": "@repetition.objectAtCurrentIteration.submenu"},
+                    "entries": {"<-": "@repetition.objectAtCurrentIteration.entries"},
+                    "action": {"<-": "@repetition.objectAtCurrentIteration.action"}
                 }
             },
 
             "owner": {
-                "prototype": "js/components/menu/menu-entry.reel",
+                "prototype": "js/ui/menu/menu-entry.reel",
                 "properties": {
                     "element":              {"#": "menuItem"},
-                    "topHeader":            {"#": "topHeaderBackground"},
-                    "topHeaderText":        {"#": "topHeaderText"},
-                    "subEntries":           {"#": "subEntries"}
+                    "menuHeaderButton":     {"@": "menuHeaderButton"}
                 }
             }
         }
@@ -83,9 +90,7 @@ POSSIBILITY OF SUCH DAMAGE.
 <body>
 
     <li data-montage-id="menuItem" class="topMenuItem">
-        <div data-montage-id="topHeaderBackground" class="menubg">
-            <span data-montage-id="topHeaderText" class="menu-label"></span>
-        </div>
+        <button data-montage-id="menuHeaderButton" class="headerButton"></button>
 
         <ul data-montage-id="subEntries" class="subEntries" style="z-index: 9991;">
             <li data-montage-id="menuEntryItem"></li>

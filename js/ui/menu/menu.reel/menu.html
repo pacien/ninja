@@ -32,46 +32,49 @@ POSSIBILITY OF SUCH DAMAGE.
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" type="text/css" href="menu-item.css">
+    <link rel="stylesheet" type="text/css" href="menu.css">
 
     <script type="text/montage-serialization">
         {
-            "entriesController": {
-                "prototype": "montage/ui/controller/array-controller",
-                "properties": {
-                    "automaticallyOrganizeObjects": false
-                },
+            "menudata": {
+                "prototype": "js/ui/menu/menu-controller",
                 "bindings": {
-                    "content": {"<-": "@owner.subentries"}
+                    "currentDocument": {"<-": "@owner.currentDocument"}
+                }
+            },
+
+            "menuController": {
+                "prototype": "montage/ui/controller/array-controller",
+                "bindings": {
+                    "content": {"<-": "@menudata.topLevelMenu"}
                 }
             },
 
             "repetition": {
                 "prototype": "montage/ui/repetition.reel",
                 "properties": {
-                    "element": {"#": "subEntries"},
-                    "contentController": {"@": "entriesController"}
+                    "element": { "#": "topMenu" },
+                    "contentController": {"@": "menuController"}
                 }
             },
 
-            "menuItem": {
-                "prototype": "js/components/menu/menu-item.reel",
+            "menuEntry": {
+                "prototype": "js/ui/menu/menu-entry.reel",
                 "properties": {
-                    "element": {"#": "menuEntryItem" }
+                    "element": { "#": "menuItem" }
                 },
                 "bindings": {
-                    "data": {"<-": "@repetition.objectAtCurrentIteration"},
-                    "enabled": {"<-": "@repetition.objectAtCurrentIteration.enabled"}
+                    "label": {"<-": "@repetition.objectAtCurrentIteration.label"},
+                    "entries": {"<-": "@repetition.objectAtCurrentIteration.entries"},
+                    "menuIsActive": {"<-": "@owner.active"}
                 }
             },
 
             "owner": {
-                "prototype": "js/components/menu/menu-item.reel",
+                "prototype": "js/ui/menu/menu.reel",
                 "properties": {
-                    "element":          {"#": "menuItem"},
-                    "itemBackground":   {"#": "menuItemBackground"},
-                    "itemText":         {"#": "menuItemText"},
-                    "subMenu":          {"#": "subEntries"}
+                    "element":  {"#": "mainMenuBar"},
+                    "menudata": {"@": "menudata"}
                 }
             }
         }
@@ -80,18 +83,12 @@ POSSIBILITY OF SUCH DAMAGE.
 </head>
 <body>
 
-    <li data-montage-id="menuItem" class="menuItem">
-        <div data-montage-id="menuItemBackground" class="menubg">
-            <span class="check"></span>
-            <span data-montage-id="menuItemText" class="menu-label"></span>
-            <span class="rightArrow"></span>
+    <nav data-montage-id="mainMenuBar" class="mainMenuBar unselectable">
+        <ul data-montage-id="topMenu" class="horizontal-menu">
+            <li data-montage-id="menuItem"></li>
+        </ul>
+    </nav>
 
-            <ul data-montage-id="subEntries" class="subEntries" style="display: none">
-                <li data-montage-id="menuEntryItem"></li>
-            </ul>
-
-        </div>
-    </li>
 
 </body>
 </html>
