@@ -113,12 +113,6 @@ exports.MenuController = Montage.create(Component, {
 
     toggleItem: {
         value: function(value) {
-<<<<<<< HEAD
-=======
-//            var f = value.substr(0, value.indexOf("-"));
-//            var c = value.slice(value.indexOf("-") + 1);
-
->>>>>>> 8f78cb1377009dabde95f4a81d5090b79b9de0da
             this['handle' + value.substr(0, value.indexOf("-"))](value.slice(value.indexOf("-") + 1));
         }
     },
