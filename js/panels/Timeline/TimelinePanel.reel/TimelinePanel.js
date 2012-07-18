@@ -922,6 +922,8 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 	    		    this.application.ninja.currentDocument.tlCurrentSelectedContainer = this.currentDocument.model.domContainer;
 	    		    this.application.ninja.currentDocument.tllayerNumber = this.currentLayerNumber;
 	    		    this.application.ninja.currentDocument.tlCurrentLayersSelected = this.currentLayersSelected;
+
+
 	    		    for (i = 0; i < hashLength; i++ ) {
 	    		    	if (this.application.ninja.currentDocument.tlBreadcrumbHash[i].containerUuid === this.currentDocument.model.domContainer.uuid) {
 	    		    		this.application.ninja.currentDocument.tlBreadcrumbHash[i].arrLayers = this.arrLayers;
@@ -961,7 +963,8 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
         value: function(boolUnbind) {
 			var arrEvents = ["elementAdded",
                              "elementsRemoved",
-                             "selectionChange"],
+                             "selectionChange",
+                             "tlZoomSlider"],
                 i,
                 arrEventsLength = arrEvents.length;
 
@@ -1112,7 +1115,8 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
                 this.currentLayersSelected = this.application.ninja.currentDocument.tlCurrentLayersSelected;
                 this.currentElementsSelected = this.application.ninja.currentDocument.tlCurrentElementsSelected;
                 this._currentDocumentUuid = this.application.ninja.currentDocument.uuid;
-                
+
+
                 // Are we only showing animated layers?
 				if (this.application.ninja.currentDocument.boolShowOnlyAnimated) {
 					// Fake a click.
@@ -1153,8 +1157,9 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
             this._captureSelection = false;
             this._openDoc = false;
             this.end_hottext.value = 25;
+            this.millisecondsOffset = 1000;
+
             this.handleTrackContainerWidthChange();
-            
             // Clear the repetitions
             if (this.arrLayers.length > 0) {
                 this.arrLayers = [];
@@ -1711,6 +1716,8 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
                 this.time_markers.removeChild(this.timeMarkerHolder);
             }
             this.drawTimeMarkers();
+
+
         }
     },
 
@@ -2247,7 +2254,53 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 			}
 			return false;
     	}
-    }
+    },
+
+    handleTlZoomSlider: {
+    		value: function(event) {
+
+    	        var currentMilliSecPerPixel , currentMilliSec , clickPos;
+    	        var i = 0,j=0,tweensLength,
+                    trackLength = this.trackRepetition.childComponents.length;
+
+                for(j=0;j<trackLength;j++){
+
+                    tweensLength = this.trackRepetition.childComponents[j].trackData.tweens.length;
+
+                    for (i = 0; i < tweensLength; i++) {
+
+                        if (i === 0) {
+                            // Exception: 0th item does not depend on anything
+                            // If 0th tween is draggable, this will need to be fixed.
+                            this.trackRepetition.childComponents[j].trackData.tweens[i].tweenData.spanWidth=0;
+                            this.trackRepetition.childComponents[j].trackData.tweens[i].tweenData.spanPosition=0;
+                            this.trackRepetition.childComponents[j].trackData.tweens[i].tweenData.keyFramePosition=0;
+                            this.trackRepetition.childComponents[j].trackData.tweens[i].tweenData.keyFrameMillisec=0;
+
+                        } else {
+                            var prevKeyFramePosition = this.trackRepetition.childComponents[j].trackData.tweens[i - 1].tweenData.keyFramePosition,
+                                myObj = {},
+                                thing = {};
+
+                            currentMilliSecPerPixel = Math.floor(this.application.ninja.timeline.millisecondsOffset / 80);
+                            currentMilliSec = this.trackRepetition.childComponents[j].trackData.tweens[i].tweenData.keyFrameMillisec;
+                            clickPos = currentMilliSec / currentMilliSecPerPixel;
+
+                            for (thing in this.trackRepetition.childComponents[j].trackData.tweens[i].tweenData) {
+                                myObj[thing] = this.trackRepetition.childComponents[j].trackData.tweens[i].tweenData[thing];
+                            }
+                            myObj.spanWidth = clickPos - prevKeyFramePosition;
+                            myObj.keyFramePosition = clickPos;
+                            myObj.spanPosition = clickPos - (clickPos - prevKeyFramePosition);
+
+                            this.trackRepetition.childComponents[j].trackData.tweens[i].tweenData = myObj;
+
+                        }
+                    }
+                }
+                this.application.ninja.timeline.zoomTrackContainerWidthChange();
+    		}
+    	}
     /* === END: Event Handlers === */
 
 });

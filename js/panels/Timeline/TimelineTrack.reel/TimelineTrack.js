@@ -506,7 +506,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             this.init();
             this.ninjaStylesContoller = this.application.ninja.stylesController;
             this.element.addEventListener("click", this, false);
-            this.eventManager.addEventListener("tlZoomSlider", this, false);
+
             
             // Drag and Drop event handlers
 			this.element.addEventListener("dragstart", this.handleKeyframeDragstart.bind(this), false);
@@ -593,48 +593,6 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
     // ==== End Draw cycle methods
 
     // ==== Begin Event handlers
-	handleTlZoomSlider: {
-		value: function(event) {
-			
-	        var currentMilliSecPerPixel , currentMilliSec , clickPos,thingToPush;
-	        var i = 0,
-	        	tweensLength = this.tweens.length;
-
-	        for (i = 0; i < tweensLength; i++) {
-	        	
-	        	if (i === 0) {
-					// Exception: 0th item does not depend on anything
-					// If 0th tween is draggable, this will need to be fixed.
-			        this.tweens[i].tweenData.spanWidth=0;
-		            this.tweens[i].tweenData.spanPosition=0;
-		            this.tweens[i].tweenData.keyFramePosition=0;
-		            this.tweens[i].tweenData.keyFrameMillisec=0;
-	
-	        	} else {
-					var prevKeyFramePosition = this.tweens[i - 1].tweenData.keyFramePosition,
-						myObj = {},
-						thing = {};
-
-			        currentMilliSecPerPixel = Math.floor(this.application.ninja.timeline.millisecondsOffset / 80);
-		            currentMilliSec = this.tweens[i].tweenData.keyFrameMillisec;
-		            clickPos = currentMilliSec / currentMilliSecPerPixel;
-
-		            for (thing in this.tweens[i].tweenData) {
-		            	myObj[thing] = this.tweens[i].tweenData[thing];
-		            }
-					myObj.spanWidth = clickPos - prevKeyFramePosition;
-		            myObj.keyFramePosition = clickPos;
-		            myObj.spanPosition = clickPos - (clickPos - prevKeyFramePosition);
-
-		            this.tweens[i].tweenData = myObj;
-
-
-	        	}
-	        }
-            this.application.ninja.timeline.zoomTrackContainerWidthChange();
-
-		}
-	},
 
     handleClick:{
         value:function (ev) {
