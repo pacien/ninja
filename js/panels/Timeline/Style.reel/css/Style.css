@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* <copyright>
 Copyright (c) 2012, Motorola Mobility LLC.
 All Rights Reserved.
@@ -5,16 +6,11 @@ All Rights Reserved.
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
-* Redistributions of source code must retain the above copyright notice,
-  this list of conditions and the following disclaimer.
+* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
 
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
+* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 
-* Neither the name of Motorola Mobility LLC nor the names of its
-  contributors may be used to endorse or promote products derived from this
-  software without specific prior written permission.
+* Neither the name of Motorola Mobility LLC nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -28,76 +24,42 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
-/* Layer.scss
- * Main SCSS file for Layer component, compiled by SASS into the file css/Layer.css.
- */
-.hidden {
-  display: none; }
+/* Layer.scss Main SCSS file for Layer component, compiled by SASS into the file css/Layer.css. */
+/* line 43, ../scss/Style.scss */
+.hideme { display: none; }
 
-.row-editor {
-  position: relative;
-  height: 14px; }
+/* line 46, ../scss/Style.scss */
+.row-editor { position: relative; height: 14px; }
 
-.style-padding {
-  padding-left: 5px;
-  padding-top: 3px;
-  padding-right: 5px; }
+/* line 50, ../scss/Style.scss */
+.style-padding { padding-left: 5px; padding-top: 3px; padding-right: 5px; }
 
-.style-row {
-  height: 20px;
-  border-bottom: 1px solid #505050; }
+/* line 55, ../scss/Style.scss */
+.style-row { height: 20px; border-bottom: 1px solid #505050; }
 
-div.content-style div.editable2 {
-  height: 14px;
-  background-color: #242424 !important;
-  color: #b2b2b2 !important;
-  border-width: 0px;
-  font-size: 11px;
-  overflow: hidden;
-  -webkit-user-select: text;
-  white-space: nowrap;
-  text-overflow: clip;
-  width: 100%; }
+/* line 60, ../scss/Style.scss */
+div.content-style div.editable2 { height: 14px; background-color: #242424 !important; color: #b2b2b2 !important; border-width: 0px; font-size: 11px; overflow: hidden; -webkit-user-select: text; white-space: nowrap; text-overflow: clip; width: 100%; }
 
-.content-style.collapsible-content,
-.content-style.collapsible-content div,
-.content-style.collapsible-content span {
-  overflow: visible;
-  text-overflow: visible; }
+/* line 74, ../scss/Style.scss */
+.content-style.collapsible-content, .content-style.collapsible-content div, .content-style.collapsible-content span { overflow: visible; text-overflow: visible; }
 
-div.content-style div.cell-property,
-div.content-style div.cell-value {
-  width: 45%;
-  float: left;
-  height: 18px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  line-height: 18px; }
+/* line 79, ../scss/Style.scss */
+div.content-style div.cell-property, div.content-style div.cell-value { width: 45%; float: left; height: 18px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 18px; }
 
-div.content-style div.cell-property div {
-  min-width: 90%;
-  height: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap; }
+/* line 88, ../scss/Style.scss */
+div.content-style div.cell-property div { min-width: 90%; height: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-div.content-style input.nj-skinned {
-  height: 10px;
-  font-size: 12px;
-  top: -3px; }
+/* line 96, ../scss/Style.scss */
+div.content-style input.nj-skinned { height: 10px; font-size: 12px; top: -3px; }
 
-div.style-row .container-propvals {
-  overflow: hidden; }
+/* line 101, ../scss/Style.scss */
+div.style-row .container-propvals { overflow: hidden; }
 
-.content-style .style-row.selected {
-  background-color: #474747;
-  color: white; }
+/* line 105, ../scss/Style.scss */
+.content-style .style-row.selected { background-color: #474747; color: white; }
 
-.content-style .style-row.style-selected {
-  background-color: #b2b2b2;
-  color: #242424; }
+/* line 109, ../scss/Style.scss */
+.content-style .style-row.style-selected { background-color: #b2b2b2; color: #242424; }
 
-.toolColorChipCtrl.color-chip-position {
-  margin-top: 0px;
-  height: 14px; }
+/* line 114, ../scss/Style.scss */
+.toolColorChipCtrl.color-chip-position { margin-top: 0px; height: 14px; }
