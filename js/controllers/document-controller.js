@@ -356,7 +356,7 @@ exports.DocumentController = Montage.create(Component, {
                     break;
                 default:
                     //Open in code view
-                    Montage.create(TextDocument).init(file, this.application.ninja, this.application.ninja.openDocument, 'code');
+                    Montage.create(TextDocument).init(file, this.application.ninja, this.application.ninja.openDocument, 'code', document.getElementById("codeViewContainer"));
                     break;
             }
         }

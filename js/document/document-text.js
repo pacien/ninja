@@ -51,13 +51,13 @@ exports.TextDocument = Montage.create(Component, {
     ////////////////////////////////////////////////////////////////////
     //
     init:{
-        value: function(file, context, callback, view){
+        value: function(file, context, callback, view, parentContainer){
             //
             var codeDocumentView = CodeDocumentView.create(), container = null; //TODO: Why is this initilzied to null?
             //Creating instance of Text Document Model
             this.model = Montage.create(TextDocumentModel,{
                 file: {value: file},
-                parentContainer: {value: document.getElementById("codeViewContainer")}, //TODO: Remove reference to this element, should be dynamic
+                parentContainer: {value: parentContainer}, //TODO: Remove reference to this element, should be dynamic
                 views: {value: {'code': codeDocumentView, 'design': null}} //TODO: Add check if file might have design view, if so, then create it
             });
             //TODO: Add design view logic
