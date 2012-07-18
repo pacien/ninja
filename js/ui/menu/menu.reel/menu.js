@@ -133,7 +133,7 @@ exports.Menu = Montage.create(Component, {
     handleMenuItemClick: {
         value: function(evt) {
             if(evt.detail.indexOf("-") > 0) {
-                this.menudata.toggleItem(evt.detail.slice(evt.detail.indexOf("-") + 1))
+                this.menudata.toggleItem(evt.detail.slice(evt.detail.indexOf("-") + 1));
             } else {
                 NJevent(evt.detail);
             }
