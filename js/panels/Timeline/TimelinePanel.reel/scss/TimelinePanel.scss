@@ -336,7 +336,6 @@ POSSIBILITY OF SUCH DAMAGE.
     background: none;
     float:left;
     margin-left: 5%;
-    visibility: hidden;
 }
 
 /* Configuration menu */
@@ -397,4 +396,30 @@ POSSIBILITY OF SUCH DAMAGE.
 
 .layer-hidden {
     display: none;
+}
+
+.tl_slider {
+    width: 127px;
+    height:5px;
+    float: left;
+    clear: none;
+    margin: 2px 0px 0px 0px;
+}
+
+.tl_slider .slider-track {
+    background: #292929;
+    width: 127px;
+    height: 4px;
+    border: 1px solid #000;
+    top: 3px;
+}
+
+.sliderClass {
+    float: left;
+    width: 127px
+}
+
+.sliderClass .knob {
+    background: url(../images/knob.png) no-repeat transparent center center;
+    margin-bottom: 2px;
 }
