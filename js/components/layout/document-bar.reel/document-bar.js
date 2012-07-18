@@ -205,6 +205,12 @@ exports.DocumentBar = Montage.create(Component, {
                 this.btnCode.removeAttribute('class');
             }
         }
+    },
+
+    handlePreviewAction: {
+        value: function(event) {
+            NJevent("executePreview");
+        }
     }
     ////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////

@@ -33,60 +33,53 @@ var Montage = require("montage/core/core").Montage;
 var Component = require("montage/ui/component").Component;
 
 exports.MenuEntry = Montage.create(Component, {
-    topHeader: {
+
+    _label: {
         value: null
     },
 
-    topHeaderText: {
-        value: null
-    },
-
-    subEntries: {
-        value: null
-    },
-
-    // Reference to the parent Menu component
-    _menu: {
-        value: null
-    },
-
-    menu: {
+    label: {
         get: function() {
-            return this._menu;
+            return this._label;
         },
         set: function(value) {
-            if(value !== this._menu) {
-                this._menu = value;
+            if(this._label !== value) {
+                this._label = value;
             }
         }
     },
 
-    _data: {
-        value: null
+    _entries: {
+        value: []
     },
 
-    data: {
+    entries: {
         get: function() {
-            return this._data;
+            return this._entries;
         },
         set: function(value) {
-            if(this._data !== value) {
-                this._data = value;
+            if(this._entries !== value) {
+                this._entries = value;
             }
         }
     },
 
-    select: {
+    menuHeaderButton: {
+        value: null
+    },
+
+
+    prepareForDraw: {
         value: function() {
-            this.element.classList.add("selected");
-            this.subEntries.style.display = "block";
+           this.menuHeaderButton.element.addEventListener("mousedown", this, true);
         }
     },
 
-    deselect: {
-        value: function() {
-            this.element.classList.remove("selected");
-            this.subEntries.style.display = "none";
+    captureMousedown: {
+        value: function(event) {
+            var mouseDownEvent = document.createEvent("CustomEvent");
+            mouseDownEvent.initCustomEvent("headermousedown", true, true, this);
+            this.dispatchEvent(mouseDownEvent);
         }
     },
 
@@ -99,42 +92,19 @@ exports.MenuEntry = Montage.create(Component, {
             return this._menuIsActive;
         },
         set: function(value) {
-            if(value)  this.element.addEventListener("mouseover", this, false);
-        }
-    },
-
-    toggleOnMenuItemAction: {
-        value: function() {
-            // TODO: Hack! Rework this!
-            //for non menu headers only
-            this.parentComponent.ownerComponent.toggleActivation(this);
-        }
-    },
-
-    captureMousedown: {
-        value: function(event) {
-            // TODO: Hack! Rework this!
-            //for menu headers only
-            if(event.target.getAttribute("data-montage-id") === "topHeaderText"){
-                this.parentComponent.ownerComponent.toggleActivation(this);
+            if(value) {
+                this.element.addEventListener("mouseover", this, false);
+            } else {
+                this.element.removeEventListener("mouseover", this, false);
             }
         }
     },
 
     handleMouseover: {
         value: function(event) {
-            this.parentComponent.ownerComponent.activeEntry = this;
-        }
-    },
-
-    prepareForDraw: {
-        value: function() {
-
-            this.subEntries.style.display = "none";
-
-            this.topHeaderText.innerHTML = this.data.header;
-
-            this.element.addEventListener("mousedown", this, true);
+            var mouseOverEvent = document.createEvent("CustomEvent");
+            mouseOverEvent.initCustomEvent("headermouseover", true, true, this);
+            this.dispatchEvent(mouseOverEvent);
         }
     }
 });
