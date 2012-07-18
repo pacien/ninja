@@ -85,6 +85,11 @@ var ClipboardController = exports.ClipboardController = Montage.create(Component
                 return;
             }
 
+            //perform clipboard operations only if selection tool is selected
+            if(this.application.ninja.toolsData.defaultToolsData[this.application.ninja.toolsData.selectionToolIndex].selected === false){
+                return;
+            }
+
             if(this.clipboardContext === "stage"){
                 ElementsClipboardAgent.copy(clipboardEvent);
             }
@@ -99,6 +104,11 @@ var ClipboardController = exports.ClipboardController = Montage.create(Component
 
             // Don't do anything if an input or other control is focused
             if(document.activeElement.nodeName !== "BODY") {
+                return;
+            }
+
+            //perform clipboard operations only if selection tool is selected
+            if(this.application.ninja.toolsData.defaultToolsData[this.application.ninja.toolsData.selectionToolIndex].selected === false){
                 return;
             }
 
@@ -123,6 +133,11 @@ var ClipboardController = exports.ClipboardController = Montage.create(Component
 
             // Don't do anything if an input or other control is focused
             if(document.activeElement.nodeName !== "BODY") {
+                return;
+            }
+
+            //perform clipboard operations only if selection tool is selected
+            if(this.application.ninja.toolsData.defaultToolsData[this.application.ninja.toolsData.selectionToolIndex].selected === false){
                 return;
             }
 
