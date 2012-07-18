@@ -203,5 +203,11 @@ exports.DocumentBar = Montage.create(Component, {
             this.currentView = event._event.target.id;
             this.application.ninja.documentController.stage.stageView.switchDesignDocViews(event._event.target.id);//switch between design view
         }
+    },
+
+    handlePreviewAction: {
+        value: function(event) {
+            NJevent("executePreview");
+        }
     }
 });

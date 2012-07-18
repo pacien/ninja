@@ -29,11 +29,52 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
 
-.horizontal-menu {
-    list-style: none;
-    margin:  0px;
-    padding:  5px;
+.topMenuItem {
     float: left;
-    cursor: default;
+    display: inline;
+    height: 26px;
+}
+
+.headerButton {
+    color: #f7f7f7;
+    font-family: 'Droid Sans', sans-serif;
+    text-shadow: 1px 1px 1px black;
+    display: inline;
+    outline: none;
+    box-sizing: border-box;
+    font-size: 10pt;
+    height: 26px;
+    vertical-align: middle;
+    border: 0;
+    background: none;
+}
+
+.headerButton:focus {
+    -webkit-box-shadow: none;
+}
+
+.topMenuItem.selected {
+    background-color: #222222;
+}
+
+.subEntries{
+    display: none;
+    position: absolute;
+    /*z-index: 100000;*/
+    margin-top: 1px;
+    float:left;
+    font-family: 'Droid Sans', sans-serif !important;
+    color: #ffffff;
+    background: #494949;
+    /*border:  1px solid #292929;*/
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    /*border-radius: 8px;*/
+    padding:  8px 0px 8px 0px;
+    box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.8);
+    white-space:nowrap;
+}
+
+.selected .subEntries {
     display: block;
 }

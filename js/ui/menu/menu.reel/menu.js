@@ -51,6 +51,10 @@ exports.Menu = Montage.create(Component, {
         }
     },
 
+    menudata: {
+        value: null
+    },
+
     _active: {
         value: false
     },
@@ -60,7 +64,19 @@ exports.Menu = Montage.create(Component, {
             return this._active;
         },
         set: function(value) {
-            this._active = value;
+            if(this._active !== value) {
+                this._active = value;
+            }
+
+            if(this._active) {
+                document.addEventListener("mousedown", this, false);
+                document.addEventListener("keydown", this, true);
+            } else {
+                document.removeEventListener("mousedown", this, false);
+                document.removeEventListener("keydown", this, true);
+                this.activeEntry = null;
+            }
+
         }
     },
 
@@ -73,46 +89,70 @@ exports.Menu = Montage.create(Component, {
             return this._activeEntry;
         },
         set: function(value) {
-            if(this.active) {
+                if(this._activeEntry === value) return;
 
-                if(this._activeEntry) this._activeEntry.deselect();
+                if(this._activeEntry) {
+                    this._activeEntry.element.classList.remove("selected");
+                }
 
                 this._activeEntry = value;
 
-                this._activeEntry.select();
-
-            }
-        }
-    },
-
-    toggleActivation: {
-        value: function(item) {
-            if(this.active) {
-                this._activeEntry.deselect();
-                this._activeEntry = null;
-                this.active = false;
-                this.element.ownerDocument.removeEventListener('mousedown', this, false);
-            } else {
-                this.active = true;
-                this.activeEntry = item;
-                this.element.ownerDocument.addEventListener('mousedown', this, false);
-            }
+                if(this._activeEntry) {
+                    this._activeEntry.element.classList.add("selected");
+                }
         }
     },
 
     prepareForDraw: {
         value: function() {
+            this.addEventListener("headermousedown", this, false);
+            this.addEventListener("headermouseover", this, false);
 
+            this.addEventListener("menuItemClick", this, false);
+        }
+    },
+
+    handleHeadermousedown: {
+        value: function(evt) {
+            if(!this.active) {
+                this.active = true;
+            }
+
+            this.activeEntry = evt.detail;
+        }
+    },
+
+    handleHeadermouseover: {
+        value: function(evt) {
+            if(this.active) {
+                this.activeEntry = evt.detail;
+            }
+        }
+    },
+
+    handleMenuItemClick: {
+        value: function(evt) {
+            if(evt.detail.indexOf("-") > 0) {
+                this.menudata.toggleItem(evt.detail.slice(evt.detail.indexOf("-") + 1));
+            } else {
+                NJevent(evt.detail);
+            }
+            this.active = false;
+        }
+    },
+
+    captureKeydown: {
+        value: function(evt) {
+            if(evt.keyCode === 27) {
+                this.active = false;
+            }
         }
     },
 
     handleMousedown: {
         value: function(evt) {
             if(this.active && (this.getZIndex(evt.target) < 9000 || evt.target.id === "topMenu")) {
-                this._activeEntry.deselect();
-                this._activeEntry = null;
                 this.active = false;
-                this.element.ownerDocument.removeEventListener('mousedown', this, false);
             }
         }
     },
