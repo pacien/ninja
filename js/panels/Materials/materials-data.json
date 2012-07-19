@@ -5,20 +5,24 @@
             "label": "Ninja Materials",
             "children": [
                 {
+                    "label": "Blue Sky",
+                    "id" : "Blue Sky"
+               },
+               {
                     "label": "Bump Metal",
                     "id" : "Bump Metal"
                 },
-                {
+                 {
+                    "label": "Dark Blur",
+                    "id" : "Dark Blur"
+                },
+               {
                     "label": "Flag",
                     "id" : "Flag"
                 },
                 {
                     "label": "Linear Gradient",
                     "id" : "Linear Gradient"
-                },
-                {
-                    "label": "Paris",
-                    "id" : "Paris"
                 },
                 {
                     "label": "Plasma",
@@ -35,10 +39,6 @@
                 {
                     "label": "Radial Gradient",
                     "id" : "Radial Gradient"
-                },
-                {
-                    "label": "Raiders",
-                    "id" : "Raiders"
                 },
                 {
                     "label": "Taper",

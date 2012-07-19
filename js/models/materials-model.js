@@ -43,7 +43,7 @@ var BumpMetalMaterial = require("js/lib/rdge/materials/bump-metal-material").Bum
 var UberMaterial = require("js/lib/rdge/materials/uber-material").UberMaterial;
 //var CloudMaterial = require("js/lib/rdge/materials/cloud-material").CloudMaterial;
 var RadialBlurMaterial = require("js/lib/rdge/materials/radial-blur-material").RadialBlurMaterial;
-var RaidersMaterial = require("js/lib/rdge/materials/radial-blur-material").RaidersMaterial;
+var DarkBlurMaterial = require("js/lib/rdge/materials/radial-blur-material").DarkBlurMaterial;
 var PlasmaMaterial = require("js/lib/rdge/materials/plasma-material").PlasmaMaterial;
 var PulseMaterial = require("js/lib/rdge/materials/pulse-material").PulseMaterial;
 //var TunnelMaterial = require("js/lib/rdge/materials/tunnel-material").TunnelMaterial;
@@ -52,7 +52,7 @@ var FlagMaterial = require("js/lib/rdge/materials/flag-material").FlagMaterial;
 //var SquareTunnelMaterial = require("js/lib/rdge/materials/square-tunnel-material").SquareTunnelMaterial;
 //var FlyMaterial = require("js/lib/rdge/materials/fly-material").FlyMaterial;
 var WaterMaterial = require("js/lib/rdge/materials/water-material").WaterMaterial;
-var ParisMaterial = require("js/lib/rdge/materials/water-material").ParisMaterial;
+var BlueSkyMaterial = require("js/lib/rdge/materials/water-material").BlueSkyMaterial;
 //var ZInvertMaterial = require("js/lib/rdge/materials/z-invert-material").ZInvertMaterial;
 //var DeformMaterial = require("js/lib/rdge/materials/deform-material").DeformMaterial;
 //var StarMaterial = require("js/lib/rdge/materials/star-material").StarMaterial;
@@ -74,8 +74,10 @@ exports.MaterialsModel = Montage.create(Component, {
         value: function() {
             // Load all the materials
             this.addMaterial(new FlatMaterial());
+            this.addMaterial(new BlueSkyMaterial());
             this.addMaterial(new BumpMetalMaterial());
             //this.addMaterial(new CloudMaterial());
+            this.addMaterial(new DarkBlurMaterial());
             //this.addMaterial(new DeformMaterial());
             this.addMaterial(new FlagMaterial());
             //this.addMaterial(new FlyMaterial());
@@ -83,12 +85,10 @@ exports.MaterialsModel = Montage.create(Component, {
             //this.addMaterial(new KeleidoscopeMaterial());
             this.addMaterial(new LinearGradientMaterial());
             //this.addMaterial(new MandelMaterial());
-            this.addMaterial(new ParisMaterial());
             this.addMaterial(new PlasmaMaterial());
             this.addMaterial(new PulseMaterial());
             this.addMaterial(new RadialBlurMaterial());
             this.addMaterial(new RadialGradientMaterial());
-            this.addMaterial(new RaidersMaterial());
             //this.addMaterial(new ReliefTunnelMaterial());
             //this.addMaterial(new SquareTunnelMaterial());
             //this.addMaterial(new StarMaterial());
@@ -260,8 +260,8 @@ exports.MaterialsModel = Montage.create(Component, {
                 case "flag":                mat = new FlagMaterial();               break;
                 //case "fly":                 mat = new FlyMaterial();                break;
                 case "water":               mat = new WaterMaterial();              break;
-                case "paris":               mat = new ParisMaterial();              break;
-                case "raiders":             mat = new RaidersMaterial();            break;
+                case "blueSky":               mat = new BlueSkyMaterial();              break;
+                case "darkBlur":             mat = new DarkBlurMaterial();            break;
                 //case "zinvert":             mat = new ZInvertMaterial();            break;
                 //case "deform":              mat = new DeformMaterial();             break;
                 //case "star":                mat = new StarMaterial();               break;
