@@ -42,8 +42,8 @@ var RadialGradientMaterial = require("js/lib/rdge/materials/radial-gradient-mate
 var BumpMetalMaterial = require("js/lib/rdge/materials/bump-metal-material").BumpMetalMaterial;
 var UberMaterial = require("js/lib/rdge/materials/uber-material").UberMaterial;
 //var CloudMaterial = require("js/lib/rdge/materials/cloud-material").CloudMaterial;
-//var RadialBlurMaterial = require("js/lib/rdge/materials/radial-blur-material").RadialBlurMaterial;
-//var RaidersMaterial = require("js/lib/rdge/materials/radial-blur-material").RaidersMaterial;
+var RadialBlurMaterial = require("js/lib/rdge/materials/radial-blur-material").RadialBlurMaterial;
+var RaidersMaterial = require("js/lib/rdge/materials/radial-blur-material").RaidersMaterial;
 var PlasmaMaterial = require("js/lib/rdge/materials/plasma-material").PlasmaMaterial;
 var PulseMaterial = require("js/lib/rdge/materials/pulse-material").PulseMaterial;
 //var TunnelMaterial = require("js/lib/rdge/materials/tunnel-material").TunnelMaterial;
@@ -86,9 +86,9 @@ exports.MaterialsModel = Montage.create(Component, {
             this.addMaterial(new ParisMaterial());
             this.addMaterial(new PlasmaMaterial());
             this.addMaterial(new PulseMaterial());
-            //this.addMaterial(new RadialBlurMaterial());
+            this.addMaterial(new RadialBlurMaterial());
             this.addMaterial(new RadialGradientMaterial());
-            //this.addMaterial(new RaidersMaterial());
+            this.addMaterial(new RaidersMaterial());
             //this.addMaterial(new ReliefTunnelMaterial());
             //this.addMaterial(new SquareTunnelMaterial());
             //this.addMaterial(new StarMaterial());
@@ -251,7 +251,7 @@ exports.MaterialsModel = Montage.create(Component, {
 
                 case "taper":               mat = new TaperMaterial();              break;
                 case "twistVert":           mat = new TwistVertMaterial();          break;
-                //case "radialBlur":          mat = new RadialBlurMaterial();         break;
+                case "radialBlur":          mat = new RadialBlurMaterial();         break;
                 case "plasma":              mat = new PlasmaMaterial();             break;
                 case "pulse":               mat = new PulseMaterial();              break;
                 //case "tunnel":              mat = new TunnelMaterial();             break;
@@ -261,7 +261,7 @@ exports.MaterialsModel = Montage.create(Component, {
                 //case "fly":                 mat = new FlyMaterial();                break;
                 case "water":               mat = new WaterMaterial();              break;
                 case "paris":               mat = new ParisMaterial();              break;
-                //case "raiders":             mat = new RaidersMaterial();            break;
+                case "raiders":             mat = new RaidersMaterial();            break;
                 //case "zinvert":             mat = new ZInvertMaterial();            break;
                 //case "deform":              mat = new DeformMaterial();             break;
                 //case "star":                mat = new StarMaterial();               break;

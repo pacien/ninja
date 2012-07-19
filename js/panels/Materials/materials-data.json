@@ -29,8 +29,16 @@
                     "id" : "Pulse"
                 },
                 {
+                    "label": "Radial Blur",
+                    "id" : "Radial Blur"
+                },
+                {
                     "label": "Radial Gradient",
                     "id" : "Radial Gradient"
+                },
+                {
+                    "label": "Raiders",
+                    "id" : "Raiders"
                 },
                 {
                     "label": "Taper",
