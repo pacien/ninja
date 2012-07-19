@@ -69,7 +69,7 @@ exports.ElementMediator = Montage.create(Component, {
 
             var undoLabel = "add element";
 
-            document.application.undoManager.add(undoLabel, this.removeElements, this, elements, notify);
+            document.application.undoManager.add(undoLabel, this.removeElements, this, elements, notify, false);
 
             this.application.ninja.currentDocument.model.needsSave = true;
 
@@ -80,9 +80,10 @@ exports.ElementMediator = Montage.create(Component, {
     },
 
     removeElements:{
-        value:function (elements, notify /* Used for the add undo */) {
+        value:function (elements, notify, callDeleteDelegate) {
 
-            if (this.deleteDelegate && (typeof this.deleteDelegate.handleDelete === 'function')) {
+            if ((callDeleteDelegate || (typeof callDeleteDelegate === "undefined"))
+                && this.deleteDelegate && (typeof this.deleteDelegate.handleDelete === 'function')) {
                 return this.deleteDelegate.handleDelete();
                 // this.handleDelete.call(deleteDelegate);
             }
@@ -98,7 +99,7 @@ exports.ElementMediator = Montage.create(Component, {
 
             var undoLabel = "add element";
 
-            document.application.undoManager.add(undoLabel, this.addElements, this, elements, null, notify);
+            document.application.undoManager.add(undoLabel, this.addElements, this, elements, null, notify, false);
 
             this.application.ninja.currentDocument.model.needsSave = true;
 
