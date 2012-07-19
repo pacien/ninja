@@ -34,19 +34,6 @@ var Montage = require("montage/core/core").Montage,
 
 exports.AppModel = Montage.create(Component, {
 
-    _livePreview: {
-        value: false
-    },
-
-    livePreview: {
-        get: function() {
-            return this._livePreview;
-        },
-        set: function(value) {
-            this._livePreview = value;
-        }
-    },
-
     _layoutView: {
         value: "layoutAll"
     },
