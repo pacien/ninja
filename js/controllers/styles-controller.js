@@ -1433,6 +1433,9 @@ var stylesController = exports.StylesController = Montage.create(Component, {
                 sheetEl.disabled = true;
                 this.userStyleSheets.splice(this.userStyleSheets.indexOf(sheet), 1);
 
+                ///// Make sure cached rules from this stylesheet are not used
+                this._clearCache();
+
                 ///// Check to see if we're removing the default style sheet
                 if(sheet === this._defaultStylesheet) {
                     sheetCount = this.userStyleSheets.length;
@@ -1467,6 +1470,18 @@ var stylesController = exports.StylesController = Montage.create(Component, {
     isSheetLocked : {
         value: function(sheet) {
             return !!sheet.ownerNode.dataset['ninjaFileReadOnly'];
+        }
+    },
+
+    setMediaAttribute : {
+        value: function(sheet, mediaString) {
+            if(sheet.media.mediaText === mediaString) { return false; }
+
+            sheet.ownerNode.setAttribute('media', mediaString);
+
+            this._clearCache();
+
+            this.styleSheetModified(sheet);
         }
     },
 

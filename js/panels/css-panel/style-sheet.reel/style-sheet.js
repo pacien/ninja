@@ -202,7 +202,7 @@ exports.StyleSheet = Montage.create(Component, {
         set : function(value) {
             if(value === this._mediaText) { return; }
 
-            this._source.ownerNode.setAttribute('media', value);
+            this.application.ninja.stylesController.setMediaAttribute(this._source, value);
             
             this._mediaText = value;
 
