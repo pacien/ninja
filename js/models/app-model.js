@@ -34,32 +34,6 @@ var Montage = require("montage/core/core").Montage,
 
 exports.AppModel = Montage.create(Component, {
 
-    _currentDocument: {
-        value : null
-    },
-
-    currentDocument : {
-        get : function() {
-            return this._currentDocument;
-        },
-        set : function(value) {
-            if (value === this._currentDocument) {
-                return;
-            }
-
-            if(this._currentDocument && this._currentDocument.currentView === "design") {
-                this._currentDocument.model.draw3DGrid = this.show3dGrid;
-            }
-
-            this._currentDocument = value;
-
-            if(this._currentDocument && this._currentDocument.currentView === "design") {
-                this.show3dGrid = this._currentDocument.model.draw3DGrid;
-            }
-
-        }
-    },
-
     _livePreview: {
         value: false
     },
@@ -70,18 +44,6 @@ exports.AppModel = Montage.create(Component, {
         },
         set: function(value) {
             this._livePreview = value;
-        }
-    },
-    _chromePreview: {
-        value: false
-    },
-
-    chromePreview: {
-        get: function() {
-            return this._chromePreview;
-        },
-        set: function(value) {
-            this._chromePreview = value;
         }
     },
 
@@ -95,67 +57,6 @@ exports.AppModel = Montage.create(Component, {
         },
         set: function(value) {
             this._layoutView = value;
-        }
-    },
-
-    _layoutAll: {
-        value: true
-    },
-
-    layoutAll: {
-        get: function() {
-            return this._layoutAll;
-        },
-        set: function(value) {
-
-            if(value) {
-                this.layoutView = "layoutAll";
-                this.layoutItems = false;
-                this.layoutOff = false;
-            }
-
-            this._layoutAll = value;
-
-        }
-    },
-
-    _layoutItems: {
-        value: false
-    },
-
-    layoutItems: {
-        get: function() {
-            return this._layoutItems;
-        },
-        set: function(value) {
-
-            if(value) {
-                this.layoutView = "layoutItems";
-                this.layoutAll = false;
-                this.layoutOff = false;
-            }
-
-            this._layoutItems = value;
-        }
-    },
-
-    _layoutOff: {
-        value: false
-    },
-
-    layoutOff: {
-        get: function() {
-            return this._layoutOff;
-        },
-        set: function(value) {
-
-            if(value) {
-                this.layoutView = "layoutOff";
-                this.layoutAll = false;
-                this.layoutItems = false;
-            }
-
-            this._layoutOff = value;
         }
     },
 
@@ -234,63 +135,6 @@ exports.AppModel = Montage.create(Component, {
         },
         set: function(value) {
             this._documentStageView = value;
-        }
-    },
-
-    _frontStageView: {
-        value: true
-    },
-
-    frontStageView: {
-        get: function() {
-            return this._frontStageView;
-        },
-        set: function(value) {
-            if(value) {
-                this.documentStageView = "front";
-                this.topStageView = false;
-                this.sideStageView = false;
-            }
-
-            this._frontStageView = value;
-        }
-    },
-
-    _topStageView: {
-        value: false
-    },
-
-    topStageView: {
-        get: function() {
-            return this._topStageView;
-        },
-        set: function(value) {
-            if(value) {
-                this.documentStageView = "top";
-                this.frontStageView = false;
-                this.sideStageView = false;
-            }
-
-            this._topStageView = value;
-        }
-    },
-
-    _sideStageView: {
-        value: false
-    },
-
-    sideStageView: {
-        get: function() {
-            return this._sideStageView;
-        },
-        set: function(value) {
-            if(value) {
-                this.documentStageView = "side";
-                this.frontStageView = false;
-                this.topStageView = false;
-            }
-
-            this._sideStageView = value;
         }
     },
 

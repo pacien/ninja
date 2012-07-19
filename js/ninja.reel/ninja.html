@@ -52,10 +52,7 @@ POSSIBILITY OF SUCH DAMAGE.
                 },
     
                 "appModel": {
-                    "prototype": "js/models/app-model",
-                    "bindings": {
-                        "currentDocument": {"<-": "@documentList.selectedObjects.0"}
-                    }
+                    "prototype": "js/models/app-model"
                 },
     
                 "materialsModel": {
@@ -63,7 +60,7 @@ POSSIBILITY OF SUCH DAMAGE.
                 },
     
                 "menu": {
-                    "prototype": "js/components/menu/menu.reel",
+                    "prototype": "js/ui/menu/menu.reel",
                     "properties": {
                         "element": {"#": "mainMenuBar"}
                     },
@@ -183,17 +180,7 @@ POSSIBILITY OF SUCH DAMAGE.
                         "currentDocument": {"<-": "@documentList.selectedObjects.0"}
                     }
                 },
-    
-                "stageMode": {
-                    "prototype": "js/components/layout/stage-mode.reel",
-                    "properties": {
-                        "element": {"#": "stageMode"}
-                    },
-                    "bindings" : {
-                        "chromePreview": {"<->": "@appModel.chromePreview"}
-                    }
-                },
-    
+
                 "toolsList": {
                     "prototype": "js/components/layout/tools-list.reel",
                     "properties": {

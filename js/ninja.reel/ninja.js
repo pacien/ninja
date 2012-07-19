@@ -351,6 +351,7 @@ exports.Ninja = Montage.create(Component, {
             this.ninjaVersion = window.ninjaVersion.ninja.version;
             this.undoManager = document.application.undoManager = UndoManager.create();
             document.application.njUtils = NjUtils;
+            document.application.model = this.appModel;
         }
     },
 
@@ -376,9 +377,9 @@ exports.Ninja = Montage.create(Component, {
 
             this.eventManager.addEventListener("selectTool", this, false);
             this.eventManager.addEventListener("selectSubTool", this, false);
+            this.eventManager.addEventListener("executePreview", this, false);
 
             this.addPropertyChangeListener("appModel.livePreview", this.executeLivePreview, false);
-            this.addPropertyChangeListener("appModel.chromePreview", this.executeChromePreview, false);
             this.addPropertyChangeListener("appModel.debug", this.toggleDebug, false);
         }
     },
@@ -387,7 +388,7 @@ exports.Ninja = Montage.create(Component, {
     ////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
     //TODO: Expand method to allow other browsers for preview
-    executeChromePreview: {
+    handleExecutePreview: {
         value: function () {
             //TODO: Make into proper component
             this.saveOperationScreen = {};

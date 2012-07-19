@@ -75,12 +75,16 @@ POSSIBILITY OF SUCH DAMAGE.
     padding: 0;
     border: none;
     color: #FFF;
-    width: 44px;
+    width: 46px;
     text-transform: uppercase;
     text-align: left;
     float: left;
     cursor: pointer;
     font-size: 11px;
+}
+
+.preview:focus {
+    -webkit-box-shadow: none;
 }
 
 .documentBar .viewicon {
@@ -98,8 +102,13 @@ POSSIBILITY OF SUCH DAMAGE.
 }
 
 .documentBar .viewdesign {
-    background-image: url('../../../../js/panels/Color/colorpanelpopup.reel/img/icon_bitmap.png');
+    background-image: url('../../../../js/panels/color/colorpanelpopup.reel/img/icon_bitmap.png');
     background-size: 90%;
+}
+
+.documentBar .viewPreview {
+    background-image: url('../../../../images/optionsbar/edit_mode.png');
+    background-size: 100%;
 }
 
 .documentBar section.inactive .viewicon{

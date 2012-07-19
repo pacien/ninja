@@ -34,22 +34,6 @@ var Component = require("montage/ui/component").Component;
 
 exports.MenuItem = Montage.create(Component, {
 
-    itemBackground: {
-        value: null
-    },
-
-    itemText: {
-        value: null
-    },
-
-    subMenu: {
-        value: null
-    },
-
-    data: {
-        value: null
-    },
-
     _enabled: {
         value: false
     },
@@ -66,6 +50,59 @@ exports.MenuItem = Montage.create(Component, {
         }
     },
 
+    _label: {
+        value: null
+    },
+
+    label: {
+        get: function() {
+            return this._label;
+        },
+        set: function(value) {
+            if(this._label !== value) {
+                this._label = value;
+            }
+        }
+    },
+
+    _submenu: {
+        value: false
+    },
+
+    submenu: {
+        get: function() {
+            return this._submenu;
+        },
+        set: function(value) {
+            if(this._submenu !== value) {
+                this._submenu = value;
+            }
+        }
+    },
+
+    _entries: {
+        value: null
+    },
+
+    entries: {
+        get: function() {
+            return this._entries;
+        },
+        set: function(value) {
+            if(this._entries !== value) {
+                this._entries = value;
+            }
+        }
+    },
+
+    submenuElement: {
+        value: null
+    },
+
+    checkMark: {
+        value: null
+    },
+
     _checked: {
         value: null
     },
@@ -75,12 +112,6 @@ exports.MenuItem = Montage.create(Component, {
             return this._checked;
         },
         set: function(value) {
-            /*
-            if( Object.prototype.toString.call( value ) === '[object Array]' ) {
-                value =  value.indexOf(this.data.displayText + "Panel") >= 0;
-            }
-            */
-
             if(this._checked !== value) {
                 this._checked = value;
                 this.needsDraw = true;
@@ -88,53 +119,40 @@ exports.MenuItem = Montage.create(Component, {
         }
     },
 
-    submenu: {
-        value: false
+    _action: {
+        value: ""
     },
 
-    subentries: {
-        value: []
+    action: {
+        get: function() {
+            return this._action;
+        },
+        set: function(value) {
+            if(this._action !== value) {
+                this._action = value;
+            }
+        }
     },
 
     prepareForDraw: {
         value: function() {
-
-            if(!this.data) return;
-
-            if(this.data.separator) {
-                this.element.classList.add("itemSeparator");
-                this.itemBackground.classList.remove("menubg");
-                this.itemBackground.classList.add("separator");
-
+            // Don't add mouse event if this is a separator
+            if(this.label === "" ) {
                 return;
-
-            }
-
-            // Binding the checked to the assigned bound property
-            if(this.data.checked) {
-                Object.defineBinding(this, "checked", {
-                  boundObject: this.application.ninja.appModel,
-                  boundObjectPropertyPath: this.data.checked.boundProperty
-                });
-
-            }
-
-            if(this.data.submenu) {
-                this.submenu = true;
-                this.subentries = this.data.entries;
-                this.subMenu.classList.add("subMenu");
             }
 
             this.element.addEventListener("mouseover", this, false);
             this.element.addEventListener("mouseout", this, false);
-
-            this.itemText.innerHTML = this.data.displayText;
             this.element.addEventListener("mouseup", this, true);
         }
     },
 
     draw: {
         value: function() {
+            if(this.label === "") {
+                this.element.classList.add("separatorContainer");
+                this.element.innerHTML = "<div class='separator'></div>";
+            }
 
             if(this.enabled) {
                 this.element.classList.remove("disabled");
@@ -142,35 +160,27 @@ exports.MenuItem = Montage.create(Component, {
                 this.element.classList.add("disabled");
             }
 
+
             if(this.checked) {
-                this.itemBackground.classList.add("checked");
+                this.checkMark.classList.add("checked");
             } else {
-                this.itemBackground.classList.remove("checked");
+                this.checkMark.classList.remove("checked");
             }
 
-            if(this.submenu) {
-                this.itemBackground.classList.add("submenu");
-            }
         }
     },
 
     captureMouseup: {
         value: function(event) {
+            if( this.enabled === true && this.submenu === false ) {
+                if(this.action !== "") {
 
-            if(this.data.radio && this.checked){
-                this.parentComponent.ownerComponent.toggleOnMenuItemAction();
-                return;
-            }
+                    var menuItemClick = document.createEvent("CustomEvent");
+                    menuItemClick.initCustomEvent("menuItemClick", true, true, this.action);
+                    this.dispatchEvent(menuItemClick);
 
-            if( ( this.enabled === true || this.enabled > 0 ) && (this.submenu === false) ) {
-                if(this.data.action) {
-                    NJevent ( this.data.action );
-                } else  if(this.checked !== null) {
-                    this.checked = !this.checked;
                 }
-                this.parentComponent.ownerComponent.toggleOnMenuItemAction();
             }
-
         }
     },
 
@@ -178,9 +188,8 @@ exports.MenuItem = Montage.create(Component, {
         value: function() {
             if(this.enabled){
                 this.element.style.backgroundColor = "#7f7f7f";
-                this.element.style.cursor = "pointer";
-                if(this.data.submenu) {
-                    this.subMenu.style.display = "block";
+                if(this.submenu) {
+                    this.submenuElement.classList.add("show");
                 }
             }
         }
@@ -189,8 +198,9 @@ exports.MenuItem = Montage.create(Component, {
     handleMouseout: {
         value: function() {
             this.element.style.backgroundColor = "#474747";
-            if(this.data.submenu) {
-                this.subMenu.style.display = "none";
+
+            if(this.submenu) {
+                this.submenuElement.classList.remove("show");
             }
         }
     }

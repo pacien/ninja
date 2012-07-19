@@ -25,13 +25,13 @@ If you're already familiar with using Git, GitHub, you can clone master branch o
     - Browse to HKEY_CURRENT_USER/Software/Motorola Mobility/Ninja Local Cloud/Options.
     - Right click and select New > String value.
     - Type 'Local Ninja Origin' no quotes.
-    - Double click on Local Ninja Origin and paste in the Ninja app ID copied in step 6 from the Chrome extensions page in the Value data field. 
+    - Double click on Local Ninja Origin and paste in the Ninja app ID copied in step 6 from the Chrome extensions page in the Value data field. To have multiple builds of Ninja installed but not running simultaneously as this is not supported, multiple app IDs can be added separated by comma and no space.
     - Close Registry Editor.
 8. On Mac:
     - Launch Finder.
     - Double click on /Users/\<user\>/Library/Preferences/com.MotorolaMobility.Ninja-Local-Cloud.plist.  Note: on Lion (10.7), user library folder is hidden by default.  To browse to it, in Finder choose Go > Go to Folder and type ~/Library, or select Go menu with Alt (Option) key down to see Library listed in Go menu or make the user library folder permanently visible by running the following command in Terminal: chflags nohidden ~/Library
     - Click on Add Child Type 'Local Ninja Origin' no quotes.
-    - For value, paste in the Ninja app ID copied in step 6 from the Chrome extensions page.
+    - For value, paste in the Ninja app ID copied in step 6 from the Chrome extensions page.  To have multiple builds of Ninja installed but not running simultaneously as this is not supported, multiple app IDs can be added separated by comma and no space.
     - Save (File > Save or Cmd S).
     - Close Property List Editor.
 9.  Quit Ninja Local Cloud
