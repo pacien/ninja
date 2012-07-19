@@ -5,10 +5,18 @@
             "label": "Ninja Materials",
             "children": [
                 {
+                    "label": "Blue Sky",
+                    "id" : "Blue Sky"
+               },
+               {
                     "label": "Bump Metal",
                     "id" : "Bump Metal"
                 },
-                {
+                 {
+                    "label": "Dark Blur",
+                    "id" : "Dark Blur"
+                },
+               {
                     "label": "Flag",
                     "id" : "Flag"
                 },
@@ -17,16 +25,16 @@
                     "id" : "Linear Gradient"
                 },
                 {
-                    "label": "Paris",
-                    "id" : "Paris"
-                },
-                {
                     "label": "Plasma",
                     "id" : "Plasma"
                 },
                 {
                     "label": "Pulse",
                     "id" : "Pulse"
+                },
+                {
+                    "label": "Radial Blur",
+                    "id" : "Radial Blur"
                 },
                 {
                     "label": "Radial Gradient",
