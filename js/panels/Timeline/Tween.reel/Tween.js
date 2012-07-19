@@ -299,6 +299,10 @@ var Tween = exports.Tween = Montage.create(Component, {
 	            this.parentComponent.parentComponent.updateKeyframeRule();
 	            this.isTweenAnimated = true;
         	}
+
+            if(!this.parentComponent.parentComponent.enabled3D){
+                this.parentComponent.parentComponent.initial3DforAllTweens();
+            }
 			
 			if (eventDetail.source === "translateTool" || eventDetail.source === "rotateTool") {
         		var arrMat = eventDetail.data.value[0].properties.mat,
