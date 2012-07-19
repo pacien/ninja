@@ -99,31 +99,13 @@ exports.Rectangle = Object.create(GeomObj, {
 
             if(strokeMaterial) {
                 this._strokeMaterial = strokeMaterial.dup();
-            } else {
-                this._strokeMaterial = MaterialsModel.getMaterial( MaterialsModel.getDefaultMaterialName() ).dup();
-            }
-
-            if(strokeColor) {
-                if(this._strokeMaterial.hasProperty("color")) {
-                    this._strokeMaterial.setProperty( "color",  this._strokeColor );
-                } else if (this._strokeMaterial && (this._strokeMaterial.gradientType === this._strokeColor.gradientMode)) {
-                    this._strokeMaterial.setGradientData(this._strokeColor.color);
-                }
             }
 
             if(fillMaterial) {
                 this._fillMaterial = fillMaterial.dup();
-            } else {
-                this._fillMaterial = MaterialsModel.getMaterial( MaterialsModel.getDefaultMaterialName() ).dup();
             }
 
-			if(fillColor) {
-                if(this._fillMaterial.hasProperty("color")) {
-                    this._fillMaterial.setProperty( "color",  this._fillColor );
-                } else if (this._fillMaterial && (this._fillMaterial.gradientType === this._fillColor.gradientMode)) {
-                    this._fillMaterial.setGradientData(this._fillColor.color);
-        }
-            }
+            this.initColors();
         }
     },
 
@@ -303,8 +285,8 @@ exports.Rectangle = Object.create(GeomObj, {
                 'brRadius'      : this._brRadius,
                 'innerRadius'   : this._innerRadius,
                 'strokeStyle'   : this._strokeStyle,
-                'strokeMat'     : this._strokeMaterial ? this._strokeMaterial.getName() :  MaterialsModel.getDefaultMaterialName(),
-                'fillMat'       : this._fillMaterial ?  this._fillMaterial.getName() :  MaterialsModel.getDefaultMaterialName(),
+                'strokeMat'     : this._strokeMaterial ? this._strokeMaterial.getName() :  null,
+                'fillMat'       : this._fillMaterial ?  this._fillMaterial.getName() :  null,
                 'materials'     : this.exportMaterialsJSON()
             };
 
@@ -327,27 +309,26 @@ exports.Rectangle = Object.create(GeomObj, {
             this._brRadius          = jObj.brRadius;
             this._innerRadius       = jObj.innerRadius;
             this._strokeStyle       = jObj.strokeStyle;
-            var strokeMaterialName  = jObj.strokeMat;
-            var fillMaterialName    = jObj.fillMat;
 
-            var strokeMat = MaterialsModel.getMaterial( strokeMaterialName ).dup();
-            if (!strokeMat) {
-                console.log( "object material not found in library: " + strokeMaterialName );
-                strokeMat = MaterialsModel.getMaterial(  MaterialsModel.getDefaultMaterialName() ).dup();
+            if(jObj.strokeMat) {
+                var strokeMat = MaterialsModel.getMaterial(jObj.strokeMat).dup();
+                if (!strokeMat) {
+                    console.log("object material not found in library: " + jObj.strokeMat);
+                } else {
+                    this._strokeMaterial = strokeMat;
+                }
             }
-            this._strokeMaterial = strokeMat;
-            if (this._strokeMaterial.hasProperty( 'color' ))
-                this._strokeMaterial.setProperty( 'color', this._strokeColor );
 
-            var fillMat = MaterialsModel.getMaterial( fillMaterialName ).dup();
-            if (!fillMat) {
-                console.log( "object material not found in library: " + fillMaterialName );
-                fillMat = MaterialsModel.getMaterial(  MaterialsModel.getDefaultMaterialName() ).dup();
+            if(jObj.fillMat) {
+                var fillMat = MaterialsModel.getMaterial(jObj.fillMat).dup();
+                if (!fillMat) {
+                    console.log("object material not found in library: " + jObj.fillMat);
+                } else {
+                    this._fillMaterial = fillMat;
+                }
             }
-            this._fillMaterial = fillMat;
-            if (this._fillMaterial.hasProperty( 'color' ))
-                this._fillMaterial.setProperty( 'color', this._fillColor );
 
+            this.initColors();
             this.importMaterialsJSON( jObj.materials );
         }
     },
