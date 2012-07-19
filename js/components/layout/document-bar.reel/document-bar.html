@@ -75,13 +75,7 @@ POSSIBILITY OF SUCH DAMAGE.
                         "element": {"#": "previewButton"},
                         "identifier": "preview",
                         "label": "Preview"
-                    },
-                    "listeners": [
-                        {
-                            "type": "action",
-                            "listener": {"@": "owner"}
-                        }
-                    ]
+                    }
                 },
     
                 "owner": {
@@ -90,7 +84,8 @@ POSSIBILITY OF SUCH DAMAGE.
                         "element": {"#": "documentBar"},
                         "zoomControl": {"@": "hottext1"},
                         "btnDesign": {"#": "buttonDesign"},
-                        "btnCode": {"#": "buttonCode"}
+                        "btnCode": {"#": "buttonCode"},
+                        "btnPreview": {"#": "buttonPreview"}
                     }
                 }
             }
@@ -126,7 +121,7 @@ POSSIBILITY OF SUCH DAMAGE.
                 
             </section>
 
-            <section class="inactive">
+            <section data-montage-id="buttonPreview" class="inactive">
 
                 <div class="viewicon viewPreview"></div>
 
