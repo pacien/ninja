@@ -102,7 +102,6 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
             }
 
             this.isDrawing = true;
-            this.application.ninja.stage.showSelectionBounds = false;
 
             this._use3DMode = false;
 
@@ -183,7 +182,6 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
                 point = webkitConvertPointFromPageToNode(this.application.ninja.stage.canvas, new WebKitPoint(event.pageX, event.pageY));
 
             this.isDrawing = false;
-            this.application.ninja.stage.showSelectionBounds = true;
             if(this._escape) {
                 this._escape = false;
                 this._isSelecting = false;
