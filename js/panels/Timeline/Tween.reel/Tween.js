@@ -377,6 +377,12 @@ var Tween = exports.Tween = Montage.create(Component, {
                 this.application.ninja.elementMediator.setProperty([this.parentComponent.parentComponent.animatedElement], "left", [currentLeft], "Change", "tween");
                 this.application.ninja.elementMediator.setProperty([this.parentComponent.parentComponent.animatedElement], "width", [currentWidth], "Change", "tween");
                 this.application.ninja.elementMediator.setProperty([this.parentComponent.parentComponent.animatedElement], "height", [currentHeight], "Change", "tween");
+
+                if(this.parentComponent.parentComponent.enabled3D){
+                    var current3DMatrix = this.tweenedProperties["-webkit-transform"];
+                    this.application.ninja.elementMediator.setProperty([this.parentComponent.parentComponent.animatedElement], "-webkit-transform", [current3DMatrix], "Change", "tween");
+                }
+
             }
         }
     },
