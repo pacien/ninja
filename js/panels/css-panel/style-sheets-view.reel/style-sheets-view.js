@@ -96,13 +96,16 @@ exports.StyleSheetsView = Montage.create(Component, {
 
             var sheetComponent, oldDefaultSheet;
 
+            ///// Mark the appropriate component as the default, un-mark the previous default
             if(this.styleSheetList) {
                 sheetComponent = this.styleSheetList.childComponents[this.styleSheets.indexOf(sheet)];
                 if(sheetComponent) {
                     sheetComponent['default'] = true;
                     if(this._defaultStyleSheet) {
                         oldDefaultSheet = this.styleSheetList.childComponents[this.styleSheets.indexOf(this._defaultStyleSheet)];
-                        oldDefaultSheet['default'] = false;
+                        if(oldDefaultSheet) {
+                            oldDefaultSheet['default'] = false;
+                        }
                     }
                 }
             }
@@ -175,7 +178,7 @@ exports.StyleSheetsView = Montage.create(Component, {
         }
     },
 
-    handleStyleSheetModified : {
+    handleStyleSheetDirty : {
         value: function(e) {
             this.needsDraw = true;
         }
@@ -192,7 +195,7 @@ exports.StyleSheetsView = Montage.create(Component, {
     prepareForDraw : {
         value: function() {
             this.eventManager.addEventListener("styleSheetsReady", this, false);
-            this.eventManager.addEventListener("styleSheetModified", this, false);
+            this.eventManager.addEventListener("styleSheetDirty", this, false);
         }
     },
     draw : {

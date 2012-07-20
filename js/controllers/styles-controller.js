@@ -1477,7 +1477,8 @@ var stylesController = exports.StylesController = Montage.create(Component, {
                 rel   : 'stylesheet',
                 id    : id || "",
                 media : 'screen',
-                title : 'Temp'
+                title : 'Temp',
+                'data-ninja-node' : 'true'
             });
 
             doc.head.appendChild(sheetElement);
@@ -1503,6 +1504,9 @@ var stylesController = exports.StylesController = Montage.create(Component, {
             if(sheetEl) {
                 sheetEl.disabled = true;
                 this.userStyleSheets.splice(this.userStyleSheets.indexOf(sheet), 1);
+
+                ///// Make sure cached rules from this stylesheet are not used
+                this._clearCache();
 
                 ///// Check to see if we're removing the default style sheet
                 if(sheet === this._defaultStylesheet) {
@@ -1541,6 +1545,18 @@ var stylesController = exports.StylesController = Montage.create(Component, {
         }
     },
 
+    setMediaAttribute : {
+        value: function(sheet, mediaString) {
+            if(sheet.media.mediaText === mediaString) { return false; }
+
+            sheet.ownerNode.setAttribute('media', mediaString);
+
+            this._clearCache();
+
+            this.styleSheetModified(sheet);
+        }
+    },
+
     ///// Style Sheet Modified
     ///// Method to call whenever a stylesheet change is made
     ///// Dispatches an event, and keeps list of dirty style sheets
@@ -1558,6 +1574,7 @@ var stylesController = exports.StylesController = Montage.create(Component, {
             ///// If the sheet doesn't already exist in the list of modified
             ///// sheets, dispatch dirty event and add the sheet to the list
             if(sheetSearch.length === 0) {
+                NJevent('styleSheetDirty', eventData);
                 this.dirtyStyleSheets.push({
                     document : sheet.ownerNode.ownerDocument,
                     stylesheet : sheet
