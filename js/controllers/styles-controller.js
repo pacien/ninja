@@ -106,7 +106,17 @@ var stylesController = exports.StylesController = Montage.create(Component, {
             this.defaultStylesheet = this.getSheetFromElement(this.CONST.DEFAULT_SHEET_ID);
 
             this.userStyleSheets = nj.toArray(document.model.views.design.document.styleSheets).filter(function(sheet) {
-                return sheet !== this._stageStylesheet;
+                if(sheet === this._stageStylesheet) { return false; }
+
+                var media = sheet.ownerNode.getAttribute('media');
+
+                ///// If the media attribute contains a query, we'll watch for changes in media
+                if(/\([0-9A-Za-z-: ]+\)/.test(media)) {
+                    this.watchMedia(media);
+                }
+
+                return true;
+
             }, this);
 
             this.initializeRootStyles();
@@ -115,6 +125,33 @@ var stylesController = exports.StylesController = Montage.create(Component, {
         },
         enumerable : false
     },
+
+    _mediaList : {
+        value: []
+    },
+
+    watchMedia : {
+        value: function(mediaQuery, doc) {
+            var _doc = doc || this._currentDocument.model.views.design.document;
+
+            ///// Set a listener for media changes
+            _doc.defaultView.matchMedia(mediaQuery).addListener(function(e) {
+                this.handleMediaChange(e);
+            }.bind(this));
+        }
+    },
+
+    handleMediaChange : {
+        value: function(query) {
+            this._clearCache();
+
+            NJevent('mediaChange', {
+                query: query,
+                source: "stylesController"
+            });
+        }
+    },
+
     userStyleSheets : {
         value : null
     },
