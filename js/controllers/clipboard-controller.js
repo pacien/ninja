@@ -82,7 +82,7 @@ var ClipboardController = exports.ClipboardController = Montage.create(Component
 
             // Don't do anything if an input or other control is focused except the copy menu button
             if(document.activeElement.nodeName !== "BODY") {
-                if(!document.activeElement.getAttribute("data-montage-id") === "menuItemButton") {
+                if(!(document.activeElement.getAttribute("data-montage-id") === "menuItemButton")) {
                     return;
                 }
             }
@@ -101,7 +101,7 @@ var ClipboardController = exports.ClipboardController = Montage.create(Component
 
             // Don't do anything if an input or other control is focused
             if(document.activeElement.nodeName !== "BODY") {
-                if(!document.activeElement.getAttribute("data-montage-id") === "menuItemButton") {
+                if(!(document.activeElement.getAttribute("data-montage-id") === "menuItemButton")) {
                     return;
                 }
             }
@@ -127,7 +127,7 @@ var ClipboardController = exports.ClipboardController = Montage.create(Component
 
             // Don't do anything if an input or other control is focused
             if(document.activeElement.nodeName !== "BODY") {
-                if(!document.activeElement.getAttribute("data-montage-id") === "menuItemButton") {
+                if(!(document.activeElement.getAttribute("data-montage-id") === "menuItemButton")) {
                     return;
                 }
             }
