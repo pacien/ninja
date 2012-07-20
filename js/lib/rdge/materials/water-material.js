@@ -165,16 +165,16 @@ var waterMaterialDef =
     }
 };
 
-var ParisMaterial = function ParisMaterial()
+var BlueSkyMaterial = function BlueSkyMaterial()
 {
     // initialize the inherited members
     this.inheritedFrom = WaterMaterial;
     this.inheritedFrom();
 
-    this._name = "Paris";
-    this._shaderName = "paris";
+    this._name = "Blue Sky";
+    this._shaderName = "blueSky";
 
-    this._defaultTexMap = 'assets/images/paris.png';
+    this._defaultTexMap = 'assets/images/bluesky.png';
     this._propValues[this._propNames[0]] = this._defaultTexMap.slice(0);
 
     //this._diffuseColor = [0.5, 0.5, 0.5, 0.5];
@@ -191,7 +191,7 @@ var ParisMaterial = function ParisMaterial()
         this._shader.init();
 
         // set up the material node
-        this._materialNode = RDGE.createMaterialNode("parisMaterial" + "_" + world.generateUniqueNodeID());
+        this._materialNode = RDGE.createMaterialNode("blueSkyMaterial" + "_" + world.generateUniqueNodeID());
         this._materialNode.setShader(this._shader);
 
         this._time = 0;
@@ -206,9 +206,9 @@ var ParisMaterial = function ParisMaterial()
 }
 
 
-ParisMaterial.prototype = new PulseMaterial();
+BlueSkyMaterial.prototype = new PulseMaterial();
 if (typeof exports === "object") {
-    exports.ParisMaterial = ParisMaterial;
+    exports.BlueSkyMaterial = BlueSkyMaterial;
 }
 
 

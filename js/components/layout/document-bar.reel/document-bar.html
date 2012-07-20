@@ -68,6 +68,21 @@ POSSIBILITY OF SUCH DAMAGE.
                         "condition": {"<-": "@owner.disabled"}
                     }
                 },
+
+                "menuItemButton": {
+                    "prototype": "montage/ui/native/button.reel",
+                    "properties": {
+                        "element": {"#": "previewButton"},
+                        "identifier": "preview",
+                        "label": "Preview"
+                    },
+                    "listeners": [
+                        {
+                            "type": "action",
+                            "listener": {"@": "owner"}
+                        }
+                    ]
+                },
     
                 "owner": {
                     "prototype": "js/components/layout/document-bar.reel",
@@ -107,6 +122,14 @@ POSSIBILITY OF SUCH DAMAGE.
                 
                 <button class="btn_view">Code</button>
                 
+            </section>
+
+            <section class="inactive">
+
+                <div class="viewicon viewPreview"></div>
+
+                <button data-montage-id="previewButton" class="btn_view preview"></button>
+
             </section>
         
             <div data-montage-id="disabledCondition" class="panelDisabled"></div>

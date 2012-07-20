@@ -239,6 +239,27 @@ exports.ViewUtils = Montage.create(Component, {
         }
     },
 
+    getOffsetParent: {
+        value: function( elt ) {
+            var parent = elt.elementModel.getProperty("offsetParent");
+            if(parent === "none") {
+                return null;
+            }
+            else if(parent) {
+                return parent;
+            } else {
+                parent = elt.offsetParent;
+                if(parent) {
+                    elt.elementModel.setProperty("offsetParent", parent);
+                    return parent;
+                } else {
+                    elt.elementModel.setProperty("offsetParent", "none");
+                    return null;
+                }
+            }
+        }
+    },
+
     getEyePoint: {
         value:function() {
             // this function should use the center of projection - it is currently hard wired to (0,0).
@@ -360,7 +381,7 @@ exports.ViewUtils = Montage.create(Component, {
 
             // transform the point up the tree
             var child = elt;
-            var parent = elt.offsetParent;
+            var parent = this.getOffsetParent(elt);
             while ( parent )
             {
                 // go to screen space of the current child
@@ -388,7 +409,7 @@ exports.ViewUtils = Montage.create(Component, {
                 }
 
                 child = parent;
-                parent = parent.offsetParent;
+                parent = this.getOffsetParent(parent);
             }
 
             return pt;
@@ -413,7 +434,7 @@ exports.ViewUtils = Montage.create(Component, {
 
                 if (child === this._stageElement)  break;
                 if (child === this._rootElement)  break;
-                child = child.offsetParent;
+                child = this.getOffsetParent(child);
                 if (child === this._rootElement)  break;
             }
 
@@ -449,7 +470,7 @@ exports.ViewUtils = Montage.create(Component, {
             if (pt.length == 2)  pt[2] = 0;
 
             // transform the bounds up the tree
-            var parent = child.offsetParent;
+            var parent = this.getOffsetParent(child);
             // TODO - Should have a different way to check for new template mode
             if ( parent || (child === this.application.ninja.currentDocument.model.documentRoot) )
             {
@@ -498,7 +519,7 @@ exports.ViewUtils = Montage.create(Component, {
             pt[3] = 1;
 
             // transform the bounds up the tree
-            var parent = child.offsetParent;
+            var parent = this.getOffsetParent(child);
             if ( parent )
             {
                 this.setViewportObj( child );
@@ -701,11 +722,25 @@ exports.ViewUtils = Montage.create(Component, {
             // optional argument localSpace, if true, puts the top left at (0,0).
             if (arguments.length < 2)  localSpace = false;
 
-            var bounds;
-            var left    = elt.offsetLeft,
-                top     = elt.offsetTop,
-                w       = elt.offsetWidth,
+            var bounds, left, top, w, h;
+            if(elt.elementModel.getProperty("offsetCache")) {
+                left = elt.elementModel.getProperty("offsetLeft");
+                top = elt.elementModel.getProperty("offsetTop");
+                w = elt.elementModel.getProperty("offsetWidth");
+                h = elt.elementModel.getProperty("offsetHeight");
+            } else {
+                left    = elt.offsetLeft;
+                top     = elt.offsetTop;
+                w       = elt.offsetWidth;
                 h       = elt.offsetHeight;
+                elt.elementModel.setProperty("offsetLeft", left);
+                elt.elementModel.setProperty("offsetTop", top);
+                elt.elementModel.setProperty("offsetWidth", w);
+                elt.elementModel.setProperty("offsetHeight", h);
+                elt.elementModel.setProperty("offsetCache", true);
+            }
+
+
 
 //            if (elt instanceof SVGSVGElement) {
             if(elt.nodeName.toLowerCase() === "svg") {
@@ -745,21 +780,39 @@ exports.ViewUtils = Montage.create(Component, {
 
     getElementOffset: {
         value: function( elt ) {
-            var xOff = elt.offsetLeft,  yOff = elt.offsetTop;
-        //        if (elt.__ninjaXOff)  xOff = elt.__ninjaXOff;
-        //        if (elt.__ninjaYOff)  yOff = elt.__ninjaYOff;
-            var offset = [xOff, yOff];
-            if(elt.offsetParent && (elt.offsetParent !== this._stageElement))
+            var xOff, yOff, offset, parent, border, pS, bl, bt;
+
+            if(elt.elementModel.getProperty("offsetCache")) {
+                xOff = elt.elementModel.getProperty("offsetLeft");
+                yOff = elt.elementModel.getProperty("offsetTop");
+            } else {
+                xOff    = elt.offsetLeft;
+                yOff     = elt.offsetTop;
+                elt.elementModel.setProperty("offsetLeft", xOff);
+                elt.elementModel.setProperty("offsetTop", yOff);
+                elt.elementModel.setProperty("offsetCache", true);
+            }
+            offset = [xOff, yOff];
+            parent = this.getOffsetParent(elt);
+            if(parent && (parent !== this._stageElement))
             {
-                var pS = elt.ownerDocument.defaultView.getComputedStyle(elt.offsetParent);
-
-                var border = parseInt(pS.getPropertyValue("border"));
-
-                if(border)
-                {
-                    var bl = parseInt(pS.getPropertyValue("border-left-width")),
+                if(parent.elementModel.getProperty("border")) {
+                    border = parent.elementModel.getProperty("border");
+                    bl = parent.elementModel.getProperty("border-left-width");
+                    bt = parent.elementModel.getProperty("border-top-width");
+                } else {
+                    if(elt.ownerDocument.defaultView) {
+                        pS = elt.ownerDocument.defaultView.getComputedStyle(parent, null);
+                        border = parseInt(pS.getPropertyValue("border"));
+                        bl = parseInt(pS.getPropertyValue("border-left-width"));
                         bt = parseInt(pS.getPropertyValue("border-top-width"));
+                        parent.elementModel.setProperty("border", border);
+                        parent.elementModel.setProperty("border-left-width", bl);
+                        parent.elementModel.setProperty("border-top-width", bt);
+                    }
+                }
 
+                if(border) {
                     offset[0] += bl;
                     offset[1] += bt;
                 }
@@ -1072,7 +1125,7 @@ exports.ViewUtils = Montage.create(Component, {
 
                 if (elt === this._stageElement)  break;
                 if (elt === this._rootElement)  break;
-                elt = elt.offsetParent;
+                elt = this.getOffsetParent(elt);
                 if (elt === this._rootElement)  break;
             }
 
@@ -1125,7 +1178,7 @@ exports.ViewUtils = Montage.create(Component, {
                 //mat = offMat.multiply( mat );
                 glmat4.multiply( offMat, mat, mat );
 
-                elt = elt.offsetParent;
+                elt = this.getOffsetParent(elt);
             }
 
             return mat;

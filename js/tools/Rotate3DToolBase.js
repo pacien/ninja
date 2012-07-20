@@ -485,7 +485,6 @@ exports.Rotate3DToolBase = Montage.create(ModifierToolBase, {
                 if(len === 1)
                 {
                     this.target = this.application.ninja.selectedElements[0];
-                    drawUtils.addElement(this.target);
 
                     viewUtils.pushViewportObj( this.target );
                     var eltCtr = viewUtils.getCenterOfProjection();

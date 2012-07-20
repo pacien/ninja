@@ -111,6 +111,8 @@ exports.Splitter = Montage.create(Component, {
                 else this.panel.classList.remove("collapsed");
                 this.element.classList.remove("collapsed");
                 if(this._resizeBar != null) this.resizeBar.classList.remove("collapsed");
+                // webkitTransitionEnd is not fired when expanded, so force draw here.
+                this.application.ninja.stage.resizeCanvases = true;
             }
         }
     },

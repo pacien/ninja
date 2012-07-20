@@ -49,7 +49,7 @@ exports.ElementMediator = Montage.create(Component, {
     },
 
     addElements:{
-        value:function (elements, rules, notify) {
+        value:function (elements, rules, notify, callAddDelegate) {
             if (Array.isArray(elements)) {
                 elements.forEach(function (element) {
                     ElementController.addElement(element, rules);
@@ -61,7 +61,9 @@ exports.ElementMediator = Montage.create(Component, {
 
             }
 
-            if (this.addDelegate && typeof (this.addDelegate['onAddElements']) === "function") {
+            if ((callAddDelegate || (typeof callAddDelegate === "undefined"))
+                && this.addDelegate && typeof (this.addDelegate['onAddElements']) === "function") {
+
                 this.addDelegate['onAddElements'].call(this.addDelegate, elements);
             }
 

@@ -385,8 +385,8 @@ exports.GeomObj = Object.create(Object.prototype, {
                     case "plasma":
                     case "deform":
                     case "water":
-                    case "paris":
-                    case "raiders":
+                    case "blueSky":
+                    case "darkBlur":
                     case "tunnel":
                     case "reliefTunnel":
                     case "squareTunnel":
