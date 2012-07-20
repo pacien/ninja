@@ -1349,6 +1349,70 @@ exports.Stage = Montage.create(Component, {
 
             this.drawUtils.initializeFromDocument(adjustScrollOffsets);
         }
+    },
+
+    _timelinePlay: {
+        value: false
+    },
+
+    timelinePlay: {
+        get: function() {
+            return this._timelinePlay;
+        },
+        set: function(value) {
+            if(this._timelinePlay !== value) {
+                this._timelinePlay = value;
+                this._timelinePlay ? this.playTimeline() : this.stopTimeline();
+            }
+        }
+    },
+
+    playTimeline: {
+        value: function() {
+            this._canvas.style.visibility = "hidden";
+            this._layoutCanvas.style.visibility = "hidden";
+            this._gridCanvas.style.visibility = "hidden";
+
+            this._drawingCanvas.removeEventListener("mousedown", this, false);
+            this._drawingCanvas.removeEventListener("mouseup", this, false);
+            this._drawingCanvas.removeEventListener("dblclick", this, false);
+            this._drawingCanvas.removeEventListener("mousewheel", this, false);
+            this._drawingCanvas.removeEventListener("mousemove", this, false);
+
+            this.clearDrawingCanvas();
+            this._drawingContext.save();
+            this._drawingContext.strokeStyle = "rgba(255,0,0,1)";
+            this._drawingContext.lineWidth = 4;
+
+            this._drawingContext.strokeRect(0, 0, this._drawingCanvas.width, this._drawingCanvas.height);
+
+            document.removeEventListener("keydown", this, false);
+            document.removeEventListener("keyup", this, false);
+            this.bindingView.hide = true;
+            this.application.ninja.stylesController._stageStylesheet.rules[0].selectorText = "nj-css-garbage-selector";
+        }
+    },
+
+    stopTimeline: {
+        value: function() {
+            this._canvas.style.visibility = "visible";
+            this._layoutCanvas.style.visibility = "visible";
+            this._gridCanvas.style.visibility = "visible";
+
+            this._drawingCanvas.addEventListener("mousedown", this, false);
+            this._drawingCanvas.addEventListener("mouseup", this, false);
+            this._drawingCanvas.addEventListener("dblclick", this, false);
+            this._drawingCanvas.addEventListener("mousewheel", this, false);
+            this._drawingCanvas.addEventListener("mousemove", this, false);
+
+            this.clearDrawingCanvas();
+            this._drawingContext.restore();
+
+            document.addEventListener("keydown", this, false);
+            document.addEventListener("keyup", this, false);
+            this.bindingView.hide = false;
+            this.application.ninja.stylesController._stageStylesheet.rules[0].selectorText = "*";
+        }
     }
 
 });

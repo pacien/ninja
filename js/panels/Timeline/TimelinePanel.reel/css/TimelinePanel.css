@@ -68,107 +68,116 @@ POSSIBILITY OF SUCH DAMAGE.
 .rewindbutton { background-image: url("../images/play_prev.png"); background-repeat: no-repeat; height: 18px; width: 18px; float: left; padding-right: 5px; }
 
 /* line 150, ../scss/TimelinePanel.scss */
-.playbutton { background-image: url("../images/play.png"); background-repeat: no-repeat; height: 18px; width: 18px; float: left; padding-right: 5px; }
+.playbutton { background: transparent url("../images/play.png") no-repeat; height: 18px; width: 18px; float: left; padding-right: 5px; border: none; margin: 0; min-width: 0; opacity: 0.8; }
 
-/* line 158, ../scss/TimelinePanel.scss */
-.pausebutton { background-image: url("../images/pause.png"); background-repeat: no-repeat; height: 18px; width: 18px; float: left; padding-right: 5px; }
+/* line 162, ../scss/TimelinePanel.scss */
+.playbutton:hover { background-color: #474747; opacity: 1; }
 
 /* line 166, ../scss/TimelinePanel.scss */
+.playbutton.active:hover { background-color: #474747; opacity: 1; }
+
+/* line 170, ../scss/TimelinePanel.scss */
+.playbutton:focus { -webkit-box-shadow: none; }
+
+/* line 173, ../scss/TimelinePanel.scss */
+.pausebutton { background-image: url("../images/pause.png"); }
+
+/* line 176, ../scss/TimelinePanel.scss */
 .forwardbutton { background-image: url("../images/play_next.png"); background-repeat: no-repeat; height: 18px; width: 18px; float: left; padding-right: 5px; }
 
-/* line 174, ../scss/TimelinePanel.scss */
+/* line 184, ../scss/TimelinePanel.scss */
 .timelinemarkers { height: 20px; width: 100%; background-color: #474747; border-bottom-style: solid; border-bottom-width: thin; border-bottom-color: black; -webkit-box-flex: 0; position: absolute; background-image: url("../images/timetick.jpg"); overflow: visible; }
 
-/* line 186, ../scss/TimelinePanel.scss */
+/* line 196, ../scss/TimelinePanel.scss */
 .layout_markers { position: absolute; overflow: hidden; top: 0px; left: 0px; height: 20px; width: 100%; border-bottom-style: solid; }
 
-/* line 196, ../scss/TimelinePanel.scss */
+/* line 206, ../scss/TimelinePanel.scss */
 .masterlayer { font-family: 'Droid Sans'; font-size: 12px; text-shadow: 1px 1px 1px black; height: 18px; background-color: #474747; border-bottom-style: solid; border-bottom-width: thin; border-bottom-color: #3a3a3a; color: white; padding-left: 15px; padding-top: 2px; }
 
-/* line 209, ../scss/TimelinePanel.scss */
+/* line 219, ../scss/TimelinePanel.scss */
 .mastertrack { -webkit-box-flex: 0; color: white; height: 20px; width: 100%; border-bottom-style: solid; border-bottom-width: thin; border-bottom-color: #3a3a3a; background-color: #232323; background-image: url("../../Track.reel/images/gridline.jpg"); }
 
-/* line 223, ../scss/TimelinePanel.scss */
+/* line 233, ../scss/TimelinePanel.scss */
 .container-tracks, .timelinemarkers, .mastertrack { width: 2000px; }
 
-/* line 226, ../scss/TimelinePanel.scss */
+/* line 236, ../scss/TimelinePanel.scss */
 .userlayers { width: 100%; background-color: #292929; -webkit-box-flex: 1; overflow: hidden; border-bottom-style: solid; border-bottom-width: thin; border-bottom-color: black; }
 
-/* line 235, ../scss/TimelinePanel.scss */
+/* line 245, ../scss/TimelinePanel.scss */
 .timelinegutter { height: 16px; padding-top: 1px; padding-left: 6px; -webkit-box-flex: 0; background-color: #474747; border-top-style: solid; border-top-width: thin; border-top-color: #3a3a3a; }
 
-/* line 245, ../scss/TimelinePanel.scss */
+/* line 255, ../scss/TimelinePanel.scss */
 .newlayerbutton { background-image: url("../images/plus.png"); background-repeat: no-repeat; height: 16px; width: 16px; float: left; padding-right: 5px; }
 
-/* line 253, ../scss/TimelinePanel.scss */
+/* line 263, ../scss/TimelinePanel.scss */
 .deletelayerbutton { background-image: url("../images/trash.png"); background-repeat: no-repeat; height: 16px; width: 16px; float: left; padding-right: 5px; }
 
-/* line 261, ../scss/TimelinePanel.scss */
+/* line 271, ../scss/TimelinePanel.scss */
 .tracktick { height: 100%; width: 15px; border-right-color: #3a3a3a; border-right-style: solid; border-right-width: thin; float: left; }
 
-/* line 269, ../scss/TimelinePanel.scss */
+/* line 279, ../scss/TimelinePanel.scss */
 .timemark { font-family: 'Droid Sans'; font-size: 12px; text-shadow: 1px 1px 1px #3a3a3a; width: 76px; color: gray; float: left; padding-top: 6px; padding-left: 4px; text-align: left; }
 
-/* line 280, ../scss/TimelinePanel.scss */
+/* line 290, ../scss/TimelinePanel.scss */
 .playhead { height: 14px; width: 6px; position: absolute; top: 6px; left: -3px; z-index: 92; background-color: #b50003; opacity: 0.5; visibility: hidden; }
 
-/* line 291, ../scss/TimelinePanel.scss */
+/* line 301, ../scss/TimelinePanel.scss */
 .playheadmarker { height: 100%; width: 1px; background-color: white; top: 0; left: 0; position: absolute; z-index: 91; opacity: 0.7; }
 
-/* line 301, ../scss/TimelinePanel.scss */
+/* line 311, ../scss/TimelinePanel.scss */
 .timebar { height: 3px; width: 0; background-color: #ff0003; opacity: 0.3; top: 10px; position: absolute; border-top: #c7a19f thin solid; border-right: #ffffff thin solid; }
 
-/* line 311, ../scss/TimelinePanel.scss */
+/* line 321, ../scss/TimelinePanel.scss */
 .timelinegutter .endhottext { float: right; font-family: 'Droid Sans'; font-size: 12px; text-shadow: 1px 1px 1px #3a3a3a; color: white; margin-top: 0%; }
 
-/* line 319, ../scss/TimelinePanel.scss */
+/* line 329, ../scss/TimelinePanel.scss */
 .timeline-disabled { position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; background-color: rgba(30, 30, 30, 0.796); z-index: 100; display: none; box-shadow: #111111 0px 0px 14px inset; }
 
-/* line 330, ../scss/TimelinePanel.scss */
+/* line 340, ../scss/TimelinePanel.scss */
 .timeline-dnd-helper { -webkit-transform: scale(0.9, 0.9); }
 
-/* line 333, ../scss/TimelinePanel.scss */
+/* line 343, ../scss/TimelinePanel.scss */
 .tl_slider { width: 65px; height: 5px; background: none; float: left; margin-left: 5%; }
 
 /* Configuration menu */
-/* line 342, ../scss/TimelinePanel.scss */
+/* line 352, ../scss/TimelinePanel.scss */
 .layer-master { position: relative; }
 
-/* line 345, ../scss/TimelinePanel.scss */
+/* line 355, ../scss/TimelinePanel.scss */
 .tl-configbutton { position: absolute; top: 0px; right: 2px; width: 20px; height: 20px; background-image: url(../images/icon-gear.png); background-repeat: no-repeat; cursor: pointer; z-index: 100; background-position: 100% 0px; }
 
-/* line 357, ../scss/TimelinePanel.scss */
+/* line 367, ../scss/TimelinePanel.scss */
 .tl-configbutton:hover { width: 180px; }
 
-/* line 361, ../scss/TimelinePanel.scss */
+/* line 371, ../scss/TimelinePanel.scss */
 .tl-configbutton .tl-dropdown { position: absolute; border: 1px solid black; top: 16px; right: 2px; width: 180px; padding-bottom: 7px; background-color: #474747; box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5); display: none; }
 
-/* line 372, ../scss/TimelinePanel.scss */
+/* line 382, ../scss/TimelinePanel.scss */
 .tl-configbutton.checked .tl-dropdown { display: block; }
 
-/* line 376, ../scss/TimelinePanel.scss */
+/* line 386, ../scss/TimelinePanel.scss */
 .tl-configbutton .checkable { padding-left: 20px; height: 20px; line-height: 20px; margin-top: 3px; }
 
-/* line 382, ../scss/TimelinePanel.scss */
+/* line 392, ../scss/TimelinePanel.scss */
 .tl-configbutton .checkable:hover { background-color: #b2b2b2; color: #242424; text-shadow: none; }
 
-/* line 387, ../scss/TimelinePanel.scss */
+/* line 397, ../scss/TimelinePanel.scss */
 .tl-configbutton .checkable.checked { background-image: url(../images/icon-checkmark.png); background-repeat: no-repeat; background-position: 6px 4px; }
 
-/* line 393, ../scss/TimelinePanel.scss */
+/* line 403, ../scss/TimelinePanel.scss */
 .tl-configbutton .nj-divider { margin-top: 7px; }
 
-/* line 397, ../scss/TimelinePanel.scss */
+/* line 407, ../scss/TimelinePanel.scss */
 .layer-hidden { display: none; }
 
-/* line 401, ../scss/TimelinePanel.scss */
+/* line 411, ../scss/TimelinePanel.scss */
 .tl_slider { width: 127px; height: 5px; float: left; clear: none; margin: 2px 0px 0px 0px; }
 
-/* line 409, ../scss/TimelinePanel.scss */
-.tl_slider .slider-track { background: #29292; width: 127px; height: 4px; border: 1px solid #000; top: 3px; }
+/* line 419, ../scss/TimelinePanel.scss */
+.tl_slider .slider-track { background: #292929; width: 127px; height: 4px; border: 1px solid #000; top: 3px; }
 
-/* line 417, ../scss/TimelinePanel.scss */
+/* line 427, ../scss/TimelinePanel.scss */
 .sliderClass { float: left; width: 127px; }
 
-/* line 422, ../scss/TimelinePanel.scss */
+/* line 432, ../scss/TimelinePanel.scss */
 .sliderClass .knob { background: url(../images/knob.png) no-repeat transparent center center; margin-bottom: 2px; }
