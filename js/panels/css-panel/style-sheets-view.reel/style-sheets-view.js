@@ -141,7 +141,6 @@ exports.StyleSheetsView = Montage.create(Component, {
     handleDeleteAction : {
         value: function(sheetComponent) {
             this.stylesController.removeStyleSheet(sheetComponent.source);
-            this.stylesController._clearCache();
             this._dispatchChange();
         }
     },
