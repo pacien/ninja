@@ -116,6 +116,14 @@ exports.MaterialsLibraryPanel = Montage.create(Component, {
     handleShowMaterialPopup: {
         enumerable: false,
         value: function (event) {
+            var piButton = this.application.eventManager.componentClaimingPointer("mouse");
+            if(piButton) {
+                this.selectedMaterialNode = piButton.element;
+            } else {
+                this.selectedMaterialNode = null;
+            }
+
+            this.materialId = event.detail.materialId;
             this._showMaterialPopup(event.detail);
         }
     },
@@ -213,7 +221,11 @@ exports.MaterialsLibraryPanel = Montage.create(Component, {
                 contentHt = parseFloat(content.style.height) || content.offsetHeight || 0,
                 contentWd = parseFloat(content.style.width) || content.offsetWidth || 0,
                 pt = webkitConvertPointFromNodeToPage(this.selectedMaterialNode, new WebKitPoint(0, 0));
-            return {top: pt.y - contentHt + 10, left: pt.x - contentWd + 10};
+            if(!pt) {
+                return defaultPosition;
+            } else {
+                return {top: pt.y - contentHt + 10, left: pt.x - contentWd + 10};
+            }
         }
     }
 });

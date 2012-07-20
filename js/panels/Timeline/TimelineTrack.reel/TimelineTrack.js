@@ -354,6 +354,20 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
         }
     },
 
+    _enabled3D:{
+        value:false
+    },
+    enabled3D:{
+        serializable:true,
+        get:function () {
+            return this._enabled3D;
+        },
+        set:function (val) {
+            this._enabled3D = val;
+            this.trackData.enabled3D = val;
+        }
+    },
+
     _ruleList:{
         value:[]
     },
@@ -495,6 +509,7 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
             this.trackPosition = this.trackData.trackPosition;
             this.isVisible = this.trackData.isVisible;
             this.stageElement = this.trackData.stageElement;
+            this.enabled3D = this.trackData.enabled3D;
             this.trackEditorProperty = "master";
             this.needsDraw = true;
         }
@@ -1084,6 +1099,17 @@ var TimelineTrack = exports.TimelineTrack = Montage.create(Component, {
                 var styleProp = ruleSet[i][0].style[0];
                 this.application.ninja.timeline.layerRepetition.childComponents[0].addStyle(styleProp, ruleSet[i]);
             }
+        }
+    },
+
+    initial3DforAllTweens:{
+        value:function(){
+            var j;
+            var tweensLength = this.tweens.length;
+            for (j = 0; j < tweensLength; j++) {
+                this.tweens[j].tweenData.tweenedProperties["-webkit-transform"] = "perspective(1400) matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)";
+            }
+            this.enabled3D = true;
         }
     },
 
