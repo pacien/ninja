@@ -1130,9 +1130,13 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
                 this.currentLayersSelected = this.application.ninja.currentDocument.tlCurrentLayersSelected;
                 this.currentElementsSelected = this.application.ninja.currentDocument.tlCurrentElementsSelected;
                 this._currentDocumentUuid = this.application.ninja.currentDocument.uuid;
-                this.millisecondsOffset = this.application.ninja.currentDocument.tlZoomSliderValue ;
-                this.zoom_slider.value = this.application.ninja.currentDocument.tlZoomSliderValue;
-
+//                if(this.application.ninja.currentDocument.tlZoomSliderValue){
+//                this.millisecondsOffset = this.application.ninja.currentDocument.tlZoomSliderValue ;
+//                    if(this.zoom_slider){
+//                        this.zoom_slider.value = this.application.ninja.currentDocument.tlZoomSliderValue;
+//                    }
+//
+//                }
                 // Are we only showing animated layers?
 				if (this.application.ninja.currentDocument.boolShowOnlyAnimated) {
 					// Fake a click.
@@ -1707,7 +1711,7 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
     zoomTrackContainerWidthChange:{
         value:function () {
 
-            if(this.application.ninja.currentDocument){
+            if(this.application.ninja.currentDocument && this.zoomValue){
                 this.application.ninja.currentDocument.tlZoomSliderValue = this.zoomValue;
 
             }
@@ -1923,7 +1927,12 @@ var TimelinePanel = exports.TimelinePanel = Montage.create(Component, {
 
     handleElementsRemoved:{
         value:function (event) {
-            this.deleteLayers(event.detail);
+
+            if(typeof(event.detail.length) === "undefined"){
+                this.deleteLayers([event.detail]);
+            }else{
+                this.deleteLayers(event.detail);
+            }
         }
     },
 
