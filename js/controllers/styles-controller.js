@@ -1516,6 +1516,7 @@ var stylesController = exports.StylesController = Montage.create(Component, {
 
                 ///// Mark for removal for i/o
                 sheetEl.setAttribute('data-ninja-remove', 'true');
+                sheetEl.removeAttribute('data-ninja-node');
 
                 NJevent('removeStyleSheet', sheet);
             }
