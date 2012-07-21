@@ -841,10 +841,10 @@ exports.ShapesController = Montage.create(CanvasController, {
                                         child.strokeMat = "Linear Gradient";
                                     }
                                 }
-                                else if( (child.strokeMat === "Radial Gradient") ||
+                                else if( !child.strokeMat || (child.strokeMat === "Radial Gradient") ||
                                          (child.strokeMat === "Linear Gradient") )
                                 {
-                                    // Set Flat Material for children geometry if color has been changed to solid
+                                    // Set Flat Material for children geometry if no material defined or color has been changed to solid
                                     child.strokeMat = "Flat";
                                 }
                             }
@@ -863,10 +863,10 @@ exports.ShapesController = Montage.create(CanvasController, {
                                         child.fillMat = "Linear Gradient";
                                     }
                                 }
-                                else if( (child.fillMat === "Radial Gradient") ||
+                                else if( !child.fillMat || (child.fillMat === "Radial Gradient") ||
                                          (child.fillMat === "Linear Gradient") )
                                 {
-                                    // Set Flat Material for children geometry if color has been changed to solid
+                                    // Set Flat Material for children geometry if no material defined or color has been changed to solid
                                     child.fillMat = "Flat";
                                 }
                             }
