@@ -106,7 +106,17 @@ var stylesController = exports.StylesController = Montage.create(Component, {
             this.defaultStylesheet = this.getSheetFromElement(this.CONST.DEFAULT_SHEET_ID);
 
             this.userStyleSheets = nj.toArray(document.model.views.design.document.styleSheets).filter(function(sheet) {
-                return sheet !== this._stageStylesheet;
+                if(sheet === this._stageStylesheet) { return false; }
+
+                var media = sheet.ownerNode.getAttribute('media');
+
+                ///// If the media attribute contains a query, we'll watch for changes in media
+                if(/\([0-9A-Za-z-: ]+\)/.test(media)) {
+                    this.watchMedia(media);
+                }
+
+                return true;
+
             }, this);
 
             this.initializeRootStyles();
@@ -115,6 +125,33 @@ var stylesController = exports.StylesController = Montage.create(Component, {
         },
         enumerable : false
     },
+
+    _mediaList : {
+        value: []
+    },
+
+    watchMedia : {
+        value: function(mediaQuery, doc) {
+            var _doc = doc || this._currentDocument.model.views.design.document;
+
+            ///// Set a listener for media changes
+            _doc.defaultView.matchMedia(mediaQuery).addListener(function(e) {
+                this.handleMediaChange(e);
+            }.bind(this));
+        }
+    },
+
+    handleMediaChange : {
+        value: function(query) {
+            this._clearCache();
+
+            NJevent('mediaChange', {
+                query: query,
+                source: "stylesController"
+            });
+        }
+    },
+
     userStyleSheets : {
         value : null
     },
@@ -1440,7 +1477,8 @@ var stylesController = exports.StylesController = Montage.create(Component, {
                 rel   : 'stylesheet',
                 id    : id || "",
                 media : 'screen',
-                title : 'Temp'
+                title : 'Temp',
+                'data-ninja-node' : 'true'
             });
 
             doc.head.appendChild(sheetElement);
@@ -1467,6 +1505,9 @@ var stylesController = exports.StylesController = Montage.create(Component, {
                 sheetEl.disabled = true;
                 this.userStyleSheets.splice(this.userStyleSheets.indexOf(sheet), 1);
 
+                ///// Make sure cached rules from this stylesheet are not used
+                this._clearCache();
+
                 ///// Check to see if we're removing the default style sheet
                 if(sheet === this._defaultStylesheet) {
                     sheetCount = this.userStyleSheets.length;
@@ -1475,6 +1516,7 @@ var stylesController = exports.StylesController = Montage.create(Component, {
 
                 ///// Mark for removal for i/o
                 sheetEl.setAttribute('data-ninja-remove', 'true');
+                sheetEl.removeAttribute('data-ninja-node');
 
                 NJevent('removeStyleSheet', sheet);
             }
@@ -1504,6 +1546,18 @@ var stylesController = exports.StylesController = Montage.create(Component, {
         }
     },
 
+    setMediaAttribute : {
+        value: function(sheet, mediaString) {
+            if(sheet.media.mediaText === mediaString) { return false; }
+
+            sheet.ownerNode.setAttribute('media', mediaString);
+
+            this._clearCache();
+
+            this.styleSheetModified(sheet);
+        }
+    },
+
     ///// Style Sheet Modified
     ///// Method to call whenever a stylesheet change is made
     ///// Dispatches an event, and keeps list of dirty style sheets
@@ -1521,6 +1575,7 @@ var stylesController = exports.StylesController = Montage.create(Component, {
             ///// If the sheet doesn't already exist in the list of modified
             ///// sheets, dispatch dirty event and add the sheet to the list
             if(sheetSearch.length === 0) {
+                NJevent('styleSheetDirty', eventData);
                 this.dirtyStyleSheets.push({
                     document : sheet.ownerNode.ownerDocument,
                     stylesheet : sheet
