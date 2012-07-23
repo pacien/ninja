@@ -217,15 +217,27 @@ exports.MaterialsLibraryPanel = Montage.create(Component, {
 
     willPositionPopup: {
         value: function(popup, defaultPosition) {
-            var content = popup.content.element,
+            var left,
+                top,
+                content = popup.content.element,
                 contentHt = parseFloat(content.style.height) || content.offsetHeight || 0,
                 contentWd = parseFloat(content.style.width) || content.offsetWidth || 0,
                 pt = webkitConvertPointFromNodeToPage(this.selectedMaterialNode, new WebKitPoint(0, 0));
-            if(!pt) {
+			
+			if(!pt) {
                 return defaultPosition;
-            } else {
-                return {top: pt.y - contentHt + 10, left: pt.x - contentWd + 10};
+            } 
+
+            top = pt.y - contentHt + 10;
+            if(top < 0) {
+                top = 0;
             }
+            left = pt.x - contentWd + 10;
+            if(left < 0) {
+                left = 0;
+            }
+
+            return {top:top, left:left};
         }
     }
 });
