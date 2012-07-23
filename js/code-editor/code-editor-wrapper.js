@@ -131,6 +131,12 @@ exports.CodeEditorWrapper = Montage.create(Component, {
                 this.application.ninja.editorViewOptions.codeEditorWrapper = this;
             }
 
+            //TODO:add codeEditorWrapper
+            if(!this.application.ninja.documentBar.codeEditorWrapper){
+                this.application.ninja.documentBar.codeEditorWrapper = this;
+            }
+
+
             editorOptions = {
                                lineNumbers: true,
                                matchBrackets:true,

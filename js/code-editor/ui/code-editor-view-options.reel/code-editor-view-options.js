@@ -51,7 +51,7 @@ exports.CodeEditorViewOptions = Montage.create(Component, {
 
             this._currentDocument = value;
 
-            if(!value || this._currentDocument.currentView === "design") {
+            if(!value || (this._currentDocument.currentView === "design") || ((this._currentDocument.model.views.design !== null))) {
                 this.visible = false;
             } else {
                 this.visible = true;
