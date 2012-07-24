@@ -302,6 +302,7 @@ exports.PenTool = Montage.create(ShapeTool, {
     HandleLeftButtonDown:
     {
         value: function (event) {
+            var newAnchor;
             //ignore any right or middle clicks
             if (event.button !== 0) {
                 //todo NOTE: this will work on Webkit only...IE has different codes (left: 1, middle: 4, right: 2)
@@ -427,7 +428,7 @@ exports.PenTool = Montage.create(ShapeTool, {
 
                 } else {
                     this._selectedSubpath.addAnchor(new AnchorPoint());
-                    var newAnchor = this._selectedSubpath.getAnchor(this._selectedSubpath.getSelectedAnchorIndex());
+                    newAnchor = this._selectedSubpath.getAnchor(this._selectedSubpath.getSelectedAnchorIndex());
                     newAnchor.setPos(stageWorldMousePos[0], stageWorldMousePos[1], stageWorldMousePos[2]);
                     newAnchor.setPrevPos(stageWorldMousePos[0], stageWorldMousePos[1], stageWorldMousePos[2]);
                     newAnchor.setNextPos(stageWorldMousePos[0], stageWorldMousePos[1], stageWorldMousePos[2]);
@@ -489,7 +490,7 @@ exports.PenTool = Montage.create(ShapeTool, {
                         if (numAnchors>1 && !this._selectedSubpath.getIsClosed() && this._selectedSubpath.getSelectedAnchorIndex()===0 && prevSelectedAnchorIndex === numAnchors-1){
                             //insert an anchor temporarily that will get removed in the mouse up handler
                             this._selectedSubpath.addAnchor(new AnchorPoint());
-                            var newAnchor = this._selectedSubpath.getAnchor(this._selectedSubpath.getSelectedAnchorIndex());
+                            newAnchor = this._selectedSubpath.getAnchor(this._selectedSubpath.getSelectedAnchorIndex());
                             newAnchor.setPos(localMousePos[0], localMousePos[1], localMousePos[2]);
                             newAnchor.setPrevPos(localMousePos[0], localMousePos[1], localMousePos[2]);
                             newAnchor.setNextPos(localMousePos[0], localMousePos[1], localMousePos[2]);
@@ -534,7 +535,7 @@ exports.PenTool = Montage.create(ShapeTool, {
                         ) {
                         if (!this._selectedSubpath.getIsClosed()) { //todo this test is probably unnecessary, but doing it to be safe
                             this._selectedSubpath.addAnchor(new AnchorPoint());
-                            var newAnchor = this._selectedSubpath.getAnchor(this._selectedSubpath.getSelectedAnchorIndex());
+                            newAnchor = this._selectedSubpath.getAnchor(this._selectedSubpath.getSelectedAnchorIndex());
 
                             newAnchor.setPos(localMousePos[0], localMousePos[1], localMousePos[2]);
                             newAnchor.setPrevPos(localMousePos[0], localMousePos[1], localMousePos[2]);
@@ -564,6 +565,7 @@ exports.PenTool = Montage.create(ShapeTool, {
     HandleMouseMove:
     {
         value: function (event) {
+            var cursor;
             //ignore any right or middle clicks
             if (event.button !== 0) {
                 //NOTE: this will work on Webkit only...IE has different codes (left: 1, middle: 4, right: 2)
@@ -678,7 +680,7 @@ exports.PenTool = Montage.create(ShapeTool, {
                     { //the anchor was hit
                         this._hoveredAnchorIndex = selAnchorAndParamAndCode[0];
                         var lastAnchorIndex = this._selectedSubpath.getNumAnchors()-1;
-                        var cursor;
+
                         if (this._subtool===this.SUBTOOL_NONE){
                             cursor = "url('images/cursors/penCursors/Pen_anchorSelect.png') 5 1, default";
                             if (this._selectedSubpath.getIsClosed()===false){
@@ -697,7 +699,7 @@ exports.PenTool = Montage.create(ShapeTool, {
                     } else if (selAnchorAndParamAndCode[2] & this._selectedSubpath.SEL_PATH) {
                         //change the cursor only if we're not in pen-minus subtool
                         if (this._subtool!==this.SUBTOOL_PENMINUS){
-                            var cursor = "url('images/cursors/penCursors/Pen_plus.png') 5 1, default";
+                            cursor = "url('images/cursors/penCursors/Pen_plus.png') 5 1, default";
                             this.application.ninja.stage.drawingCanvas.style.cursor = cursor;
                         }
                     }
@@ -735,6 +737,8 @@ exports.PenTool = Montage.create(ShapeTool, {
                 return;
             }
 
+            var world, subpath;
+
             w = Math.round(w);
             h = Math.round(h);
             var left = Math.round(midPt[0] - 0.5 * w);
@@ -743,16 +747,16 @@ exports.PenTool = Montage.create(ShapeTool, {
             if (!canvas) {
                 this._doesSelectionChangeNeedHandling = false; //this will ignore the selection change event triggered by the new canvas
                 var newCanvas = document.application.njUtils.make("canvas", {"data-RDGE-id": NJUtils.generateRandom()}, this.application.ninja.currentDocument);
-                var styles = document.application.njUtils.stylesFromDraw(newCanvas, parseInt(w), parseInt(h), {midPt: midPt, planeMat: planeMat});
+                var styles = document.application.njUtils.stylesFromDraw(newCanvas, parseInt(w, 10), parseInt(h, 10), {midPt: midPt, planeMat: planeMat});
                 this.application.ninja.elementMediator.addElements(newCanvas, styles, false);
 
                 // create all the GL stuff
-                var world = this.getGLWorld(newCanvas, this._useWebGL);//this.options.use3D);//this.CreateGLWorld(planeMat, midPt, newCanvas, this._useWebGL);//fillMaterial, strokeMaterial);
+                world = this.getGLWorld(newCanvas, this._useWebGL);//this.options.use3D);//this.CreateGLWorld(planeMat, midPt, newCanvas, this._useWebGL);//fillMaterial, strokeMaterial);
                 //store a reference to this newly created canvas
                 this._selectedSubpathCanvas = newCanvas;
                 this._selectedSubpathPlaneMat = ElementMediator.getMatrix(newCanvas);
 
-                var subpath = this._selectedSubpath; //new GLSubpath();
+                subpath = this._selectedSubpath; //new GLSubpath();
                 subpath.setWorld(world);
                 subpath.setCanvas(newCanvas);
 
@@ -791,7 +795,7 @@ exports.PenTool = Montage.create(ShapeTool, {
             } //if (!canvas) {
             else {
 
-                var world = null;
+                world = null;
                 if (canvas.elementModel.shapeModel && canvas.elementModel.shapeModel.GLWorld) {
                     world = canvas.elementModel.shapeModel.GLWorld;
                 } else {
@@ -815,7 +819,7 @@ exports.PenTool = Montage.create(ShapeTool, {
                     }
                 }
 
-                var subpath = this._selectedSubpath;
+                subpath = this._selectedSubpath;
 
                 subpath.setDrawingTool(this);
                 subpath.setWorld(world);
@@ -1358,7 +1362,7 @@ exports.PenTool = Montage.create(ShapeTool, {
                 ctx.lineWidth = 1;
                 var defFill = "#FFFFFF";
                 var defStroke = "green";
-                var selHandleFill = "#000000"
+                var selHandleFill = "#000000";
 
                 ctx.strokeStyle = defStroke;
                 ctx.fillStyle = defFill;
@@ -1608,7 +1612,7 @@ exports.PenTool = Montage.create(ShapeTool, {
                         var world = ElementMediator.getShapeProperty(this._selectedSubpathCanvas, "GLWorld");
                         if (world === null){
                             throw("Pen tool handleSelectionChange did not work correctly");
-                            break; //something bad happened //TODO handle this better
+                            //something bad happened //TODO handle this better
                         }
 
                         //TODO assuming that we want the first subpath in this world...fix this!
