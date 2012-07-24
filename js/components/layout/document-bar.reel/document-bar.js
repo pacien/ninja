@@ -73,12 +73,12 @@ exports.DocumentBar = Montage.create(Component, {
     _codeEditorWrapper:{
         value: null
     },
-
+    ////////////////////////////////////////////////////////////////////
+    //
     codeEditorWrapper:{
-        get : function() {
-            return this._codeEditorWrapper;
-        },
-        set : function(value) {
+        get: function() {return this._codeEditorWrapper;},
+        set: function(value) {
+        	//
             if(this._codeEditorWrapper !== value){
                 this._codeEditorWrapper = value;
             }
@@ -89,9 +89,13 @@ exports.DocumentBar = Montage.create(Component, {
     btnCode: {
         value: null
     },
+    ////////////////////////////////////////////////////////////////////
+    //
     btnDesign: {
         value: null
     },
+    ////////////////////////////////////////////////////////////////////
+    //
     btnPreview: {
         value: null
     },
@@ -209,52 +213,37 @@ exports.DocumentBar = Montage.create(Component, {
     },
     ////////////////////////////////////////////////////////////////////
     //
-    renderDesignView: {
-        value: function () {
-            //Reloading in design view (with updates from other view)
-            this.reloadView('design', this.fileTemplate);
-        }
-    },
-    ////////////////////////////////////////////////////////////////////
-    //
-    renderCodeView: {
-        value: function () {
-            //Reloading in code view (with updates from other view)
-            this.reloadView('code', this.fileTemplate);
-        }
-    },
-    ////////////////////////////////////////////////////////////////////
-    //
     showViewDesign: {
         value: function () {
             //
-            if (this._currentDocument.model.currentView !== 'design') {
-                //
-                this._currentDocument.model.switchViewTo('design');
-                this.btnCode.setAttribute('class', 'inactive');
-                this.btnDesign.removeAttribute('class');
-                //this._currentDocument.model.file.content.body = '<div class="test">hello</div><div class="test">hello</div>';
-                var render = this.renderDesignView.bind(this._currentDocument);
-                render();
-            }
+            this.showView('design', this.renderDesignView, this.btnDesign, this.btnCode);
         }
     },
     ////////////////////////////////////////////////////////////////////
-    //TODO: Implement code with that updates the file template through the ninja document parser
+    //
     showViewCode: {
         value: function () {
             //
-            if (this._currentDocument.model.currentView !== 'code') {
-                //
-                this._currentDocument.model.switchViewTo('code');
-                this.btnDesign.setAttribute('class', 'inactive');
-                this.btnCode.removeAttribute('class');
-                var render = this.renderCodeView.bind(this._currentDocument);
-                render();
-            }
+            this.showView('code', this.renderCodeView, this.btnCode, this.btnDesign);
         }
     },
-
+    ////////////////////////////////////////////////////////////////////
+    //
+    showView: {
+	    value: function (view, render, aBtn, iBtn) {
+	    	//TODO: Remove reference to string view
+		    if (this._currentDocument.model.currentView !== view) {
+                //
+                this._currentDocument.model.switchViewTo(view);
+                iBtn.setAttribute('class', 'inactive');
+                aBtn.removeAttribute('class');
+                //TODO: Add document parsing to reload view
+                this._currentDocument.reloadView(view, this.fileTemplate);
+            }
+	    }
+    },
+    ////////////////////////////////////////////////////////////////////
+    //
     handleClick: {
         value: function(evt) {
             NJevent("executePreview");

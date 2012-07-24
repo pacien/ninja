@@ -35,7 +35,7 @@ var Montage =               require("montage/core/core").Montage,
     Component =             require("montage/ui/component").Component,
     HtmlDocumentModel =     require("js/document/models/html").HtmlDocumentModel,
     DesignDocumentView =    require("js/document/views/design").DesignDocumentView,
-    DesignCodeView =  require("js/document/views/design-code").DesignCodeView;
+    CodeDocumentView =		require("js/document/views/design-code").DesignCodeView;
 ////////////////////////////////////////////////////////////////////////
 //
 exports.HtmlDocument = Montage.create(Component, {
@@ -78,7 +78,6 @@ exports.HtmlDocument = Montage.create(Component, {
     //
     init: {
         value: function(file, context, callback, view, template) {
-            var designCodeView = DesignCodeView.create();
             //Storing callback data for loaded dispatch
             this.loaded.callback = callback;
             this.loaded.context = context;
@@ -87,7 +86,7 @@ exports.HtmlDocument = Montage.create(Component, {
                 file: {value: file},
                 fileTemplate: {value: template},
                 parentContainer: {value: document.getElementById("iframeContainer")}, //Saving reference to parent container of all views (should be changed to buckets approach
-                views: {value: {'design': DesignDocumentView.create(), 'code': designCodeView}} //TODO: Add code view logic
+                views: {value: {'design': DesignDocumentView.create(), 'code': CodeDocumentView.create()}} //TODO: Add code view logic
             });
             //Calling the any init routines in the model
             this.model.init();
@@ -101,10 +100,10 @@ exports.HtmlDocument = Montage.create(Component, {
                 //ERROR: Design View not initialized
             }
 
-
+            
+            //TODO: Make sure you have a boolean to indicate if view was initilize and handle errors (just like design view above)
             //initialize the code view for the html document and hide it since design is the default view
             this.model.views.code.initialize(this.model.parentContainer);
-
             this.model.views.code.hide();
 
 
@@ -126,8 +125,10 @@ exports.HtmlDocument = Montage.create(Component, {
                     this._observer = new WebKitMutationObserver(this.handleTemplateReady.bind(this));
                     this._observer.observe(this.model.views.design.document.head, {childList: true});
                 }.bind(this), template, {viewCallback: this.handleViewReady, context: this});
+            } else  if (view === 'code'){
+                //TODO: Add logic to open document in code view since it's now available
             } else {
-                //TODO: Identify default view (probably code)
+	            //TODO: Add error handling
             }
         }
     },
@@ -166,17 +167,19 @@ exports.HtmlDocument = Montage.create(Component, {
                     this._observer.observe(this.model.views.design.document.head, {childList: true});
                 }.bind(this), template, {viewCallback: this.handleViewReady, context: this});
             } else if(view === 'code'){
-                //TODO: Identify default view (probably code)
-
-                //TODO:get the html content from the document
+            
+            
+                //TODO: Parse in memory document through template to get current document
                 content = '<html><head>'+this.model.file.content.head+'</head><body>'+this.model.file.content.body+'</body></html>';//dummy
-
+                
+                
+                //
                 this.model.views.code.load(content);
-
                 //Setting current view object to code
                 this.currentView = 'code';
                 this.model.currentView = this.model.views.code;
-
+            } else {
+	            //TODO: Identify default view (probably code) - Error handling
             }
         }  
     },
