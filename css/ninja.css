@@ -789,10 +789,6 @@ input[type="radio"]:disabled { opacity: .3; background: #282828; border-width: 1
 
 .tagRadioButtons .nj-divider { height: 100%; float: left; position: relative; }
 
-.tagRadioButtons select.nj-skinned { visibility: visible; position: relative; margin-top: 1px; }
-
-.tagRadioButtons select[disabled="true"].nj-skinned, .tagRadioButtons select[disabled].nj-skinned { visibility: hidden; }
-
 #zoomToolOptionHolder .zoomOutToolIcon { background-image: url("../images/optionsbar/zoom/zoom_minus.png"); }
 
 #zoomToolOptionHolder .zoomInToolIcon { background-image: url("../images/optionsbar/zoom/zoom_plus.png"); }

@@ -351,16 +351,6 @@ input[type="radio"]:disabled {
     position: relative;
 }
 
-.tagRadioButtons select.nj-skinned {
-    visibility: visible;
-    position: relative;
-    margin-top: 1px;
-}
-
-.tagRadioButtons select[disabled="true"].nj-skinned,
-.tagRadioButtons select[disabled].nj-skinned  {
-    visibility: hidden;
-}
 //  End: styles for tag toolbar
 
 #zoomToolOptionHolder .zoomOutToolIcon {
