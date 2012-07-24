@@ -109,11 +109,11 @@ var SnapManager = exports.SnapManager = Montage.create(Component, {
     popWorkingPlane : { value: function ()      { workingPlane = this._workingPlaneStack.pop(); return workingPlane; }},
 
     getStageWidth : { value: function ()        {
-        return parseInt(this.currentStage.offsetWidth);
+        return this.currentStage.elementModel.getProperty("offsetWidth") || parseInt(this.currentStage.offsetWidth);
     }},
 
     getStageHeight : { value: function ()       {
-        return parseInt(this.currentStage.offsetHeight);
+        return this.currentStage.elementModel.getProperty("offsetHeight") || parseInt(this.currentStage.offsetHeight);
     }},
 
     getStage : { value: function()      {        return this.currentStage;    }},

@@ -71,6 +71,9 @@ exports.StyleSheet = Montage.create(Component, {
     prepareForDraw : {
         value: function() {
             this.nameText.element.addEventListener('click', this, false);
+
+            //// Set the initial media text value
+            this.mediaText = this._source.media.mediaText;
         }
     },
 
@@ -88,8 +91,6 @@ exports.StyleSheet = Montage.create(Component, {
     draw : {
         value: function() {
             var transStr = '-webkit-transform';
-
-            this.mediaInput.value = this._source.media.mediaText;
 
             if(this.editing) {
                 this.editView.classList.add('expanded');
@@ -194,6 +195,21 @@ exports.StyleSheet = Montage.create(Component, {
             this._name = text;
         }
     },
+
+    _mediaText : { value: null },
+    mediaText : {
+        get : function() { return this._mediaText; },
+        set : function(value) {
+            if(value === this._mediaText) { return; }
+
+            this.application.ninja.stylesController.setMediaAttribute(this._source, value);
+            
+            this._mediaText = value;
+
+            this.needsDraw = true;
+        }
+    },
+
     _dirty : {
         value: null
     },

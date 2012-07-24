@@ -86,6 +86,17 @@ exports.DocumentBar = Montage.create(Component, {
     },
     ////////////////////////////////////////////////////////////////////
     //
+    btnCode: {
+        value: null
+    },
+    btnDesign: {
+        value: null
+    },
+    btnPreview: {
+        value: null
+    },
+    ////////////////////////////////////////////////////////////////////
+    //
     _visible: {
         value: false
     },
@@ -139,6 +150,7 @@ exports.DocumentBar = Montage.create(Component, {
             //
             this.btnCode.addEventListener('click', this.showViewCode.bind(this), false);
             this.btnDesign.addEventListener('click', this.showViewDesign.bind(this), false);
+            this.btnPreview.addEventListener('click', this, false);
         }
     },
     ////////////////////////////////////////////////////////////////////
@@ -240,6 +252,12 @@ exports.DocumentBar = Montage.create(Component, {
                 var render = this.renderCodeView.bind(this._currentDocument);
                 render();
             }
+        }
+    },
+
+    handleClick: {
+        value: function(evt) {
+            NJevent("executePreview");
         }
     }
     ////////////////////////////////////////////////////////////////////

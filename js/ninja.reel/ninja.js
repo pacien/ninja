@@ -351,6 +351,7 @@ exports.Ninja = Montage.create(Component, {
             this.ninjaVersion = window.ninjaVersion.ninja.version;
             this.undoManager = document.application.undoManager = UndoManager.create();
             document.application.njUtils = NjUtils;
+            document.application.model = this.appModel;
         }
     },
 
@@ -376,9 +377,8 @@ exports.Ninja = Montage.create(Component, {
 
             this.eventManager.addEventListener("selectTool", this, false);
             this.eventManager.addEventListener("selectSubTool", this, false);
+            this.eventManager.addEventListener("executePreview", this, false);
 
-            this.addPropertyChangeListener("appModel.livePreview", this.executeLivePreview, false);
-            this.addPropertyChangeListener("appModel.chromePreview", this.executeChromePreview, false);
             this.addPropertyChangeListener("appModel.debug", this.toggleDebug, false);
         }
     },
@@ -387,7 +387,7 @@ exports.Ninja = Montage.create(Component, {
     ////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
     //TODO: Expand method to allow other browsers for preview
-    executeChromePreview: {
+    handleExecutePreview: {
         value: function () {
             //TODO: Make into proper component
             this.saveOperationScreen = {};
@@ -534,42 +534,18 @@ exports.Ninja = Montage.create(Component, {
         }
     },
 
-    executeLivePreview: {
-        value: function() {
-            var transitionStopRule;
-//            this.stage.hideCanvas(this.appModel.livePreview);
-
-            if(this.appModel.livePreview) {
-                transitionStopRule = "nj-css-garbage-selector";
-                this.stage.bindingView.hide = true;
-            } else {
-                transitionStopRule = "*"
-                this.stage.bindingView.hide = false;
-            }
-
-            this.application.ninja.stylesController._stageStylesheet.rules[0].selectorText = transitionStopRule;
-
-            this._toggleWebGlAnimation(this.appModel.livePreview);
-        }
-    },
-
-    // Turn on WebGL animation during preview
-    _toggleWebGlAnimation: {
-        value: function(inLivePreview) {
-            var glCanvases = this.currentDocument.model.views.design.iframe.contentWindow.document.querySelectorAll('[data-RDGE-id]'),
-                glShapeModel;
-            if(glCanvases) {
-                for(var i = 0, len = glCanvases.length; i<len; i++) {
-                    glShapeModel = glCanvases[i].elementModel.shapeModel;
-                    if(inLivePreview) {
-                        glShapeModel.GLWorld._previewAnimation = true;
-                        glShapeModel.GLWorld.restartRenderLoop();
-                    } else if (!glShapeModel.animate ) {
-                        glShapeModel.GLWorld._previewAnimation = false;
-                        glShapeModel.GLWorld._canvas.task.stop();
-                    }
+    // Turn on WebGL animation on/off
+    toggleWebGlAnimation: {
+        value: function(animate) {
+            Array.prototype.slice.call(elt.querySelectorAll('[data-RDGE-id]'),0).forEach(function(glCanvas) {
+                if(animate) {
+                    glCanvas.elementModel.shapeModel.GLWorld._previewAnimation = true;
+                    glCanvas.elementModel.shapeModel.GLWorld.restartRenderLoop();
+                } else if (!glCanvas.elementModel.shapeModel.animate ) {
+                    glCanvas.elementModel.shapeModel.GLWorld._previewAnimation = false;
+                    glCanvas.elementModel.shapeModel.GLWorld._canvas.task.stop();
                 }
-            }
+            });
         }
     },
 

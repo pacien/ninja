@@ -44,13 +44,17 @@ POSSIBILITY OF SUCH DAMAGE.
                     }
                 },
 
+                "nodeNameConverter": {
+                    "prototype": "js/components/converter/node-name-converter"
+                },
+
                 "breadcrumbButton": {
                     "prototype": "js/components/layout/bread-crumb-button.reel",
                     "properties": {
                         "element": {"#": "breadcrumbButton"}
                     },
                     "bindings": {
-                        "label": {"<-": "@buttonsList.objectAtCurrentIteration.label"},
+                        "label": {"<-": "@buttonsList.objectAtCurrentIteration.label", "converter": {"@": "nodeNameConverter"}},
                         "value": {"<-": "@buttonsList.objectAtCurrentIteration.nodeUuid"}
                     }
                 },

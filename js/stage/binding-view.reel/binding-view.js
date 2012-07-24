@@ -365,7 +365,7 @@ exports.BindingView = Montage.create(Component, {
             this.mouseOverHud = overHud;
             if(this._isDrawingConnection && !overHud) {
                 //NOTE : Continue This content. mouse over select
-                var obj = this.application.ninja.stage.getElement(event, true);
+                var obj = this.application.ninja.stage.getElement(e, true);
                 if (obj && obj !== this.selectedElement)
                 {
                     if (!obj.controller || obj === null)

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!-- <copyright>
 Copyright (c) 2012, Motorola Mobility LLC.
 All Rights Reserved.
@@ -54,7 +54,6 @@ POSSIBILITY OF SUCH DAMAGE.
                         "playheadmarker": {"#": "playhead_marker"},
                         "timetext" : {"#": "time_text"},
                         "timebar" : {"#": "time_bar"},
-                        "container_tracks" : {"#" : "container-tracks"},
                         "end_hottext" : {"@" : "endHottext"},
                         "container_layers" : {"#" : "container-layers"},
                         "container_tracks" : {"#" : "container-tracks"},
@@ -62,8 +61,23 @@ POSSIBILITY OF SUCH DAMAGE.
                         "checkable_animated" : {"#" : "checkable_animated"},
                         "tl_configbutton" : {"#" : "tl-configbutton"},
                         "checkable_lock" : {"#" : "checkable_lock"},
-                        "checkable_visible":{"#" : "checkable_visible"},
-                        "play_button" : {"#" : "play_button"}
+                        "checkable_visible":{"#" : "checkable_visible"}
+
+                    }
+                },
+
+                "playButton": {
+                    "prototype": "montage/ui/toggle-button.reel",
+                    "properties": {
+                        "element": {"#": "play_button"},
+                        "identifier": "playButton",
+                        "pressedClass": "pausebutton",
+                        "pressedLabel": "",
+                        "unpressedLabel": "",
+                        "pressed": false
+                    },
+                    "bindings": {
+                        "pressed": {"<->": "@owner.stage.timelinePlay"}
                     }
                 },
 
@@ -190,7 +204,7 @@ POSSIBILITY OF SUCH DAMAGE.
                     <div data-montage-id="leftpane_inside" class="leftinside">
                         <div data-montage-id="timeline_controller" class="timelinecontroller">
                             <div data-montage-id="timeline_controls" class="timelinecontrols">
-                                <div data-montage-id="play_button" class="playbutton"></div>
+                                <button data-montage-id="play_button" class="playbutton"></button>
                                 <div data-montage-id="time_text" class="timetext">00:00:00</div>
                             </div>
                         </div>
@@ -217,7 +231,9 @@ POSSIBILITY OF SUCH DAMAGE.
                         </div>
 
                         <div data-montage-id="timeline_gutter" class="timelinegutter">
+                            <div class="sliderClass">
                             <div data-montage-id="tl_slider" class="tl_slider"></div>
+                            </div>
                             <input data-montage-id="end_hottext" class="endhottext">
                         </div>
                     </div>

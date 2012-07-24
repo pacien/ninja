@@ -98,20 +98,6 @@ exports.KeyboardMediator = Montage.create(Component, {
         value: function() {
             document.addEventListener("keydown", this, false);
             document.addEventListener("keyup", this, false);
-
-            this.addPropertyChangeListener("appModel.livePreview", this.handleLivePreview, false);
-        }
-    },
-
-    handleLivePreview: {
-        value: function() {
-            if(this.appModel.livePreview) {
-                document.removeEventListener("keydown", this, false);
-                document.removeEventListener("keyup", this, false);
-            } else {
-                document.addEventListener("keydown", this, false);
-                document.addEventListener("keyup", this, false);
-            }
         }
     },
 
@@ -264,7 +250,7 @@ exports.KeyboardMediator = Montage.create(Component, {
 
 
                 if((evt.keyCode == Keyboard.ENTER) && (evt.ctrlKey || evt.metaKey)) {
-                    this.application.ninja.executeChromePreview();
+                    this.application.ninja.handleExecutePreview();
                     return;
                 }
 

@@ -53,7 +53,7 @@ var modelGenerator = exports.modelGenerator = function() {
         })
     });
 
-    if(this._model.selection !== "body") {
+    if(this._model.selection !== "body" && this.nodeName.toLowerCase() !== "ninja-content") {
         this._model.props3D.init(this, false);
     }
 
@@ -75,9 +75,9 @@ var getInfoForElement = function(el) {
     }
 
     if(el.nodeName.toLowerCase() === "ninja-content") {
-        elementName = "body";
-        controller = elementNameToController(elementName);
-        pi = elementNameToPi(elementName);
+        elementName = "div";
+        controller = elementNameToController("body");
+        pi = elementNameToPi("body");
     }
 
     // TODO: Add this in case there is no controller for the component

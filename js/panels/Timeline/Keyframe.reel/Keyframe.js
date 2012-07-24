@@ -34,6 +34,7 @@ var Component = require("montage/ui/component").Component;
 
 var Keyframe = exports.Keyframe = Montage.create(Component, {
 
+    // ==== Begin models
     hasTemplate:{
         value: true
     },
@@ -67,7 +68,9 @@ var Keyframe = exports.Keyframe = Montage.create(Component, {
             this.needsDraw = true;
         }
     },
+    // ==== End Models
 
+    // ==== Begin Draw cycle methods
     prepareForDraw:{
         value:function(){
             this.element.addEventListener("click", this, false);
@@ -91,34 +94,9 @@ var Keyframe = exports.Keyframe = Montage.create(Component, {
             this.element.style.left = (this.position - 5) + "px";
         }
     },
+    // ==== End Draw cycle methods
 
-    deselectKeyframe:{
-        value:function(){
-            this.isSelected=false;
-            this.element.style.left = (this.position - 5) + "px";
-        }
-    },
-
-    selectKeyframe:{
-        value:function(){
-            if(this.isSelected){
-                return;
-            }
-
-            if(this.parentComponent.parentComponent.parentComponent.trackType == "position"){
-                var tweenID = this.parentComponent.tweenID;
-                var mainTrack = this.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent;
-                mainTrack.childComponents[0].childComponents[tweenID].childComponents[0].selectKeyframe();
-                return;
-            }
-
-            this.isSelected=true;
-            this.element.style.left = (this.position - 6) + "px";
-            this.application.ninja.timeline.selectedStyle = this.parentComponent.parentComponent.parentComponent.trackEditorProperty;
-            this.parentComponent.selectTween();
-        }
-    },
-
+    // ==== Begin Event handlers
     handleClick:{
         value:function(ev){
             this.selectKeyframe();
@@ -126,38 +104,72 @@ var Keyframe = exports.Keyframe = Montage.create(Component, {
         }
     },
 
-    handleMouseover: {
-        value: function(event) {
-            this.element.draggable = true;
-        }
-    },
-    handleMouseout: {
-        value: function(event) {
-            this.element.draggable = false;
-        }
-    },
-    handleDragstart: {
-        value: function(event) {
-            //this.parentComponent.parentComponent.dragLayerID = this.layerID;
-            event.dataTransfer.setData('Text', 'Keyframe');
+	handleMouseover: {
+		value: function(event) {
+			this.element.draggable = true;
+		}
+	},
 
-            // Get my index in my track's tween array
+	handleMouseout: {
+		value: function(event) {
+			this.element.draggable = false;
+		}
+	},
+
+	handleDragstart: {
+		value: function(event) {
+            event.dataTransfer.setData('Text', 'Keyframe');
             var i = 0,
-                tweenRepetitionLength = this.parentComponent.parentComponent.parentComponent.tweenRepetition.childComponents.length,
-                myIndex = null;
-            for (i = 0; i < tweenRepetitionLength; i++) {
-                if (this.parentComponent.parentComponent.parentComponent.tweenRepetition.childComponents[i].uuid === this.parentComponent.uuid) {
-                    myIndex = i;
-                }
+            	tweenRepetitionLength,
+            	myTrack,
+            	myIndex = null;
+            if (typeof(this.parentComponent.parentComponent.parentComponent.tweenRepetition) !== "undefined") {
+                myTrack = this.parentComponent.parentComponent.parentComponent;
+            } else {
+                myTrack = this.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent;
             }
-            this.parentComponent.parentComponent.parentComponent.draggingIndex = myIndex;
+            tweenRepetitionLength = myTrack.tweenRepetition.childComponents.length;
+            for (i = 0; i < tweenRepetitionLength; i++) {
+            	if (myTrack.tweenRepetition.childComponents[i].uuid === this.parentComponent.uuid) {
+            		myIndex = i;
+            	}
+            }
+            myTrack.draggingIndex = myIndex;
             this.selectKeyframe();
+		}
+	},
+
+	handleDragend: {
+		value: function(event) {
+			this.parentComponent.isDragging = false;
+		}
+	},
+    // ==== End Event handlers
+
+    // === Begin Controllers
+    selectKeyframe:{
+        value:function(){
+            if(this.isSelected){
+                return;
+            }
+            if(this.parentComponent.parentComponent.parentComponent.trackType == "position"){
+                var tweenID = this.parentComponent.tweenID;
+                var mainTrack = this.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent.parentComponent;
+                mainTrack.childComponents[0].childComponents[tweenID].childComponents[0].selectKeyframe();
+                return;
+            }
+            this.isSelected=true;
+            //this.element.style.left = (this.position - 6) + "px"; Moved to draw cycle.
+            this.application.ninja.timeline.selectedStyle = this.parentComponent.parentComponent.parentComponent.trackEditorProperty;
+            this.parentComponent.selectTween();
         }
     },
-    handleDragend: {
-        value: function(event) {
-            this.parentComponent.isDragging = false;
+
+    deselectKeyframe:{
+        value:function () {
+            this.isSelected = false;
+            // this.element.style.left = (this.position - 5) + "px"; Moved to draw cycle
         }
     }
-
+    // ==== End Controllers
 });

@@ -141,6 +141,12 @@ exports.StylesViewContainer = Montage.create(Component, {
         value: function() {
             this.eventManager.addEventListener('styleSheetsReady', this, false);
             this.eventManager.addEventListener('elementChange', this, false);
+            this.eventManager.addEventListener('mediaChange', this, false);
+        }
+    },
+    handleMediaChange : {
+        value: function(e) {
+            this.ruleListContainer.update();
         }
     },
     handleStyleSheetsReady: {

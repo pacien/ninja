@@ -70,7 +70,6 @@ exports.ShapeTool = Montage.create(DrawingTool, {
                 this.doDraw(event);
             } else {
                 this.doSnap(event);
-                this._showFeedbackOnMouseMove(event);
             }
 
             this.drawLastSnap();        // Required cleanup for both Draw/Feedbacks
@@ -156,39 +155,6 @@ exports.ShapeTool = Montage.create(DrawingTool, {
             NJevent("disableStageMove");
 
             this.application.ninja.stage.stageDeps.snapManager.clearDragPlane();
-        }
-    },
-
-    /** Show a border when mousing
-     * over existing canvas elements to signal to the user that
-     * the drawing operation will act on the targeted canvas.
-    **/
-    _showFeedbackOnMouseMove: {
-        value: function (event) {
-            // TODO - This call is causing the canvas to redraw 3 times per mouse move
-            var targetedObject = this.application.ninja.stage.getElement(event, true);
-
-            if (targetedObject) {
-                if((targetedObject.nodeName === "CANVAS") && !ShapesController.isElementAShape(targetedObject))
-                {
-                    if (targetedObject !== this._targetedElement) {
-                        if(this._targetedElement)
-                        {
-                            this._targetedElement.classList.remove("active-element-outline");
-                        }
-                        this._targetedElement = targetedObject;
-                        this._targetedElement.classList.add("active-element-outline");
-                    }
-                }
-                else if (this._targetedElement) {
-                    this._targetedElement.classList.remove("active-element-outline");
-                    this._targetedElement = null;
-                }
-            }
-            else if (this._targetedElement) {
-                this._targetedElement.classList.remove("elem-red-outline");
-                this._targetedElement = null;
-            }
         }
     },
 

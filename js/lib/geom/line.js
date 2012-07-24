@@ -89,17 +89,9 @@ exports.Line = Object.create(GeomObj, {
 
             if(strokeMaterial) {
                 this._strokeMaterial = strokeMaterial.dup();
-            } else {
-                this._strokeMaterial = MaterialsModel.getMaterial( MaterialsModel.getDefaultMaterialName() ).dup();
             }
 
-            if(strokeColor) {
-                if(this._strokeMaterial.hasProperty("color")) {
-                    this._strokeMaterial.setProperty( "color",  this._strokeColor );
-                } else if (this._strokeMaterial && (this._strokeMaterial.gradientType === this._strokeColor.gradientMode)) {
-                    this._strokeMaterial.setGradientData(this._strokeColor.color);
-        }
-            }
+            this.initColors();
         }
     },
 
@@ -245,7 +237,7 @@ exports.Line = Object.create(GeomObj, {
                 'strokeWidth'   : this._strokeWidth,
                 'strokeColor'   : this._strokeColor,
                 'strokeStyle'   : this._strokeStyle,
-                'strokeMat'     : this._strokeMaterial ? this._strokeMaterial.getName() : MaterialsModel.getDefaultMaterialName(),
+                'strokeMat'     : this._strokeMaterial ? this._strokeMaterial.getName() : null,
                 'materials'     : this.exportMaterialsJSON()
             };
 
@@ -265,15 +257,17 @@ exports.Line = Object.create(GeomObj, {
             this._slope             = jObj.slope;
             this._strokeStyle       = jObj.strokeStyle;
             this._strokeColor       = jObj.strokeColor;
-            var strokeMaterialName  = jObj.strokeMat;
 
-            var strokeMat = MaterialsModel.getMaterial( strokeMaterialName );
-            if (!strokeMat) {
-                console.log( "object material not found in library: " + strokeMaterialName );
-                strokeMat = MaterialsModel.getMaterial(  MaterialsModel.getDefaultMaterialName() );
+            if(jObj.strokeMat) {
+                var strokeMat = MaterialsModel.getMaterial(jObj.strokeMat).dup();
+                if (!strokeMat) {
+                    console.log("object material not found in library: " + jObj.strokeMat);
+                } else {
+                    this._strokeMaterial = strokeMat;
+                }
             }
-            this._strokeMaterial = strokeMat;
 
+            this.initColors();
             this.importMaterialsJSON( jObj.materials );
         }
     },

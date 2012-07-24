@@ -32,52 +32,67 @@ POSSIBILITY OF SUCH DAMAGE.
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" type="text/css" href="menu.css">
+    <link rel="stylesheet" type="text/css" href="menu-item.css">
 
     <script type="text/montage-serialization">
         {
-            "menudata": {
-                "prototype": "js/data/menu-data",
+
+            "menuItemButton": {
+                "prototype": "montage/ui/native/button.reel",
+                "properties": {
+                    "element": {"#": "menuItemButton"}
+                },
                 "bindings": {
-                    "currentDocument": {"<-": "@owner.currentDocument"}
+                    "label": {"<-": "@owner.label"}
                 }
             },
 
-            "menuController": {
-                "prototype": "montage/ui/controller/array-controller",
+            "submenuConditional": {
+                "prototype": "montage/ui/condition.reel",
                 "properties": {
-                    "automaticallyOrganizeObjects": false
+                    "element": {"#": "submenu"}
                 },
                 "bindings": {
-                    "content": {"<-": "@menudata.topLevelMenu"}
+                    "condition": {"<-": "@owner.entries.count()"}
+                }
+            },
+
+            "entriesController": {
+                "prototype": "montage/ui/controller/array-controller",
+                "bindings": {
+                    "content": {"<-": "@owner.entries"}
                 }
             },
 
             "repetition": {
                 "prototype": "montage/ui/repetition.reel",
                 "properties": {
-                    "element": { "#": "topMenu" }
-                },
-                "bindings": {
-                    "objects": {"<-": "@menudata.topLevelMenu"}
+                    "element": {"#": "submenuEntries"},
+                    "contentController": {"@": "entriesController"}
                 }
             },
 
-            "menuEntry": {
-                "prototype": "js/components/menu/menu-entry.reel",
+            "submenuItem": {
+                "prototype": "js/ui/menu/menu-item.reel",
                 "properties": {
-                    "element": { "#": "menuItem" }
+                    "element": {"#": "submenuEntryItem"}
                 },
                 "bindings": {
-                    "data": {"<-": "@repetition.objectAtCurrentIteration"},
-                    "menuIsActive": {"<-": "@owner.active"}
+                    "label": {"<-": "@repetition.objectAtCurrentIteration.label"},
+                    "checked": {"<-": "@repetition.objectAtCurrentIteration.checked"},
+                    "enabled": {"<-": "@repetition.objectAtCurrentIteration.enabled"},
+                    "submenu": {"<-": "@repetition.objectAtCurrentIteration.submenu"},
+                    "entries": {"<-": "@repetition.objectAtCurrentIteration.entries"},
+                    "action": {"<-": "@repetition.objectAtCurrentIteration.action"}
                 }
             },
 
             "owner": {
-                "prototype": "js/components/menu/menu.reel",
+                "prototype": "js/ui/menu/menu-item.reel",
                 "properties": {
-                    "element":  {"#": "mainMenuBar"}
+                    "element": {"#": "menuItem"},
+                    "checkMark": {"#": "checkMark"},
+                    "submenuElement": {"#":"submenuEntries"}
                 }
             }
         }
@@ -86,12 +101,20 @@ POSSIBILITY OF SUCH DAMAGE.
 </head>
 <body>
 
-    <nav data-montage-id="mainMenuBar" class="mainMenuBar unselectable">
-        <ul data-montage-id="topMenu" class="horizontal-menu">
-            <li data-montage-id="menuItem"></li>
-        </ul>
-    </nav>
+    <li data-montage-id="menuItem" class="menuItem">
 
+        <span data-montage-id="checkMark" class="check"></span>
+
+        <button data-montage-id="menuItemButton" class="menuItemButton"></button>
+
+        <div data-montage-id="submenu" class="submenu">
+            <span class="rightArrow"></span>
+            <ul data-montage-id="submenuEntries" class="submenuEntries" style="z-index: 9992;">
+                <li data-montage-id="submenuEntryItem"></li>
+            </ul>
+        </div>
+
+    </li>
 
 </body>
 </html>
