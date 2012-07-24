@@ -28,3 +28,21 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
+
+.tagRadioButtons select.nj-skinned {
+    visibility: visible;
+    position: relative;
+    margin-top: 1px;
+}
+
+.tag-position select.nj-skinned {
+    border-radius: 0px;
+    padding-left: 5px;
+    height: 18px;
+    width: 100px;
+    border-color: #181818;
+}
+
+input.tag-class {
+    border-color: #181818 !important;
+}

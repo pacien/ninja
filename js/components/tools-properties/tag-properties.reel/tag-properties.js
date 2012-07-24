@@ -29,9 +29,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
 
-var Montage = require("montage/core/core").Montage;
-var Component = require("montage/ui/component").Component;
-var ToolProperties = require("js/components/tools-properties/tool-properties").ToolProperties;
+var Montage = require("montage/core/core").Montage,
+    ToolProperties = require("js/components/tools-properties/tool-properties").ToolProperties;
 
 var TagProperties = exports.TagProperties = Montage.create(ToolProperties, {
     divElement: {
@@ -71,6 +70,11 @@ var TagProperties = exports.TagProperties = Montage.create(ToolProperties, {
         }
     },
 
+    elementPosition: {
+        value: null,
+        serializable: true
+    },
+
     _subPrepare: {
         value: function() {
             this.customName.style["display"] = "none";
@@ -81,6 +85,8 @@ var TagProperties = exports.TagProperties = Montage.create(ToolProperties, {
             this.videoElement.addEventListener("click", this, false);
             this.canvasElement.addEventListener("click", this, false);
             this.customElement.addEventListener("click", this, false);
+
+            this.elementPosition.disabled = true;
         }
     },
 
@@ -107,7 +113,6 @@ var TagProperties = exports.TagProperties = Montage.create(ToolProperties, {
     handleFillColorChange: {
         value: function (e) {
             this.fill = e._event;
-//            this.fill.webGlColor = this.application.ninja.colorController.colorModel.colorToWebGl(e._event.color);
         }
     },
 
@@ -130,8 +135,12 @@ var TagProperties = exports.TagProperties = Montage.create(ToolProperties, {
     },
 
     selectedElement: {
-        get: function() { return this._selectedElement;},
-        set: function(value) { this._selectedElement = value; }
+        get: function() {
+            return this._selectedElement;
+        },
+        set: function(value) {
+            this._selectedElement = value;
+        }
     }
 
 });
