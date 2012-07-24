@@ -32,7 +32,6 @@ POSSIBILITY OF SUCH DAMAGE.
 var Montage = require("montage/core/core").Montage,
     Translate3DToolBase = require("js/tools/Translate3DToolBase").Translate3DToolBase,
     drawUtils = require("js/helper-classes/3D/draw-utils").DrawUtils,
-    vecUtils = require("js/helper-classes/3D/vec-utils").VecUtils,
     viewUtils = require("js/helper-classes/3D/view-utils").ViewUtils,
     vecUtils = require("js/helper-classes/3D/vec-utils").VecUtils,
     snapManager = require("js/helper-classes/3D/snap-manager").SnapManager;
@@ -48,8 +47,7 @@ exports.TranslateObject3DTool = Montage.create(Translate3DToolBase, {
     },
 
     initializeSnapping : {
-        value : function(event)
-        {
+        value : function(event) {
 //            console.log( "initializeSnapping" );
 
             this._mouseDownHitRec = null;
@@ -79,8 +77,7 @@ exports.TranslateObject3DTool = Montage.create(Translate3DToolBase, {
             else
             {
                 this._delta = null;
-                //if(this._handleMode === 2)
-                {
+                //if(this._handleMode === 2) {
                     this._dragPlane = viewUtils.getNormalToUnprojectedElementPlane(this._target, this._handleMode, this._inLocalMode);
                     //console.log( "dragPlane: " + this._dragPlane );
                     snapManager.setupDragPlaneFromPlane(this._dragPlane);
@@ -88,7 +85,7 @@ exports.TranslateObject3DTool = Montage.create(Translate3DToolBase, {
 
                     snapManager.enableElementSnap   ( false );
                     snapManager.enableGridSnap      ( false );
-                }
+                //}
             }
 
             if(this.application.ninja.selectedElements.length) {
@@ -161,7 +158,7 @@ exports.TranslateObject3DTool = Montage.create(Translate3DToolBase, {
                     // only do quadrant snapping if the 4 corners of the element are in the drag plane
 
                     var sign = MathUtils.fpSign( vecUtils.vecDot(3,this._dragPlane,[0,0,1]) + this._dragPlane[3] - 1.0);
-                     this._shouldUseQuadPt = (sign == 0);
+                     this._shouldUseQuadPt = (sign === 0);
 
                     var wpHitRec = hitRec.convertToWorkingPlane( this._dragPlane );
                     this._mouseDownHitRec = wpHitRec;

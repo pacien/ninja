@@ -272,7 +272,7 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
 
     HandleKeyPress: {
         value: function(event){
-            var inc;
+            var inc, newLeft, leftArr, newTop, topArr;
 
             if (!(event.target instanceof HTMLInputElement)) {
                 if(this.application.ninja.selectedElements.length !== 0) {
@@ -280,36 +280,36 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
 
                     switch(event.keyCode) {
                         case Keyboard.LEFT:
-                            var newLeft = [];
-                            var leftArr = this.application.ninja.selectedElements.map(function(item) {
-                                newLeft.push( (parseInt(ElementsMediator.getProperty(item, "left")) - inc) + "px"  );
+                            newLeft = [];
+                            leftArr = this.application.ninja.selectedElements.map(function(item) {
+                                newLeft.push( (parseInt(ElementsMediator.getProperty(item, "left"), 10) - inc) + "px"  );
                                 return ElementsMediator.getProperty(item, "left");
                             });
 
                             ElementsMediator.setProperty(this.application.ninja.selectedElements, "left", newLeft , "Change", "selectionTool", leftArr);
                             break;
                         case Keyboard.UP:
-                            var newTop = [];
-                            var topArr = this.application.ninja.selectedElements.map(function(item) {
-                                newTop.push( (parseInt(ElementsMediator.getProperty(item, "top")) - inc) + "px"  );
+                            newTop = [];
+                            topArr = this.application.ninja.selectedElements.map(function(item) {
+                                newTop.push( (parseInt(ElementsMediator.getProperty(item, "top"), 10) - inc) + "px"  );
                                 return ElementsMediator.getProperty(item, "top");
                             });
 
                             ElementsMediator.setProperty(this.application.ninja.selectedElements, "top", newTop , "Change", "selectionTool", topArr);
                             break;
                         case Keyboard.RIGHT:
-                            var newLeft = [];
-                            var leftArr = this.application.ninja.selectedElements.map(function(item) {
-                                newLeft.push( (parseInt(ElementsMediator.getProperty(item, "left")) + inc) + "px"  );
+                            newLeft = [];
+                            leftArr = this.application.ninja.selectedElements.map(function(item) {
+                                newLeft.push( (parseInt(ElementsMediator.getProperty(item, "left"), 10) + inc) + "px"  );
                                 return ElementsMediator.getProperty(item, "left");
                             });
 
                             ElementsMediator.setProperty(this.application.ninja.selectedElements, "left", newLeft , "Change", "selectionTool", leftArr);
                             break;
                         case Keyboard.DOWN:
-                            var newTop = [];
-                            var topArr = this.application.ninja.selectedElements.map(function(item) {
-                                newTop.push( (parseInt(ElementsMediator.getProperty(item, "top")) + inc) + "px"  );
+                            newTop = [];
+                            topArr = this.application.ninja.selectedElements.map(function(item) {
+                                newTop.push( (parseInt(ElementsMediator.getProperty(item, "top"), 10) + inc) + "px"  );
                                 return ElementsMediator.getProperty(item, "top");
                             });
 
@@ -317,7 +317,6 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
                             break;
                         default:
                             return false;
-                            break;
                     }
 
 
@@ -339,17 +338,17 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
             var modObject = [], mod3dObject = [], self = this;
 
             this.application.ninja.selectedElements.forEach(function(element) {
-
+                var prevW, prevH, w, h;
                 if(addToUndo) {
                     if(!self._use3DMode) {
                         var prevX = element.elementModel.getProperty("x");
                         var prevY = element.elementModel.getProperty("y");
-                        var prevW = element.elementModel.getProperty("w");
-                        var prevH = element.elementModel.getProperty("h");
+                        prevW = element.elementModel.getProperty("w");
+                        prevH = element.elementModel.getProperty("h");
                         var x = ElementsMediator.getProperty(element, "left");
                         var y = ElementsMediator.getProperty(element, "top");
-                        var w = ElementsMediator.getProperty(element, "width");
-                        var h = ElementsMediator.getProperty(element, "height");
+                        w = ElementsMediator.getProperty(element, "width");
+                        h = ElementsMediator.getProperty(element, "height");
 
                         // if we have a delta, that means the transform handles were used and
                         // we should update the width and height too.  Otherwise, just update left and top.
@@ -362,10 +361,10 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
                     } else {
                         // Not using the 3d mode
                         var previousMat = element.elementModel.getProperty("mat").slice(0);
-                        var prevW = element.elementModel.getProperty("w");
-                        var prevH = element.elementModel.getProperty("h");
-                        var w = ElementsMediator.getProperty(element, "width");
-                        var h = ElementsMediator.getProperty(element, "height");
+                        prevW = element.elementModel.getProperty("w");
+                        prevH = element.elementModel.getProperty("h");
+                        w = ElementsMediator.getProperty(element, "width");
+                        h = ElementsMediator.getProperty(element, "height");
 
                         var previousStyleStr = {dist:element.elementModel.getProperty("dist"), mat:MathUtils.scientificToDecimal(previousMat, 5)};
                         var newStyleStr = {dist:viewUtils.getPerspectiveDistFromElement(element), mat:MathUtils.scientificToDecimal(viewUtils.getMatrixFromElement(element), 5)};
@@ -421,8 +420,8 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
                     viewUtils.setMatrixForElement( element, curMat, true);
                     element.elementModel.setProperty("mat", curMat);
                 } else {
-                    var x = (parseInt(ElementsMediator.getProperty(element, "left")) + transMat[12]) + "px";
-                    var y = (parseInt(ElementsMediator.getProperty(element, "top")) + transMat[13]) + "px";
+                    var x = (parseInt(ElementsMediator.getProperty(element, "left"), 10) + transMat[12]) + "px";
+                    var y = (parseInt(ElementsMediator.getProperty(element, "top"), 10) + transMat[13]) + "px";
 
                     targets.push({element:element, properties:{left:x , top:y}});
                 }
@@ -452,21 +451,21 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
                         // Resize North-West
                         this.application.ninja.selectedElements.forEach(function(element) {
                             delta = ~~(data.pt1[0] - data.pt0[0]);
-                            width = parseInt(element.elementModel.getProperty("w")) - delta;
+                            width = parseInt(element.elementModel.getProperty("w"), 10) - delta;
                             if(width <= 0) {
                                 width = 1;
-                                left = parseInt(element.elementModel.getProperty("x")) + parseInt(element.elementModel.getProperty("w")) - 1;
+                                left = parseInt(element.elementModel.getProperty("x"), 10) + parseInt(element.elementModel.getProperty("w"), 10) - 1;
                             } else {
-                                left = parseInt(element.elementModel.getProperty("x")) + delta;
+                                left = parseInt(element.elementModel.getProperty("x"), 10) + delta;
                             }
 
                             delta = ~~(data.pt1[1] - data.pt0[1]);
-                            height = parseInt(element.elementModel.getProperty("h")) - delta;
+                            height = parseInt(element.elementModel.getProperty("h"), 10) - delta;
                             if(height <= 0) {
                                 height = 1;
-                                top = parseInt(element.elementModel.getProperty("y")) + parseInt(element.elementModel.getProperty("h")) - 1;
+                                top = parseInt(element.elementModel.getProperty("y"), 10) + parseInt(element.elementModel.getProperty("h"), 10) - 1;
                             } else {
-                                top = parseInt(element.elementModel.getProperty("y")) + delta;
+                                top = parseInt(element.elementModel.getProperty("y"), 10) + delta;
                             }
                             modObject.push({element:element, properties:{width: width + "px", height: height + "px", left: left + "px", top: top + "px"}});
                         });
@@ -475,12 +474,12 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
                         // Resize West
                         this.application.ninja.selectedElements.forEach(function(element) {
                             delta = ~~(data.pt1[0] - data.pt0[0]);
-                            width = parseInt(element.elementModel.getProperty("w")) - delta;
+                            width = parseInt(element.elementModel.getProperty("w"), 10) - delta;
                             if(width <= 0) {
                                 width = 1;
-                                left = parseInt(element.elementModel.getProperty("x")) + parseInt(element.elementModel.getProperty("w")) - 1;
+                                left = parseInt(element.elementModel.getProperty("x"), 10) + parseInt(element.elementModel.getProperty("w"), 10) - 1;
                             } else {
-                                left = parseInt(element.elementModel.getProperty("x")) + delta;
+                                left = parseInt(element.elementModel.getProperty("x"), 10) + delta;
                             }
                             modObject.push({element:element, properties:{left: left + "px", width: width + "px"}});
                         });
@@ -489,15 +488,15 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
                         // Resize South-West
                         this.application.ninja.selectedElements.forEach(function(element) {
                             delta = ~~(data.pt1[0] - data.pt0[0]);
-                            width = parseInt(element.elementModel.getProperty("w")) - delta;
+                            width = parseInt(element.elementModel.getProperty("w"), 10) - delta;
                             if(width <= 0) {
                                 width = 1;
-                                left = parseInt(element.elementModel.getProperty("x")) + parseInt(element.elementModel.getProperty("w")) - 1;
+                                left = parseInt(element.elementModel.getProperty("x"), 10) + parseInt(element.elementModel.getProperty("w"), 10) - 1;
                             } else {
-                                left = parseInt(element.elementModel.getProperty("x")) + delta;
+                                left = parseInt(element.elementModel.getProperty("x"), 10) + delta;
                             }
                             delta = ~~(data.pt1[1] - data.pt0[1]);
-                            height = parseInt(element.elementModel.getProperty("h")) + delta;
+                            height = parseInt(element.elementModel.getProperty("h"), 10) + delta;
                             if(height <= 0) {
                                 height = 1;
                             }
@@ -508,7 +507,7 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
                         // Resize South
                         this.application.ninja.selectedElements.forEach(function(element) {
                             delta = ~~(data.pt1[1] - data.pt0[1]);
-                            height = parseInt(element.elementModel.getProperty("h")) + delta;
+                            height = parseInt(element.elementModel.getProperty("h"), 10) + delta;
                             if(height <= 0) {
                                 height = 1;
                             }
@@ -519,12 +518,12 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
                         // Resize South-East
                         this.application.ninja.selectedElements.forEach(function(element) {
                             delta = ~~(data.pt1[0] - data.pt0[0]);
-                            width = parseInt(element.elementModel.getProperty("w")) + delta;
+                            width = parseInt(element.elementModel.getProperty("w"), 10) + delta;
                             if(width <= 0) {
                                 width = 1;
                             }
                             delta = ~~(data.pt1[1] - data.pt0[1]);
-                            height = parseInt(element.elementModel.getProperty("h")) + delta;
+                            height = parseInt(element.elementModel.getProperty("h"), 10) + delta;
                             if(height <= 0) {
                                 height = 1;
                             }
@@ -535,7 +534,7 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
                         // Resize East
                         this.application.ninja.selectedElements.forEach(function(element) {
                             delta = ~~(data.pt1[0] - data.pt0[0]);
-                            width = parseInt(element.elementModel.getProperty("w")) + delta;
+                            width = parseInt(element.elementModel.getProperty("w"), 10) + delta;
                             if(width <= 0) {
                                 width = 1;
                             }
@@ -546,17 +545,17 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
                         // Resize North-East
                         this.application.ninja.selectedElements.forEach(function(element) {
                             delta = ~~(data.pt1[0] - data.pt0[0]);
-                            width = parseInt(element.elementModel.getProperty("w")) + delta;
+                            width = parseInt(element.elementModel.getProperty("w"), 10) + delta;
                             if(width <= 0) {
                                 width = 1;
                             }
                             delta = ~~(data.pt1[1] - data.pt0[1]);
-                            height = parseInt(element.elementModel.getProperty("h")) - delta;
+                            height = parseInt(element.elementModel.getProperty("h"), 10) - delta;
                             if(height <= 0) {
                                 height = 1;
-                                top = parseInt(element.elementModel.getProperty("y")) + parseInt(element.elementModel.getProperty("h")) - 1;
+                                top = parseInt(element.elementModel.getProperty("y"), 10) + parseInt(element.elementModel.getProperty("h"), 10) - 1;
                             } else {
-                                top = parseInt(element.elementModel.getProperty("y")) + delta;
+                                top = parseInt(element.elementModel.getProperty("y"), 10) + delta;
                             }
                             modObject.push({element:element, properties:{width: width + "px", height: height + "px", top: top + "px"}});
                         });
@@ -565,12 +564,12 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
                         // Resize North
                         this.application.ninja.selectedElements.forEach(function(element) {
                             delta = ~~(data.pt1[1] - data.pt0[1]);
-                            height = parseInt(element.elementModel.getProperty("h")) - delta;
+                            height = parseInt(element.elementModel.getProperty("h"), 10) - delta;
                             if(height <= 0) {
                                 height = 1;
-                                top = parseInt(element.elementModel.getProperty("y")) + parseInt(element.elementModel.getProperty("h")) - 1;
+                                top = parseInt(element.elementModel.getProperty("y"), 10) + parseInt(element.elementModel.getProperty("h"), 10) - 1;
                             } else {
-                                top = parseInt(element.elementModel.getProperty("y")) + delta;
+                                top = parseInt(element.elementModel.getProperty("y"), 10) + delta;
                             }
                             modObject.push({element:element, properties:{height: height + "px", top: top + "px"}});
                         });
@@ -657,10 +656,12 @@ var SelectionTool = exports.SelectionTool = Montage.create(ModifierToolBase, {
                             y0 = bounds[0][1],  y1 = bounds[1][1];
                         var dx = x1 - x0,   dy = y1 - y0;
                         var u = 0, v = 0;
-                        if (MathUtils.fpSign(dx) != 0)
+                        if (MathUtils.fpSign(dx) !== 0) {
                             u = (scrPt[0] - x0) / dx;
-                        if (MathUtils.fpSign(dy) != 0)
+                        }
+                        if (MathUtils.fpSign(dy) !== 0) {
                             v = (scrPt[1] - y0) / dy;
+                        }
 
                         paramPt[0] = u;
                         paramPt[1] = v;
