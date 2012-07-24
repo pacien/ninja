@@ -36,6 +36,27 @@ var ToolProperties = require("js/components/tools-properties/tool-properties").T
 
 exports.TextProperties = Montage.create(ToolProperties, {
 
+
+    _keepSelected: {value: false, serializable: false},
+    _addedColorChips: {value: false, serializable: false},
+
+    _setColor: {
+        enumerable: false,
+        value: { colorMode: 'rgb', color: {r:0,g:0,b:0,a:1,css: "rgb(0,0,0)"}, webGlColor: null }
+    },
+
+    setColor: {
+        enumerable: true,
+        get: function () {
+            return this._setColor;
+        },
+        set: function (value) {
+            if (value !== this._setColor) {
+                this._setColor = value;
+            }
+        }
+    },
+
     fontName: {value: null, serializable: true},
     fontSize: {value: null, serializable: true},
     fontColor: {value: null, serializable: true},
@@ -55,17 +76,19 @@ exports.TextProperties = Montage.create(ToolProperties, {
 
     numberedList: {value: null, serializable: true},
     bulletedList: {value: null, serializable: true},
+    lastSelection: {value: null, serializable: true},
 
     // Events
     handleEditorSelect: {
         value: function(e) {
+
+            //Reset Buttons
             this.alignLeft.pressed = false;
             this.alignCenter.pressed = false;
             this.alignRight.pressed = false;
             this.alignJustify.pressed = false;
             this.bulletedList.pressed = false;
             this.numberedList.pressed = false;
-
 
             switch(this.application.ninja.stage.textTool.justify) {
                 case "left":
@@ -79,7 +102,7 @@ exports.TextProperties = Montage.create(ToolProperties, {
                     break;
                 case "full":
                     this.alignJustify.pressed = true;
-        }
+            }
 
             switch(this.application.ninja.stage.textTool.listStyle) {
                 case "ordered":
@@ -87,13 +110,29 @@ exports.TextProperties = Montage.create(ToolProperties, {
                     break;
                 case "unordered":
                     this.bulletedList.pressed = true;
+            }
+
+            if(!this._keepSelected) {
+                this.lastSelection = e.target._savedSelectedRange;
+            }
+            if(this.application.ninja.stage.textTool.foreColor) {
+                this.setColor.color = this.application.ninja.colorController.parseCssToColor(this.application.ninja.stage.textTool.foreColor);
+                this.fontColor.color(this.setColor.colorMode, this.setColor.color);
+            }
+
         }
+    },
+
+    handleEditorClicked: {
+        value: function(e) {
+            this._keepSelected = false;
         }
     },
 
     handleEditorBlur: {
         value: function(e) {
-
+            window.getSelection().addRange(this.lastSelection);
+            e.target.focus();
         }
     },
 
@@ -101,14 +140,9 @@ exports.TextProperties = Montage.create(ToolProperties, {
     // Draw Cycle
     prepareForDraw: {
         value: function() {
-
-                this.fontColor.props = {side: 'top', align: 'center', wheel: true, palette: true, gradient: false, image: false, nocolor: true, offset: -80};
-                this.application.ninja.colorController.addButton("chip", this.fontColor);
-                this.fontColor.color('rgb', {wasSetByCode: true, type: 'change', color: {r: 0, g: 0, b: 0}, css: 'rgb(0,0,0)'});
-                this.fontColor.addEventListener("change",this.handleFontColorChange.bind(this),false);
-
             this.application.ninja.stage.textTool.addEventListener("editorSelect", this.handleEditorSelect.bind(this), false);
-
+            this.application.ninja.stage.textTool.element.addEventListener("blur", this.handleEditorBlur.bind(this), false);
+            this.application.ninja.stage.textTool.element.addEventListener("click", this.handleEditorClicked.bind(this), false);
 
             //Bind to Rich Text editor that lives on the stage component
             Object.defineBinding(this.application.ninja.stage.textTool, "fontName", {
@@ -146,6 +180,23 @@ exports.TextProperties = Montage.create(ToolProperties, {
                   boundObjectPropertyPath: "strikeThrough",
                   oneway: false
                 });
+        }
+    },
+
+    willDraw: {
+        value: function() {
+            if (this._addedColorChips === false && this.application.ninja.colorController.colorPanelDrawn) {
+                this.fontColor.props = { side: 'top', align: 'center', wheel: true, palette: true, gradient: false, image: false, nocolor: false, offset: -80 };
+                this.application.ninja.colorController.addButton("chip", this.fontColor);
+                this.fontColor.addEventListener("change", this.handleFontColorChange.bind(this), false);
+                this.fontColor.addEventListener("mousedown", this.handleColorChangeClick.bind(this), false);
+                this._addedColorChips = true;
+            }
+
+            if (this._addedColorChips) {
+                this.fontColor.color(this.setColor.colorMode, this.setColor.color);
+                this.application.ninja.stage.textTool.foreColor = this.setColor.color.css;
+            }
         }
     },
 
@@ -220,10 +271,18 @@ exports.TextProperties = Montage.create(ToolProperties, {
         }
     },
 
+    handleColorChangeClick: {
+        value: function(e) {
+            this._keepSelected = true;
+        }
+    },
+
 
     handleFontColorChange: {
         value: function(e) {
-            this.application.ninja.stage.textTool.element.style.color = e._event.color.css;
+            this.setColor = e._event;
+            this.application.ninja.stage.textTool.foreColor = this.setColor.color.css;
+            //this.application.ninja.stage.textTool.element.style.color = e._event.color.css;
         }
     }
 
