@@ -245,6 +245,7 @@ exports.Rotate3DToolBase = Montage.create(ModifierToolBase, {
         value: function(data, event) {
             var mat,
                 angle,
+                f,
                 pt0 = data.pt0,
                 pt1 = data.pt1;
 
@@ -291,7 +292,7 @@ exports.Rotate3DToolBase = Montage.create(ModifierToolBase, {
                 angle = this._getAngleToRotate(pt1.x, pt1.y);
                 if(event.shiftKey)
                 {
-                    var f = Math.floor(angle/(Math.PI/4));
+                    f = Math.floor(angle/(Math.PI/4));
                     angle = f*Math.PI/4;
                 }
                 this._delta = angle;
@@ -324,7 +325,7 @@ exports.Rotate3DToolBase = Montage.create(ModifierToolBase, {
                     }
                     if(event.shiftKey)
                     {
-                        var f = Math.floor(zAngle/(Math.PI/4));
+                        f = Math.floor(zAngle/(Math.PI/4));
                         zAngle = f*Math.PI/4;
                     }
                     mat = Matrix.RotationZ(zAngle);
@@ -335,7 +336,7 @@ exports.Rotate3DToolBase = Montage.create(ModifierToolBase, {
                     var xAngle = -this._mouseSpeed * (pt1.y - this.downPoint.y) * Math.PI / 180.0;
                     if(event.shiftKey)
                     {
-                        var f = Math.floor(yAngle/(Math.PI/4));
+                        f = Math.floor(yAngle/(Math.PI/4));
                         yAngle = f*Math.PI/4;
                         f = Math.floor(xAngle/(Math.PI/4));
                         xAngle = f*Math.PI/4;

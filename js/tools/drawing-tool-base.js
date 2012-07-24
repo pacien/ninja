@@ -300,7 +300,7 @@ exports.DrawingToolBase = Montage.create(Component, {
                 s1Offset[1] += snapManager.getStageHeight() / 2.0;
                return ({ "width": w, "height": h, "planeMat": planeMat, "midPt": midPt, "mouseDownPos": s0Offset, "mouseUpPos": s1Offset });
             } else {
-                return null
+                return null;
             }
         }
     },
@@ -516,7 +516,7 @@ exports.DrawingToolBase = Montage.create(Component, {
         value: function( s0In, s1In, planeMat, planeMatInv,  fixedS1 ) {
             var s0 = s0In.slice(0);
             var s2 = s1In.slice(0);
-
+            var pt0, pt1;
 
             // calculate the mid point of the rectangle
             var midPt = vecUtils.vecAdd(3, s0, s2);
@@ -571,7 +571,8 @@ exports.DrawingToolBase = Montage.create(Component, {
             {
                 p0 = ptArr[0];  p1 = ptArr[1];  p2 = ptArr[2];  p3 = ptArr[3];
                 z = p0[2];
-                var pt0 = p0.slice(0), pt1 = p2.slice(0);
+                pt0 = p0.slice(0);
+                pt1 = p2.slice(0);
                 if (p0[0] < p2[0]){
                     pt0[0] = Math.max(p0[0],p1[0]);
                     pt1[0] = Math.min(p2[0],p3[0]);

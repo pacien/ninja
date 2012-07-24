@@ -95,22 +95,19 @@ exports.EyedropperTool = Montage.create(toolBase, {
     },
 
     HandleLeftButtonUp: {
-        value : function (event) {
-            {
-                this._isMouseDown = false;
+        value: function(event) {
+            this._isMouseDown = false;
 
-                if(this._escape)
-                {
-                    this._escape = false;
-                }
-
-                this._updateColor(this._color, true);
-
-                this._color = null;
-
-                this._elementUnderMouse = null;
-                this._deleteImageDataCanvas();
+            if(this._escape) {
+                this._escape = false;
             }
+
+            this._updateColor(this._color, true);
+
+            this._color = null;
+
+            this._elementUnderMouse = null;
+            this._deleteImageDataCanvas();
         }
     },
 
@@ -237,8 +234,7 @@ exports.EyedropperTool = Montage.create(toolBase, {
 
                 if(color.mode === "gradient")
                 {
-                    this.application.ninja.colorController.colorModel["gradient"] =
-                                    {value: color.color, wasSetByCode: true, type: eventType};
+                    this.application.ninja.colorController.colorModel.gradient = {value: color.color, wasSetByCode: true, type: eventType};
                 }
                 else
                 {
@@ -253,7 +249,7 @@ exports.EyedropperTool = Montage.create(toolBase, {
                     }
                     else
                     {
-                        this.application.ninja.colorController.colorModel["rgb"] = color.color;
+                        this.application.ninja.colorController.colorModel.rgb = color.color;
                     }
                 }
 

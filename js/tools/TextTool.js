@@ -30,8 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
 
 var Montage = require("montage/core/core").Montage,
-    DrawingTool = require("js/tools/drawing-tool").DrawingTool,
-    ElementsMediator = require("js/mediators/element-mediator").ElementMediator;
+    DrawingTool = require("js/tools/drawing-tool").DrawingTool;
 
 exports.TextTool = Montage.create(DrawingTool, {
     drawingFeedback: {
@@ -175,8 +174,7 @@ exports.TextTool = Montage.create(DrawingTool, {
                 self.applyElementStyles(self.selectedElement, self.application.ninja.stage.textTool.element, ["font","padding-left","padding-top","padding-right","padding-bottom", "color"]);
                 this.selectAll();
                 this.didDraw = function() {};
-            }
-
+            };
         }
     },
 

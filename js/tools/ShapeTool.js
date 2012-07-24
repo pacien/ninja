@@ -167,13 +167,13 @@ exports.ShapeTool = Montage.create(DrawingTool, {
     },
 
     getGLWorld: {
-        value: function (canvas, use3D)
-        {
-            var world = this.application.ninja.elementMediator.getShapeProperty(canvas, "GLWorld");
-            if(!world)
-            {
+        value: function (canvas, use3D) {
+            var world;
+
+            world = this.application.ninja.elementMediator.getShapeProperty(canvas, "GLWorld");
+            if(!world) {
                 // create all the GL stuff
-                var world = new World(canvas, use3D);
+                world = new World(canvas, use3D);
                 this.application.ninja.elementMediator.setShapeProperty(canvas, "GLWorld", world);
             }
 
