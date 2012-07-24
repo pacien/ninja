@@ -33,11 +33,11 @@ POSSIBILITY OF SUCH DAMAGE.
 //
 var Montage =           require("montage/core/core").Montage,
     Component =         require("montage/ui/component").Component,
-    TextDocumentModel = require("js/document/models/text").TextDocumentModel,
     CodeDocumentView =  require("js/document/views/code").CodeDocumentView;
 ////////////////////////////////////////////////////////////////////////
+//Code View for the HTML file
 //
-exports.TextDocument = Montage.create(Component, {
+exports.DesignCodeView = Montage.create(CodeDocumentView, {
     ////////////////////////////////////////////////////////////////////
     //
     hasTemplate: {
@@ -45,52 +45,86 @@ exports.TextDocument = Montage.create(Component, {
     },
     ////////////////////////////////////////////////////////////////////
     //
-    model: {
-        value: null
-    },
-    ////////////////////////////////////////////////////////////////////
-    //
     init:{
-        value: function(file, context, callback, view, parentContainer){
-            //
-            var codeDocumentView = CodeDocumentView.create(), container = null; //TODO: Why is this initilzied to null?
-            //Creating instance of Text Document Model
-            this.model = Montage.create(TextDocumentModel,{
-                file: {value: file},
-                parentContainer: {value: parentContainer}, //TODO: Remove reference to this element, should be dynamic
-                views: {value: {'code': codeDocumentView, 'design': null}} //TODO: Add check if file might have design view, if so, then create it
-            });
-            //TODO: Add design view logic
-            //Initilizing view(s)
-            codeDocumentView.initialize(this.model.parentContainer);
-            //Checking for view specified
-            if (view === 'code') {
-                //TODO: Remove reference and use as part of model
-                this.currentView = 'code';
-                //Setting current view object to design
-                this.model.currentView = this.model.views.code;
-                //Rendering view
-                codeDocumentView.textArea.value = file.content;
-                codeDocumentView.initializeTextView(file, this);
-            } else {
-                //Other view(s) logic goes here
-            }
-            //Checking if callback is needed
-            if (callback) callback.call(context, this);
+        value: function (content) {
+
         }
     },
     ////////////////////////////////////////////////////////////////////
     //
-    closeDocument: {
-        value: function (context, callback) {
-            //Closing document and getting outcome
-            var closed = this.model.close(null);
-            //Making callback if specified
-            if (callback) callback.call(context, this);
+    load:{
+        value:function(content){
+            //initialize the editor if not yet created
+            if(this.editor === null){
+                //todo: get the proper content
+                this.textArea.value = content;
+                this.initializeTextView(this.application.ninja.currentDocument.model.file, this.application.ninja.currentDocument);
+                return true;
+            }else{//reload the editor
+                this.editor.setValue(content);
+                this.editor.focus();
+            }
+        }
+    },
+    ////////////////////////////////////////////////////////////////////
+    //
+    show: {
+        value: function (callback) {
+
+            this.textViewContainer.style.display = "block";
+            this.textViewContainer.style.background = "white";
+            this.textViewContainer.style.height = "100%";
+
+
+            ///todo-remove after the switch view logic is added in all the components
+            this.application.ninja.stage.collapseAllPanels();
+            this.application.ninja.stage.hideCanvas(true);
+            this.application.ninja.stage.hideRulers();
+
+            document.getElementsByClassName("bindingView")[0].style.display = "none";
+
+            //bindingView div needs to be display noned
+            //timeline error on switching back to design view
+
+            ///-end todo-remove
+
+
+
+
+            //todo : update options bar
+
+            //
+            if (callback) callback();
+        }
+    },
+    ////////////////////////////////////////////////////////////////////
+    //
+    hide: {
+        value: function (callback) {
+            if(this.editor){
+                this.editor.save();//save to textarea
+            }
+            this.textViewContainer.style.display = "none";
+
+            ///todo-remove after the switch view logic is added in all the components
+            this.application.ninja.stage.restoreAllPanels(false);
+            this.application.ninja.stage.hideCanvas(false);
+            this.application.ninja.stage.showRulers();
+            ///-end todo-remove
+
+
+            //todo : update options bar
+
+            //
+            if (callback) callback();
+        }
+    },
+    ////////////////////////////////////////////////////////////////////
+    //
+    applyTheme:{
+        value:function(themeClass){
+            //Todo: change for bucket structure of documents
+            this.textViewContainer.className = "codeViewContainer "+themeClass;
         }
     }
-    ////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////
 });
-////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////

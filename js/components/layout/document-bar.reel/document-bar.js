@@ -61,6 +61,27 @@ exports.DocumentBar = Montage.create(Component, {
             }
             //
             this.visible = true;
+
+            //TODO: check if the code's options bar can be unified
+            if(this._currentDocument && this._currentDocument.model && (this._currentDocument.model.views.design === null) && (this._currentDocument.model.views.code !== null)){
+                this.visible = false;
+            }
+        }
+    },
+    ////////////////////////////////////////////////////////////////////
+    //
+    _codeEditorWrapper:{
+        value: null
+    },
+
+    codeEditorWrapper:{
+        get : function() {
+            return this._codeEditorWrapper;
+        },
+        set : function(value) {
+            if(this._codeEditorWrapper !== value){
+                this._codeEditorWrapper = value;
+            }
         }
     },
     ////////////////////////////////////////////////////////////////////
@@ -112,7 +133,12 @@ exports.DocumentBar = Montage.create(Component, {
                 this._zoomFactor = value;
                 //
                 if (!this._firstDraw) {
-                    this.application.ninja.stage.setZoom(value);
+                    if(this._currentDocument && this._currentDocument.model && this._currentDocument.model.currentView === this._currentDocument.model.views.design){
+                        this.application.ninja.stage.setZoom(value);
+                    }else if(this._currentDocument && this._currentDocument.model && this._currentDocument.model.currentView === this._currentDocument.model.views.code){
+                        this._zoomFactor = value;
+                        if(this.codeEditorWrapper){this.codeEditorWrapper.handleZoom(value)};
+                    }
                 }
             }
         }
@@ -191,6 +217,14 @@ exports.DocumentBar = Montage.create(Component, {
     },
     ////////////////////////////////////////////////////////////////////
     //
+    renderCodeView: {
+        value: function () {
+            //Reloading in code view (with updates from other view)
+            this.reloadView('code', this.fileTemplate);
+        }
+    },
+    ////////////////////////////////////////////////////////////////////
+    //
     showViewDesign: {
         value: function () {
             //
@@ -215,6 +249,8 @@ exports.DocumentBar = Montage.create(Component, {
                 this._currentDocument.model.switchViewTo('code');
                 this.btnDesign.setAttribute('class', 'inactive');
                 this.btnCode.removeAttribute('class');
+                var render = this.renderCodeView.bind(this._currentDocument);
+                render();
             }
         }
     },
