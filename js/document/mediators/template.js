@@ -480,7 +480,7 @@ exports.TemplateDocumentMediator = Montage.create(Component, {
                 //Copy webGL library if needed
                 for (var i in this.application.ninja.coreIoApi.ninjaLibrary.libs) {
                     //Checking for RDGE library to be available
-                    if (this.application.ninja.coreIoApi.ninjaLibrary.libs[i].name === 'RDGE' && saveExternalData) {
+                    if (this.application.ninja.coreIoApi.ninjaLibrary.libs[i].name === 'RDGE') {
                         rdgeDirName = (this.application.ninja.coreIoApi.ninjaLibrary.libs[i].name + this.application.ninja.coreIoApi.ninjaLibrary.libs[i].version).toLowerCase();
                         rdgeVersion = this.application.ninja.coreIoApi.ninjaLibrary.libs[i].version;
                         this.application.ninja.coreIoApi.ninjaLibrary.copyLibToCloud(template.file.root, rdgeDirName, function(result) {libsobserver.canvasCopied = result; this.libCopied(libsobserver);}.bind(this));
@@ -564,7 +564,7 @@ exports.TemplateDocumentMediator = Montage.create(Component, {
                     webgllibtag.setAttribute('data-ninja-canvas-json', this.application.ninja.coreIoApi.rootUrl+'/'+cvsDataFileUrl);
                     webgllibtag.setAttribute('data-ninja-canvas-libpath', rdgeDirName);
                     //
-                    if (saveExternalData && (cvsDataFileCheck.status === 404 || cvsDataFileCheck.status === 204)) {
+                    if (cvsDataFileCheck.status === 404 || cvsDataFileCheck.status === 204) {
                         //Saving file
                         cvsDataFileOperation = this.application.ninja.ioMediator.fio.saveFile({uri: cvsDataFilePath, contents: json});
                     } else {
@@ -598,7 +598,7 @@ exports.TemplateDocumentMediator = Montage.create(Component, {
                 //Copy Montage library if needed
                 for (var i in this.application.ninja.coreIoApi.ninjaLibrary.libs) {
                     //Checking for Montage library to be available
-                    if (this.application.ninja.coreIoApi.ninjaLibrary.libs[i].name === 'Montage' && saveExternalData) {
+                    if (this.application.ninja.coreIoApi.ninjaLibrary.libs[i].name === 'Montage') {
                         mjsDirName = (this.application.ninja.coreIoApi.ninjaLibrary.libs[i].name + this.application.ninja.coreIoApi.ninjaLibrary.libs[i].version).toLowerCase();
                         mjsVersion = this.application.ninja.coreIoApi.ninjaLibrary.libs[i].version;
                         this.application.ninja.coreIoApi.ninjaLibrary.copyLibToCloud(template.file.root, mjsDirName, function(result) {libsobserver.montageCopied = result; this.libCopied(libsobserver);}.bind(this));
