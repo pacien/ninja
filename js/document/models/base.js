@@ -88,6 +88,21 @@ exports.BaseDocumentModel = Montage.create(Component, {
     },
     ////////////////////////////////////////////////////////////////////
     //
+    _currentViewIdentifier: {
+        value: ""
+    },
+    ////////////////////////////////////////////////////////////////////
+    //
+    currentViewIdentifier: {
+        get: function() {
+            return this._currentViewIdentifier;
+        },
+        set: function(value) {
+            this._currentViewIdentifier = value;
+        }
+    },
+    ////////////////////////////////////////////////////////////////////
+    //
     _selection: {
         value: []
     },

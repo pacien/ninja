@@ -39,8 +39,8 @@ var Montage =           require("montage/core/core").Montage,
 exports.CodeDocumentView = Montage.create(BaseDocumentView, {
     ////////////////////////////////////////////////////////////////////
     //
-    hasTemplate: {
-        value: false
+    identifier: {
+        value: "code"
     },
     ////////////////////////////////////////////////////////////////////
     //

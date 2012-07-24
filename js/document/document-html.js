@@ -164,7 +164,7 @@ exports.HtmlDocument = Montage.create(Component, {
                     //Adding observer to know when template is ready
                     this._observer = new WebKitMutationObserver(this.handleTemplateReady.bind(this));
                     this._observer.observe(this.model.views.design.document.head, {childList: true});
-                }.bind(this), template, {viewCallback: this.handleViewReady, context: this});
+                }.bind(this), template, {viewCallback: this.handleReloadViewReady, context: this});
             } else if(view === 'code'){
             	//TODO: Add logic to handle external changed files
             	//Checking for template type and not saving external data
@@ -176,6 +176,7 @@ exports.HtmlDocument = Montage.create(Component, {
                 //Setting current view object to code
                 this.currentView = 'code';
                 this.model.currentView = this.model.views.code;
+                this.model.currentViewIdentifier = this.model.currentView.identifier;
             } else {
 	            //TODO: Identify default view (probably code) - Error handling
             }
@@ -200,8 +201,20 @@ exports.HtmlDocument = Montage.create(Component, {
             if(typeof this.model.domContainer !== "undefined") {
                 this.model.domContainer = this.model.documentRoot;
             }
+            this.model.currentViewIdentifier = this.model.currentView.identifier;
             //Making callback after view is loaded
             this.loaded.callback.call(this.loaded.context, this);
+        }
+    },
+    handleReloadViewReady: {
+        value: function(mObjects) {
+            this.model.mObjects = mObjects;
+            // TODO: Find a better way to initialize this property
+            // Assign the domContainer to be the document root on open
+            if(typeof this.model.domContainer !== "undefined") {
+                this.model.domContainer = this.model.documentRoot;
+            }
+            this.model.currentViewIdentifier = this.model.currentView.identifier;
         }
     },
     ////////////////////////////////////////////////////////////////////
