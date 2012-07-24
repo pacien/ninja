@@ -326,7 +326,7 @@ var DrawUtils = exports.DrawUtils = Montage.create(Component, {
                     eltModel = elt.elementModel;
                     eltModel.setProperty("offsetCache", false);
 
-                    if(eltModel.selection !== "body") {
+                    if(eltModel.pi !== "bodyPi") {
                         if(isChanging) {
                             eltModel.props3D.matrix3d = null;
                         } else {
