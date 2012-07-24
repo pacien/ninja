@@ -317,9 +317,9 @@ exports.ThreeD = Montage.create(Component, {
             }
 
             if(isChanging) {
-                this.application.ninja.elementMediator.setMatrix(item, mat, true);
+                this.application.ninja.elementMediator.setMatrix(item, mat, true, "pi");
             } else {
-                this.application.ninja.elementMediator.setMatrix(item, mat, false);
+                this.application.ninja.elementMediator.setMatrix(item, mat, false, "pi");
 
                 if(!inGlobalMode) {
                     value.value = 0;

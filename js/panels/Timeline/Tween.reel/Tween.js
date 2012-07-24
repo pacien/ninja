@@ -312,6 +312,15 @@ var Tween = exports.Tween = Montage.create(Component, {
         		this.parentComponent.parentComponent.updateKeyframeRule();
         		this.isTweenAnimated = true;
         	}
+
+            if(eventDetail.source === "pi" && eventDetail.type === "setMatrix"){
+                var piArrMat = eventDetail.data.value,
+                    piStrTweenProperty = "perspective(1400) matrix3d(" + piArrMat.join() + ")";
+
+                this.tweenedProperties["-webkit-transform"] = piStrTweenProperty;
+                this.parentComponent.parentComponent.updateKeyframeRule();
+                this.isTweenAnimated = true;
+            }
         }
     },
 
