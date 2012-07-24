@@ -282,6 +282,8 @@ var Tween = exports.Tween = Montage.create(Component, {
     // ==== Begin Controllers
     setTweenProperties:{
         value:function (eventDetail) {
+            console.log("EVENT DETAIL");
+            console.log(eventDetail);
         	if (eventDetail.source === "SelectionTool" || eventDetail.source === "timeline" || eventDetail.source === "pi" || eventDetail.source === "cssPanelChange") {
 	            if(this.parentComponent.parentComponent.animatedElement.offsetTop != this.tweenedProperties["top"]){
 	                this.tweenedProperties["top"] = this.parentComponent.parentComponent.animatedElement.offsetTop + "px";
@@ -312,6 +314,15 @@ var Tween = exports.Tween = Montage.create(Component, {
         		this.parentComponent.parentComponent.updateKeyframeRule();
         		this.isTweenAnimated = true;
         	}
+
+            if(eventDetail.source === "pi" && eventDetail.type === "setMatrix"){
+                var piArrMat = eventDetail.data.value,
+                    piStrTweenProperty = "perspective(1400) matrix3d(" + piArrMat.join() + ")";
+
+                this.tweenedProperties["-webkit-transform"] = piStrTweenProperty;
+                this.parentComponent.parentComponent.updateKeyframeRule();
+                this.isTweenAnimated = true;
+            }
         }
     },
 
