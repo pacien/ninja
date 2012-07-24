@@ -233,23 +233,30 @@ exports.DocumentBar = Montage.create(Component, {
 	    value: function (view, render, aBtn, iBtn) {
 	    	//TODO: Remove reference to string view
 		    if (this._currentDocument.model.currentView !== view) {
-                //
+    		    var doc;
+                //Switching view and changing button modes
                 this._currentDocument.model.switchViewTo(view);
                 iBtn.setAttribute('class', 'inactive');
                 aBtn.removeAttribute('class');
-                //TODO: Add document parsing to reload view
-                this._currentDocument.reloadView(view, this.fileTemplate, {
-                    mode: 'html',
-                    libs: this._currentDocument.model.libs,
-                    file: this._currentDocument.model.file,
-                    webgl: this._currentDocument.model.webGlHelper.glData,
-                    styles: this._currentDocument.model.getStyleSheets(),
-                    template: this._currentDocument.fileTemplate,
-                    document: this._currentDocument.model.views.design.iframe.contentWindow.document,
-                    head: this._currentDocument.model.views.design.iframe.contentWindow.document.head,
-                    body: this._currentDocument.model.views.design.iframe.contentWindow.document.body,
-                    mjsTemplateCreator: this._currentDocument.model.views.design.iframe.contentWindow.mjsTemplateCreator
-                });
+                //Checking for view to get other view document (object to code and string to design)
+                if (view === 'code') {
+                    doc = {
+                        mode: 'html',
+                        libs: this._currentDocument.model.libs,
+                        file: this._currentDocument.model.file,
+                        webgl: this._currentDocument.model.webGlHelper.glData,
+                        styles: this._currentDocument.model.getStyleSheets(),
+                        template: this._currentDocument.fileTemplate,
+                        document: this._currentDocument.model.views.design.iframe.contentWindow.document,
+                        head: this._currentDocument.model.views.design.iframe.contentWindow.document.head,
+                        body: this._currentDocument.model.views.design.iframe.contentWindow.document.body,
+                        mjsTemplateCreator: this._currentDocument.model.views.design.iframe.contentWindow.mjsTemplateCreator
+                    }
+                } else if (view === 'design') {
+                    doc = this._currentDocument.model.views.code.textArea.value;
+                }
+                //Reloading the document from changes made
+                this._currentDocument.reloadView(view, this.fileTemplate, doc);
             }
 	    }
     },

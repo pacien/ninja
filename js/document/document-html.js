@@ -156,7 +156,7 @@ exports.HtmlDocument = Montage.create(Component, {
                 //Showing design iFrame
                 this.model.views.design.show();
                 this.model.views.design.iframe.style.opacity = 0;
-                this.model.views.design.content = this.model.file.content;
+                this.model.views.design.content = this.application.ninja.ioMediator.tmplt.parseHtmlToNinjaTemplate(doc);
                 //TODO: Improve reference (probably through binding values)
                 this.model.views.design._webGlHelper = this.model.webGlHelper;
                 //Rendering design view, using observers to know when template is ready
