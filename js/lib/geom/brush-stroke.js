@@ -864,6 +864,17 @@ BrushStroke.prototype.drawToContext = function(ctx, drawStageWorldPts, stageWorl
 }; //this.drawToCanvas()
 
 
+
+BrushStroke.prototype._fixCoordPrecision = function(coord, precision){
+    var i=0;
+    var numPoints = coord.length;
+    for (i=0;i<numPoints;i++){
+        coord[i][0] = parseFloat((coord[i][0]).toFixed(precision));
+        coord[i][1] = parseFloat((coord[i][1]).toFixed(precision));
+        coord[i][2] = parseFloat((coord[i][2]).toFixed(precision));
+    }
+};
+
 BrushStroke.prototype.exportJSON = function(){
     var retObject= new Object();
     //the type of this object
@@ -873,9 +884,10 @@ BrushStroke.prototype.exportJSON = function(){
     //the geometry for this object
     retObject.localPoints = this._LocalPoints.slice(0);
     this._copyCoordinates3D(this._LocalPoints, retObject.localPoints); //todo is this necessary in addition to the slice(0) above?
+    this._fixCoordPrecision(retObject.localPoints, 4);
     retObject.origLocalPoints = this._OrigLocalPoints.slice(0);
     this._copyCoordinates3D(this._OrigLocalPoints, retObject.origLocalPoints); //todo <ditto>
-
+    this._fixCoordPrecision(retObject.origLocalPoints, 4);
     retObject.stageWorldCenter = [this._stageWorldCenter[0],this._stageWorldCenter[1],this._stageWorldCenter[2]];
     retObject.planeMat = this._planeMat;
     retObject.planeMatInv = this._planeMatInv;

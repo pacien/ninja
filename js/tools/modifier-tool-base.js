@@ -569,7 +569,11 @@ exports.ModifierToolBase = Montage.create(DrawingTool, {
                     var alignArray = new Array();
                     snapManager.snapAlignToElementBounds( this._clickedObject, delta, alignArray );
                     if (alignArray.length > 0)
+                    {
+                        alignArray.push( hitRec );
+                        snapManager.sortHitRecords( alignArray );
                         hitRec = alignArray[0];
+                    }
                 }
             }
 

@@ -439,6 +439,11 @@ var World = function GLWorld( canvas, use3D, preserveDrawingBuffer ) {
     // in the case of a procedurally built scene an init state is not needed for loading data
     this._canvas.rdgeid = this._canvas.getAttribute( "data-RDGE-id" );
     if (this._useWebGL) {
+        // make sure the id is unique
+        var id = this.uniqueifyID( this._canvas.rdgeid );
+        this._canvas.rdgeid = id;
+        this._canvas.setAttribute( "data-rdge-id", id );
+
         rdgeStarted = true;
         RDGE.globals.engine.unregisterCanvas( this._canvas );
         RDGE.globals.engine.registerCanvas(this._canvas, this);
@@ -673,12 +678,34 @@ World.prototype.updateMaterials = function( obj, time ) {
         var n = matArray.length;
         for (var i=0;  i<n;  i++) {
             matArray[i].update( time );
-    }
+        }
     }
 
     this.updateMaterials( obj.getNext(),  time );
     this.updateMaterials( obj.getChild(), time );
 };
+
+
+World.prototype.uniqueifyID = function( id )
+{
+    var ctx = RDGE.globals.engine.getContext( id );
+    while ( ctx )
+    {
+        var num = 0;
+        var index = id.indexOf( "_" );
+        if (index >= 0)
+        {
+            var subStr = id.substr( index+1);
+            num = Number( subStr ) + 1;
+            id = id.substr( 0,  index );
+        }
+
+        id = id + "_" + num;
+        ctx = RDGE.globals.engine.getContext( id );
+    }
+
+    return id;
+}
 
 // return the origin of the world in NDC
 World.prototype.getNDCOrigin = function() {
@@ -973,7 +1000,6 @@ World.prototype.importJSON = function (jObj)
         // start RDGE
         rdgeStarted = true;
         var id = this._canvas.getAttribute( "data-RDGE-id" );
-        this._canvas.rdgeid = id;
         RDGE.globals.engine.registerCanvas(this._canvas, this);
         RDGE.RDGEStart(this._canvas);
         this._canvas.task.stop()
