@@ -131,7 +131,6 @@ exports.TextProperties = Montage.create(ToolProperties, {
 
     handleEditorBlur: {
         value: function(e) {
-            console.log("Editor Blur");
             window.getSelection().addRange(this.lastSelection);
             e.target.focus();
         }
