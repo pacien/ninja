@@ -363,6 +363,8 @@ RDGE._renderer = function (canvas) {
         if (mips === undefined)
             mips = true;
 
+        //console.log( "createTexture " + url + ", unloadedCount: " + this.unloadedTextureCount + ", world " + RDGE.globals.engine.getContext().renderer._world._worldCount );
+
         if (texture) {
             texture.image = new Image();
             texture.image.src = url;
@@ -380,7 +382,7 @@ RDGE._renderer = function (canvas) {
             texture.image.onerror = function () {
                 this.context.renderer.unloadedTextureCount--;
                 if (texture.callback) texture.callback(texture);
-                //console.log( "Error loading texture: " + texture.image.src );
+                console.log( "Error loading texture: " + texture.image.src );
                 if (this.context.renderer.unloadedTextureCount < 0)
                     console.log("more textures loaded then created...");
             };
