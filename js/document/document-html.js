@@ -135,8 +135,7 @@ exports.HtmlDocument = Montage.create(Component, {
     ////////////////////////////////////////////////////////////////////
     //TODO: Make into one method to use here and one init
     reloadView: {
-        value: function (view, template) {
-            var content;
+        value: function (view, template, doc) {
             //
             this.model.parentContainer.removeChild(this.model.views.design.iframe);
             //Initiliazing views and hiding
@@ -167,14 +166,13 @@ exports.HtmlDocument = Montage.create(Component, {
                     this._observer.observe(this.model.views.design.document.head, {childList: true});
                 }.bind(this), template, {viewCallback: this.handleViewReady, context: this});
             } else if(view === 'code'){
-            
-            
-                //TODO: Parse in memory document through template to get current document
-                content = '<html><head>'+this.model.file.content.head+'</head><body>'+this.model.file.content.body+'</body></html>';//dummy
-                
-                
-                //
-                this.model.views.code.load(content);
+            	//TODO: Add logic to handle external changed files
+            	//Checking for template type and not saving external data
+            	if (doc.template && (doc.template.type === 'banner' || doc.template.type === 'animation')) {
+                	this.model.views.code.load(this.application.ninja.ioMediator.tmplt.parseNinjaTemplateToHtml(false, doc, true, null).content);
+                } else {
+                 	this.model.views.code.load(this.application.ninja.ioMediator.tmplt.parseNinjaTemplateToHtml(false, doc, false, null).content);
+                }
                 //Setting current view object to code
                 this.currentView = 'code';
                 this.model.currentView = this.model.views.code;

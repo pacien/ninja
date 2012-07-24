@@ -47,7 +47,7 @@ exports.TemplateDocumentMediator = Montage.create(Component, {
     //
     getAppTemplatesUrlRegEx: {
         value: function () {
-            var regex = new RegExp(chrome.extension.getURL(this.application.ninja.currentDocument.model.views.design.iframe.src.split(chrome.extension.getURL('/'))[1]).replace(/\//gi, '\\\/'), 'gi');
+            var regex = new RegExp(chrome.extension.getURL(this.application.ninja.currentDocument.model.views.design.document.baseURI.split(chrome.extension.getURL('/'))[1]).replace(/\//gi, '\\\/'), 'gi');
             return regex;
         }
     },
@@ -326,7 +326,7 @@ exports.TemplateDocumentMediator = Montage.create(Component, {
                         }
                     }
                 }
-            } else if (template.css) {
+            } else if (template.css && saveExternalData) {
                 //Getting all style and link tags
                 var styleCounter = 0,
                     docStyles = template.file.content.document.getElementsByTagName('style'),
@@ -480,7 +480,7 @@ exports.TemplateDocumentMediator = Montage.create(Component, {
                 //Copy webGL library if needed
                 for (var i in this.application.ninja.coreIoApi.ninjaLibrary.libs) {
                     //Checking for RDGE library to be available
-                    if (this.application.ninja.coreIoApi.ninjaLibrary.libs[i].name === 'RDGE') {
+                    if (this.application.ninja.coreIoApi.ninjaLibrary.libs[i].name === 'RDGE' && saveExternalData) {
                         rdgeDirName = (this.application.ninja.coreIoApi.ninjaLibrary.libs[i].name + this.application.ninja.coreIoApi.ninjaLibrary.libs[i].version).toLowerCase();
                         rdgeVersion = this.application.ninja.coreIoApi.ninjaLibrary.libs[i].version;
                         this.application.ninja.coreIoApi.ninjaLibrary.copyLibToCloud(template.file.root, rdgeDirName, function(result) {libsobserver.canvasCopied = result; this.libCopied(libsobserver);}.bind(this));
@@ -564,7 +564,7 @@ exports.TemplateDocumentMediator = Montage.create(Component, {
                     webgllibtag.setAttribute('data-ninja-canvas-json', this.application.ninja.coreIoApi.rootUrl+'/'+cvsDataFileUrl);
                     webgllibtag.setAttribute('data-ninja-canvas-libpath', rdgeDirName);
                     //
-                    if (cvsDataFileCheck.status === 404 || cvsDataFileCheck.status === 204) {
+                    if (saveExternalData && (cvsDataFileCheck.status === 404 || cvsDataFileCheck.status === 204)) {
                         //Saving file
                         cvsDataFileOperation = this.application.ninja.ioMediator.fio.saveFile({uri: cvsDataFilePath, contents: json});
                     } else {
@@ -592,13 +592,13 @@ exports.TemplateDocumentMediator = Montage.create(Component, {
 
 
             //TODO: Make proper Montage method
-
+            var mjsDirName, mjsVersion;
             //Checking for Montage
             if (mJsSerialization) {
                 //Copy Montage library if needed
                 for (var i in this.application.ninja.coreIoApi.ninjaLibrary.libs) {
                     //Checking for Montage library to be available
-                    if (this.application.ninja.coreIoApi.ninjaLibrary.libs[i].name === 'Montage') {
+                    if (this.application.ninja.coreIoApi.ninjaLibrary.libs[i].name === 'Montage' && saveExternalData) {
                         mjsDirName = (this.application.ninja.coreIoApi.ninjaLibrary.libs[i].name + this.application.ninja.coreIoApi.ninjaLibrary.libs[i].version).toLowerCase();
                         mjsVersion = this.application.ninja.coreIoApi.ninjaLibrary.libs[i].version;
                         this.application.ninja.coreIoApi.ninjaLibrary.copyLibToCloud(template.file.root, mjsDirName, function(result) {libsobserver.montageCopied = result; this.libCopied(libsobserver);}.bind(this));
