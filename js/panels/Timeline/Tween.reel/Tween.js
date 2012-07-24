@@ -282,8 +282,6 @@ var Tween = exports.Tween = Montage.create(Component, {
     // ==== Begin Controllers
     setTweenProperties:{
         value:function (eventDetail) {
-            console.log("EVENT DETAIL");
-            console.log(eventDetail);
         	if (eventDetail.source === "SelectionTool" || eventDetail.source === "timeline" || eventDetail.source === "pi" || eventDetail.source === "cssPanelChange") {
 	            if(this.parentComponent.parentComponent.animatedElement.offsetTop != this.tweenedProperties["top"]){
 	                this.tweenedProperties["top"] = this.parentComponent.parentComponent.animatedElement.offsetTop + "px";
