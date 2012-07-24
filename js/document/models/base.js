@@ -253,8 +253,10 @@ exports.BaseDocumentModel = Montage.create(Component, {
                         this.libs.canvas = true;
                     }
                 }
+            } else if (this.currentView === this.views.code) {
+                //TODO: Add save logic for code view
             } else {
-                //TODO: Add logic to save code view data
+                //TODO: Error handle
             }
         }
     },
@@ -294,8 +296,10 @@ exports.BaseDocumentModel = Montage.create(Component, {
                         this.libs.canvas = true;
                     }
                 }
+            } else if (this.currentView === this.views.code) {
+                //TODO: Add save logic for code view
             } else {
-                //TODO: Add logic to save code view data
+                //TODO: Error handle
             }
 
         }
