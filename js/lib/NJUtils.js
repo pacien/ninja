@@ -241,6 +241,7 @@ exports.NJUtils = Montage.create(Component, {
     // 100px will return the following array: [100, px]
     getValueAndUnits: {
         value: function(input) {
+            if (!input) return [null, null];
             var numberValue = parseFloat(input);
 
             // Ignore all whitespace, digits, negative sign and "." when looking for units label
