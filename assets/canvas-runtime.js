@@ -289,7 +289,7 @@ NinjaCvsRt.GLRuntime = Object.create(Object.prototype, {
             this.renderer.cameraManager().setActiveCamera(cam);
 
             // change clear color
-            this.renderer.setClearColor([1.0, 1.0, 1.0, 0.0]);
+            this.renderer.setClearColor([0.0, 0.0, 0.0, 0.0]);
 
             // create an empty scene graph
             this.myScene = new RDGE.SceneGraph();
@@ -635,11 +635,11 @@ NinjaCvsRt.RuntimeGeomObj = Object.create(Object.prototype, {
                     case "plasma":          mat = Object.create(NinjaCvsRt.RuntimePlasmaMaterial, {});          break;
                     case "taper":           mat = Object.create(NinjaCvsRt.RuntimeTaperMaterial, {});           break;
 
-                    case "paris":
+                    case "blueSky":
                     case "water":           mat = Object.create(NinjaCvsRt.RuntimeWaterMaterial, {});           break;
 
                     case "deform":
-                    case "raiders":
+                    case "darkBlur":
                     case "tunnel":
                     case "reliefTunnel":
                     case "squareTunnel":

@@ -106,7 +106,17 @@ var stylesController = exports.StylesController = Montage.create(Component, {
             this.defaultStylesheet = this.getSheetFromElement(this.CONST.DEFAULT_SHEET_ID);
 
             this.userStyleSheets = nj.toArray(document.model.views.design.document.styleSheets).filter(function(sheet) {
-                return sheet !== this._stageStylesheet;
+                if(sheet === this._stageStylesheet) { return false; }
+
+                var media = sheet.ownerNode.getAttribute('media');
+
+                ///// If the media attribute contains a query, we'll watch for changes in media
+                if(/\([0-9A-Za-z-: ]+\)/.test(media)) {
+                    this.watchMedia(media);
+                }
+
+                return true;
+
             }, this);
 
             this.initializeRootStyles();
@@ -115,6 +125,33 @@ var stylesController = exports.StylesController = Montage.create(Component, {
         },
         enumerable : false
     },
+
+    _mediaList : {
+        value: []
+    },
+
+    watchMedia : {
+        value: function(mediaQuery, doc) {
+            var _doc = doc || this._currentDocument.model.views.design.document;
+
+            ///// Set a listener for media changes
+            _doc.defaultView.matchMedia(mediaQuery).addListener(function(e) {
+                this.handleMediaChange(e);
+            }.bind(this));
+        }
+    },
+
+    handleMediaChange : {
+        value: function(query) {
+            this._clearCache();
+
+            NJevent('mediaChange', {
+                query: query,
+                source: "stylesController"
+            });
+        }
+    },
+
     userStyleSheets : {
         value : null
     },
@@ -1292,29 +1329,64 @@ var stylesController = exports.StylesController = Montage.create(Component, {
 
     ///// Get Matrix From Element
     ///// Returns the matrix from an element's -webkit-transform
-    //// TODO - This routine should eventually check for other transform styles, i.e., rotateX, translateZ, etc.
 
     getMatrixFromElement : {
         value: function(element, isStage) {
             isStage = false;
             var xformStr = this.getElementStyle(element, "-webkit-transform", true, isStage),
-                mat;
+                mat,
+                index1,
+                index2,
+                substr,
+                numArray,
+                nNums,
+                i;
 
             if (xformStr) {
-                var index1 = xformStr.indexOf( "matrix3d(");
+                // Check for 3d matrix
+                index1 = xformStr.indexOf( "matrix3d(");
+                // If style does not contain 'matrix3d', try computed matrix/matrix3d from rotateY, translateZ, etc.
+                if((index1 === -1) && element.ownerDocument.defaultView) {
+                    xformStr = element.ownerDocument.defaultView.getComputedStyle(element).getPropertyValue("-webkit-transform");
+                    index1 = xformStr.indexOf( "matrix3d(");
+                }
                 if (index1 >= 0) {
                     index1 += 9;    // do not include 'matrix3d('
-                    var index2 = xformStr.indexOf( ")", index1 );
+                    index2 = xformStr.indexOf( ")", index1 );
                     if (index2 >= 0) {
-                        var substr = xformStr.substr( index1, (index2-index1));
+                        substr = xformStr.substr( index1, (index2-index1));
                         if (substr && (substr.length > 0)) {
-                            var numArray = substr.split(',');
-                            var nNums = numArray.length;
+                            numArray = substr.split(',');
+                            nNums = numArray.length;
                             if (nNums == 16) {
                                 // gl-matrix wants row order
                                 mat = numArray;
-                                for (var i=0;  i<16;  i++) {
+                                for (i=0;  i<16;  i++) {
                                     mat[i] = Number( mat[i] );
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    // Check for 2d matrix
+                    index1 = xformStr.indexOf( "matrix(");
+                    if (index1 >= 0) {
+                        index1 += 7;    // do not include 'matrix('
+                        index2 = xformStr.indexOf( ")", index1 );
+                        if (index2 >= 0) {
+                            substr = xformStr.substr( index1, (index2-index1));
+                            if (substr && (substr.length > 0)) {
+                                numArray = substr.split(',');
+                                nNums = numArray.length;
+                                if (nNums === 6) {
+                                    // gl-matrix wants row order
+                                    mat = Matrix.I(4);
+                                    mat[0] = Number(numArray[0]);
+                                    mat[1] = Number(numArray[1]);
+                                    mat[4] = Number(numArray[2]);
+                                    mat[5] = Number(numArray[3]);
+                                    mat[12] = Number(numArray[4]);
+                                    mat[13] = Number(numArray[5]);
                                 }
                             }
                         }
@@ -1405,7 +1477,8 @@ var stylesController = exports.StylesController = Montage.create(Component, {
                 rel   : 'stylesheet',
                 id    : id || "",
                 media : 'screen',
-                title : 'Temp'
+                title : 'Temp',
+                'data-ninja-node' : 'true'
             });
 
             doc.head.appendChild(sheetElement);
@@ -1432,6 +1505,9 @@ var stylesController = exports.StylesController = Montage.create(Component, {
                 sheetEl.disabled = true;
                 this.userStyleSheets.splice(this.userStyleSheets.indexOf(sheet), 1);
 
+                ///// Make sure cached rules from this stylesheet are not used
+                this._clearCache();
+
                 ///// Check to see if we're removing the default style sheet
                 if(sheet === this._defaultStylesheet) {
                     sheetCount = this.userStyleSheets.length;
@@ -1440,6 +1516,7 @@ var stylesController = exports.StylesController = Montage.create(Component, {
 
                 ///// Mark for removal for i/o
                 sheetEl.setAttribute('data-ninja-remove', 'true');
+                sheetEl.removeAttribute('data-ninja-node');
 
                 NJevent('removeStyleSheet', sheet);
             }
@@ -1469,6 +1546,18 @@ var stylesController = exports.StylesController = Montage.create(Component, {
         }
     },
 
+    setMediaAttribute : {
+        value: function(sheet, mediaString) {
+            if(sheet.media.mediaText === mediaString) { return false; }
+
+            sheet.ownerNode.setAttribute('media', mediaString);
+
+            this._clearCache();
+
+            this.styleSheetModified(sheet);
+        }
+    },
+
     ///// Style Sheet Modified
     ///// Method to call whenever a stylesheet change is made
     ///// Dispatches an event, and keeps list of dirty style sheets
@@ -1486,6 +1575,7 @@ var stylesController = exports.StylesController = Montage.create(Component, {
             ///// If the sheet doesn't already exist in the list of modified
             ///// sheets, dispatch dirty event and add the sheet to the list
             if(sheetSearch.length === 0) {
+                NJevent('styleSheetDirty', eventData);
                 this.dirtyStyleSheets.push({
                     document : sheet.ownerNode.ownerDocument,
                     stylesheet : sheet

@@ -176,22 +176,22 @@ var radialBlurMaterialDef =
 };
 
 
-var RaidersMaterial = function RaidersMaterial() {
+var DarkBlurMaterial = function DarkBlurMaterial() {
     // initialize the inherited members
     this.inheritedFrom = RadialBlurMaterial;
     this.inheritedFrom();
 
-    this._name = "Raiders";
-    this._shaderName = "raiders";
+    this._name = "Dark Blur";
+    this._shaderName = "darkBlur";
 
-    this._texMap = 'assets/images/raiders.png';
+    this._texMap = 'assets/images/darkblur.png';
     this._propValues[this._propNames[0]] = this._texMap.slice(0);
 
 
     // duplicate method required
     this.dup = function (world) {
         // allocate a new uber material
-        var newMat = new RaidersMaterial();
+        var newMat = new DarkBlurMaterial();
 
         // copy over the current values;
         var propNames = [], propValues = [], propTypes = [], propLabels = [];
@@ -204,10 +204,10 @@ var RaidersMaterial = function RaidersMaterial() {
     };
 }
 
-RaidersMaterial.prototype = new Material();
+DarkBlurMaterial.prototype = new Material();
 
 if (typeof exports === "object") {
-    exports.RaidersMaterial = RaidersMaterial;
+    exports.DarkBlurMaterial = DarkBlurMaterial;
 }
 
 

@@ -53,7 +53,9 @@ POSSIBILITY OF SUCH DAMAGE.
                     "classField": {"#": "className"},
 
                     "customName": {"#": "customTagCB"},
-                    "customLabel": {"#": "customContainer"}
+                    "customLabel": {"#": "customLabel"},
+
+                    "elementPosition": {"#": "positionCB"}
                 }
             }
         }
@@ -76,12 +78,12 @@ POSSIBILITY OF SUCH DAMAGE.
                 <div class="toolColorChipContainer"><div data-montage-id="fillColorCtrl" class="toolColorChipCtrl"></div></div>
                 <div class="nj-divider divider-vertical toolOptionsSpacer">&nbsp;</div>
 
-                <div id="classNameContainer">
+                <div>
                     <label class="label"> Class:</label>
-                    <input data-montage-id="className" type="text" name="ClassNameTextBox" class="textBox nj-skinned"/>
+                    <input data-montage-id="className" type="text" name="ClassNameTextBox" class="textBox nj-skinned tag-class"/>
                 </div>
 
-                <div id="customContainer">
+                <div data-montage-id="customLabel">
                     <label class="label"> Tag Name:</label>
                     <select data-montage-id="customTagCB" class="nj-skinned">
                         <option>article</option>
@@ -90,14 +92,15 @@ POSSIBILITY OF SUCH DAMAGE.
                     </select>
                 </div>
 
-                <div id="positionContainer">
-                    <label class="label"> Position:</label>
+                <div class="tag-position">
+                    <label class="label">Position:</label>
                     <select data-montage-id="positionCB" class="nj-skinned">
-                        <option>Static</option>
-                        <option>Absolute</option>
-                        <option>Relative</option>
+                        <option></option>
+                        <option selected>Absolute</option>
                         <option>Fixed</option>
                         <option>Inherit</option>
+                        <option>Relative</option>
+                        <option>Static</option>
                     </select>
                 </div>
             </div>

@@ -263,6 +263,10 @@ var Material = function GLMaterial( world ) {
         var material = this._materialNode;
         if (material)  technique = material.shaderProgram[this.getTechniqueName()];
 
+        // make sure RDGE has the correct context
+        if (this.getWorld())
+            RDGE.globals.engine.setContext( this.getWorld().getCanvas().rdgeid );
+
         if(prop === "gradient") {
             this.setGradientData(value);
         } else {

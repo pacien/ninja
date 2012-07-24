@@ -70,7 +70,6 @@ exports.ShapeTool = Montage.create(DrawingTool, {
                 this.doDraw(event);
             } else {
                 this.doSnap(event);
-                this._showFeedbackOnMouseMove(event);
             }
 
             this.drawLastSnap();        // Required cleanup for both Draw/Feedbacks
@@ -159,39 +158,6 @@ exports.ShapeTool = Montage.create(DrawingTool, {
         }
     },
 
-    /** Show a border when mousing
-     * over existing canvas elements to signal to the user that
-     * the drawing operation will act on the targeted canvas.
-    **/
-    _showFeedbackOnMouseMove: {
-        value: function (event) {
-            // TODO - This call is causing the canvas to redraw 3 times per mouse move
-            var targetedObject = this.application.ninja.stage.getElement(event, true);
-
-            if (targetedObject) {
-                if((targetedObject.nodeName === "CANVAS") && !ShapesController.isElementAShape(targetedObject))
-                {
-                    if (targetedObject !== this._targetedElement) {
-                        if(this._targetedElement)
-                        {
-                            this._targetedElement.classList.remove("active-element-outline");
-                        }
-                        this._targetedElement = targetedObject;
-                        this._targetedElement.classList.add("active-element-outline");
-                    }
-                }
-                else if (this._targetedElement) {
-                    this._targetedElement.classList.remove("active-element-outline");
-                    this._targetedElement = null;
-                }
-            }
-            else if (this._targetedElement) {
-                this._targetedElement.classList.remove("elem-red-outline");
-                this._targetedElement = null;
-            }
-        }
-    },
-
     RenderShape:
     {
         value: function (w, h, planeMat, midPt)
@@ -201,13 +167,13 @@ exports.ShapeTool = Montage.create(DrawingTool, {
     },
 
     getGLWorld: {
-        value: function (canvas, use3D)
-        {
-            var world = this.application.ninja.elementMediator.getShapeProperty(canvas, "GLWorld");
-            if(!world)
-            {
+        value: function (canvas, use3D) {
+            var world;
+
+            world = this.application.ninja.elementMediator.getShapeProperty(canvas, "GLWorld");
+            if(!world) {
                 // create all the GL stuff
-                var world = new World(canvas, use3D);
+                world = new World(canvas, use3D);
                 this.application.ninja.elementMediator.setShapeProperty(canvas, "GLWorld", world);
             }
 

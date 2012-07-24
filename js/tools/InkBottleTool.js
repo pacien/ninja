@@ -77,13 +77,12 @@ exports.InkBottleTool = Montage.create(ModifierToolBase, {
     },
 
     HandleLeftButtonUp: {
-        value : function () {
-            //if(this._isDrawing)
-            {
+        value: function() {
+            //if(this._isDrawing) {
                 this.application.ninja.stage.clearDrawingCanvas();
                 this._hasDraw = false;
                 this._isDrawing = false;
-            }
+            //}
         }
     },
 

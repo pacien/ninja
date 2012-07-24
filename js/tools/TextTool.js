@@ -30,12 +30,35 @@ POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
 
 var Montage = require("montage/core/core").Montage,
-    DrawingTool = require("js/tools/drawing-tool").DrawingTool,
-    ElementsMediator = require("js/mediators/element-mediator").ElementMediator;
+    DrawingTool = require("js/tools/drawing-tool").DrawingTool;
 
 exports.TextTool = Montage.create(DrawingTool, {
     drawingFeedback: {
         value: { mode: "Draw3D", type: "rectangle" }
+    },
+
+    _containsElement : {
+        value: function(target) {
+            var doc = this.application.ninja.stage.textTool.element.ownerDocument,
+                didFindElement = false;
+
+            while(!didFindElement && target !== doc) {
+                didFindElement = (target === this.application.ninja.stage.textTool.element);
+                target = target.parentNode;
+            }
+
+            return didFindElement;
+        }
+    },
+
+    captureMousedown: {
+        value: function(e) {
+//            if (!this._containsElement(e.target)) {
+//                this.application.ninja.stage.textTool.activeElementClicked = true;
+//            } else {
+//                this.application.ninja.stage.textTool.activeElementClicked = false;
+//            }
+        }
     },
 
     _selectedElement: {
@@ -56,8 +79,10 @@ exports.TextTool = Montage.create(DrawingTool, {
                 this.drawTextTool();
                 this.handleScroll();
                 this.application.ninja.stage._iframeContainer.addEventListener("scroll", this, false);
+                document.body.addEventListener("mousedown", this, true);
             } else {
                 this.application.ninja.stage._iframeContainer.removeEventListener("scroll", this);
+                document.body.removeEventListener("mousedown", this, true);
             }
 
         }
@@ -70,7 +95,6 @@ exports.TextTool = Montage.create(DrawingTool, {
             this.application.ninja.stage.textTool.element.style.display = "none";
             //ElementsMediator.setProperty([this.selectedElement], "color", [window.getComputedStyle(this.application.ninja.stage.textTool.element)["color"]], "Change", "textTool");
         }
-
     },
 
     HandleLeftButtonDown: {
@@ -175,8 +199,7 @@ exports.TextTool = Montage.create(DrawingTool, {
                 self.applyElementStyles(self.selectedElement, self.application.ninja.stage.textTool.element, ["font","padding-left","padding-top","padding-right","padding-bottom", "color"]);
                 this.selectAll();
                 this.didDraw = function() {};
-            }
-
+            };
         }
     },
 

@@ -80,9 +80,11 @@ var ClipboardController = exports.ClipboardController = Montage.create(Component
                 return;
             }//for design view only
 
-            // Don't do anything if an input or other control is focused
+            // Don't do anything if an input or other control is focused except the copy menu button
             if(document.activeElement.nodeName !== "BODY") {
-                return;
+                if(!(document.activeElement.getAttribute("data-montage-id") === "menuItemButton")) {
+                    return;
+                }
             }
 
             if(this.clipboardContext === "stage"){
@@ -99,7 +101,9 @@ var ClipboardController = exports.ClipboardController = Montage.create(Component
 
             // Don't do anything if an input or other control is focused
             if(document.activeElement.nodeName !== "BODY") {
-                return;
+                if(!(document.activeElement.getAttribute("data-montage-id") === "menuItemButton")) {
+                    return;
+                }
             }
 
             if(this.clipboardContext === "stage"){
@@ -123,7 +127,9 @@ var ClipboardController = exports.ClipboardController = Montage.create(Component
 
             // Don't do anything if an input or other control is focused
             if(document.activeElement.nodeName !== "BODY") {
-                return;
+                if(!(document.activeElement.getAttribute("data-montage-id") === "menuItemButton")) {
+                    return;
+                }
             }
 
             //TODO: return if stage is not focussed

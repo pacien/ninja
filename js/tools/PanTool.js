@@ -95,12 +95,9 @@ exports.PanTool = Montage.create(toolBase,
         }
     },
 
-    HandleLeftButtonUp:
-    {
-        value : function ( event )
-        {
-            //if(this._isDrawing)
-            {
+    HandleLeftButtonUp: {
+        value: function(event) {
+            //if(this._isDrawing) {
                 // do one final mouse move to update the scrollbars
                 this.mouseUp( event );
 
@@ -108,7 +105,7 @@ exports.PanTool = Montage.create(toolBase,
                 this._hasDraw = false;
                 this._isDrawing = false;
                 this.isDrawing = false;
-            }
+            //}
         }
     },
 
@@ -234,11 +231,10 @@ exports.PanTool = Montage.create(toolBase,
     },
 
 
-    doMouseDown:
-    {
-        value: function( point )
-        {
+    doMouseDown: {
+        value: function(point) {
             //var tmpPt, tmpPt2, tmpPt3, tmpPt4, tmpMat, tmpMat2;   // DEBUG. (see use of these points below)
+            var cop;
             var hitRec = snapManager.snap( point.x, point.y, true );
             if (hitRec)
             {
@@ -260,7 +256,7 @@ exports.PanTool = Montage.create(toolBase,
                     {
                         var localPt = hitRec.calculateElementWorldPoint();
                         viewUtils.pushViewportObj( userContent );
-                        var cop = viewUtils.getCenterOfProjection();
+                        cop = viewUtils.getCenterOfProjection();
                         this._localPt = [cop[0] + localPt[0],  cop[1] + localPt[1],  localPt[2]];
                         viewUtils.popViewportObj();
                     }
@@ -284,7 +280,7 @@ exports.PanTool = Montage.create(toolBase,
 
                     // get a matrix from user content world space to the screen
                     viewUtils.pushViewportObj( userContent );
-                    var cop = viewUtils.getCenterOfProjection();
+                    cop = viewUtils.getCenterOfProjection();
                     var pDist = viewUtils.getPerspectiveDistFromElement(userContent);
                     var projMat = glmat4.scale(Matrix.I(4), [pDist,pDist,pDist], []);
                     projMat[11] = -1;

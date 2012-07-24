@@ -28,62 +28,27 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
+var Montage = require("montage").Montage,
+    Converter = require("montage/core/converter/converter").Converter;
 
-.topMenuItem {
-    float: left;
-    display: inline;
-}
+exports.NodeNameConverter = Montage.create(Converter, {
 
-.topMenuItem .menubg{
-    color: #f7f7f7;
-}
+    convert: {
+        value: function(value) {
+            if(value) {
+                if(value.toLowerCase() === "ninja-content") {
+                    value = "DIV";
+                }
 
-.topMenuItem .menuName {
-    font-family: 'Droid Sans', sans-serif;
-    font-size: 10pt;
-    padding: 3px 12px 3px 8px;
-    text-shadow : 1px 1px 1px #000000;
-}
+                return value;
+            }
+        }
+    },
 
-.menubg{
-    display: inline;
-}
+    revert: {
+        value: function(value) {
+            return value;
+        }
+    }
 
-.menubg.checked .check {
-    opacity: 1;
-}
-
-.selected {
-    background-color: #7F7F7F;
-}
-
-.menu-label {
-    font-family: 'Droid Sans', sans-serif;
-    font-size: 10pt;
-    padding: 3px 12px 3px 8px;
-    text-shadow: 1px 1px 1px black;
-}
-
-.subEntries{
-    position: absolute;
-    z-index: 100000;
-    float:left;
-    font-family: 'Droid Sans', sans-serif !important;
-    color: #ffffff;
-    background: #494949;
-    border:  1px solid #292929;
-    border-radius: 8px;
-    padding:  8px 0px 8px 0px;
-    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.8);
-    white-space:nowrap;
-}
-
-.menuItem {
-    font-size: 9pt;
-    padding: 4px 8px;
-    display: block;
-    float: none;
-    position: relative;
-    background: #474747;
-    color: white;
-}
+});

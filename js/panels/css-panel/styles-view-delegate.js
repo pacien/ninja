@@ -337,7 +337,8 @@ exports.StylesViewDelegate = Montage.create(Component, {
                 type : 'cssChange',
                 data: {
                     "prop": property,
-                    "value": value
+                    "value": value,
+                    "els": this.application.ninja.selectedElements
                 },
                 redraw: null
             });

@@ -200,7 +200,7 @@ exports.ModifierToolBase = Montage.create(DrawingTool, {
 
                     // only do quadrant snapping if the 4 corners of the element are in the drag plane
                     var sign = MathUtils.fpSign( vecUtils.vecDot(3,this._dragPlane,[0,0,1]) + this._dragPlane[3] - 1.0);
-                    this._shouldUseQuadPt = (sign == 0)
+                    this._shouldUseQuadPt = (sign === 0);
 
                     var wpHitRec = hitRec.convertToWorkingPlane( this._dragPlane );
                     this._mouseDownHitRec = wpHitRec;
@@ -252,10 +252,12 @@ exports.ModifierToolBase = Montage.create(DrawingTool, {
                         y0 = bounds[0][1],  y1 = bounds[1][1];
                     var dx = x1 - x0,   dy = y1 - y0;
                     var u = 0, v = 0;
-                    if (MathUtils.fpSign(dx) != 0)
+                    if (MathUtils.fpSign(dx) !== 0) {
                         u = (scrPt[0] - x0) / dx;
-                    if (MathUtils.fpSign(dy) != 0)
+                    }
+                    if (MathUtils.fpSign(dy) !== 0) {
                         v = (scrPt[1] - y0) / dy;
+                    }
 
                     paramPt[0] = u;
                     paramPt[1] = v;
@@ -480,7 +482,6 @@ exports.ModifierToolBase = Montage.create(DrawingTool, {
             if(this._target)
             {
                 this.isDrawing = true;
-                this.application.ninja.stage.showSelectionBounds = false;
                 this._updateTargets();
 
                 if(this._canSnap)
@@ -570,7 +571,11 @@ exports.ModifierToolBase = Montage.create(DrawingTool, {
                     var alignArray = new Array();
                     snapManager.snapAlignToElementBounds( this._clickedObject, delta, alignArray );
                     if (alignArray.length > 0)
+                    {
+                        alignArray.push( hitRec );
+                        snapManager.sortHitRecords( alignArray );
                         hitRec = alignArray[0];
+                    }
                 }
             }
 
@@ -798,7 +803,6 @@ exports.ModifierToolBase = Montage.create(DrawingTool, {
                 if(len === 1)
                 {
                     this.target = this.application.ninja.selectedElements[0];
-                    drawUtils.addElement(this.target);
                 }
                 else
                 {
@@ -882,7 +886,6 @@ exports.ModifierToolBase = Montage.create(DrawingTool, {
                                                                     new WebKitPoint(event.pageX, event.pageY));
 
             this.isDrawing = false;
-            this.application.ninja.stage.showSelectionBounds = true;
             if(this._escape) {
                 this._escape = false;
                 return;
