@@ -40,8 +40,8 @@ var Montage =           require("montage/core/core").Montage,
 exports.DesignCodeView = Montage.create(CodeDocumentView, {
     ////////////////////////////////////////////////////////////////////
     //
-    hasTemplate: {
-        value: false
+    identifier: {
+        value: "design-code"
     },
     ////////////////////////////////////////////////////////////////////
     //
@@ -75,22 +75,6 @@ exports.DesignCodeView = Montage.create(CodeDocumentView, {
             this.textViewContainer.style.background = "white";
             this.textViewContainer.style.height = "100%";
 
-
-            ///todo-remove after the switch view logic is added in all the components
-            this.application.ninja.stage.collapseAllPanels();
-            this.application.ninja.stage.hideCanvas(true);
-            this.application.ninja.stage.hideRulers();
-
-            document.getElementsByClassName("bindingView")[0].style.display = "none";
-
-            //bindingView div needs to be display noned
-            //timeline error on switching back to design view
-
-            ///-end todo-remove
-
-
-
-
             //todo : update options bar
 
             //
@@ -105,13 +89,6 @@ exports.DesignCodeView = Montage.create(CodeDocumentView, {
                 this.editor.save();//save to textarea
             }
             this.textViewContainer.style.display = "none";
-
-            ///todo-remove after the switch view logic is added in all the components
-            this.application.ninja.stage.restoreAllPanels(false);
-            this.application.ninja.stage.hideCanvas(false);
-            this.application.ninja.stage.showRulers();
-            ///-end todo-remove
-
 
             //todo : update options bar
 
