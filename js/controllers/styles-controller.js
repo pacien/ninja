@@ -131,7 +131,7 @@ var stylesController = exports.StylesController = Montage.create(Component, {
     handleChange: {
         value: function(notification) {
             if(notification.currentPropertyPath === "model.currentViewIdentifier") {
-                if(this.currentDocument.model.currentView.identifier === "design") {
+                if(this.currentDocument && this.currentDocument.model.currentView.identifier === "design") {
                     ///// Stage stylesheet should always be found
                     this._stageStylesheet  = this.getSheetFromElement(this.CONST.STAGE_SHEET_ID);
                     // Returns null if sheet not found (as in non-ninja projects)

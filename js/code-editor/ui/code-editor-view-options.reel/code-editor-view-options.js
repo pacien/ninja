@@ -53,7 +53,7 @@ exports.CodeEditorViewOptions = Montage.create(Component, {
 
             if(!value || (this._currentDocument.currentView === "design")) {
                 this.visible = false;
-            } else if(this._currentDocument.currentView === "code") {
+            } else if(this._currentDocument && this._currentDocument.currentView === "code") {
 
                 if(this._currentDocument.model.views.design){//code view of design document
                     this.application.ninja.editorViewOptions.visible = false;
