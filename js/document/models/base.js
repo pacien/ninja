@@ -236,6 +236,8 @@ exports.BaseDocumentModel = Montage.create(Component, {
     //
     save: {
         value: function (callback, libCopyCallback) {
+            var self = this;
+
             //TODO: Implement on demand logic
             if (this.needsSave) {
                 //Save
@@ -270,6 +272,15 @@ exports.BaseDocumentModel = Montage.create(Component, {
                 }
             } else if (this.currentView === this.views.code) {
                 //TODO: Add save logic for code view
+                //save to textarea
+                self.views.code.editor.save();
+                //save to disk
+                this.application.ninja.ioMediator.fileSave({
+                    mode: 'html-text',
+                    file: self.file,
+                    content:self.views.code.textArea.value
+                }, this.handleSaved.bind({callback: callback, model: this}));
+
             } else {
                 //TODO: Error handle
             }
