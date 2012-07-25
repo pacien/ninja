@@ -349,6 +349,9 @@ exports.Stage = Montage.create(Component, {
 
                 //call configure false with the old document on the selected tool to tear down down any temp. stuff
                 this.application.ninja.toolsData.selectedToolInstance._configure(false);
+
+                // Remove the change listener
+                this._currentDocument.removePropertyChangeListener("model.currentViewIdentifier", this, false);
             } else if(this.currentDocument && (this.currentDocument.currentView === "code")) {
                 this.switchedFromCodeDoc = true;   // Switching from code document affects stage's size and scrollbar
             }
@@ -369,7 +372,7 @@ exports.Stage = Montage.create(Component, {
                 this.clearAllCanvas();
                 this.initWithDocument();
 
-                this._currentDocument.addPropertyChangeListener("model.currentView", this, false);
+                this._currentDocument.addPropertyChangeListener("model.currentViewIdentifier", this, false);
             } else {
                 this.collapseAllPanels();
                 this.hideCanvas(true);
@@ -381,6 +384,9 @@ exports.Stage = Montage.create(Component, {
     handleDocumentViewChange: {
         value: function() {
             if(this.currentDocument.model.currentView.identifier === "design-code") {
+                drawUtils._eltArray.length = 0;
+                drawUtils._planesArray.length = 0;
+                
                 this.collapseAllPanels();
                 this.hideRulers();
                 this.hideCanvas(true);
@@ -388,6 +394,9 @@ exports.Stage = Montage.create(Component, {
                 this.restoreAllPanels(true);
                 this.hideCanvas(false);
                 this.showRulers();
+
+                this.clearAllCanvas();
+                this.initWithDocument();
             }
         }
     },
@@ -600,7 +609,7 @@ exports.Stage = Montage.create(Component, {
                     drawUtils.drawXZ = false;
                     this.updatedStage = true;
                 }
-            } else if(notification.currentPropertyPath === "model.currentView") {
+            } else if(notification.currentPropertyPath === "model.currentViewIdentifier") {
                 this.handleDocumentViewChange();
             }
             /*
