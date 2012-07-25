@@ -1,6 +1,6 @@
 {
-  "name": "Ninja Authoring Tool",
-  "description": "Ninja HTML5 Authoring Tool - Alpha Release",
+  "name": "Ninja Authoring Tool Preview",
+  "description": "Ninja HTML5 Authoring Tool Preview",
   "version": "0.8.0.0",
   "app": {
     "launch": {

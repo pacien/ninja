@@ -56,10 +56,11 @@ exports.ShapesController = Montage.create(CanvasController, {
                     {
                         // Changing stroke size should grow/shrink the shape from the center.
                         var delta = ~~(val - el.elementModel.shapeModel.GLGeomObj.getStrokeWidth()),
-                            l = this.application.ninja.elementMediator.getProperty(el, "left", parseInt),
-                            t = this.application.ninja.elementMediator.getProperty(el, "top", parseInt),
-                            w = this.application.ninja.elementMediator.getProperty(el, "width", parseInt),
-                            h = this.application.ninja.elementMediator.getProperty(el, "height", parseInt);
+                            ol = this.application.ninja.elementMediator.getProperty(el, "left", parseInt),
+                            ot = this.application.ninja.elementMediator.getProperty(el, "top", parseInt),
+                            ow = this.application.ninja.elementMediator.getProperty(el, "width", parseInt),
+                            oh = this.application.ninja.elementMediator.getProperty(el, "height", parseInt),
+                            l, t, w, h;
 
                         if(geomType === 3)
                         {
@@ -68,12 +69,12 @@ exports.ShapesController = Montage.create(CanvasController, {
                             if(slope === "horizontal")
                             {
                                 h = Math.max(val, 1);
-                                t -= ~~(delta/2);
+                                t = ot - ~~(delta/2);
                             }
                             else if(slope === "vertical")
                             {
                                 w = Math.max(val, 1);
-                                l -= ~~(delta/2);
+                                l = ol - ~~(delta/2);
                             }
                             else
                             {
@@ -85,10 +86,10 @@ exports.ShapesController = Montage.create(CanvasController, {
                                 var dX = ~~(xAdj*2 - oldXAdj*2);
                                 var dY = ~~(yAdj*2 - oldYAdj*2);
 
-                                l -= dX;
-                                t -= dY;
-                                w += dX*2;
-                                h += dY*2;
+                                l = ol - dX;
+                                t = ot - dY;
+                                w = ow + dX*2;
+                                h = oh + dY*2;
 
                                 el.elementModel.shapeModel.GLGeomObj.setXAdj(xAdj);
                                 el.elementModel.shapeModel.GLGeomObj.setYAdj(yAdj);
@@ -96,13 +97,16 @@ exports.ShapesController = Montage.create(CanvasController, {
                         }
                         else
                         {
-                            l -= ~~(delta/2);
-                            t -= ~~(delta/2);
-                            w += delta;
-                            h += delta;
+                            l = ol - ~~(delta/2);
+                            t = ot - ~~(delta/2);
+                            w = ow + delta;
+                            h = oh + delta;
                         }
 
-                        this.application.ninja.elementMediator.setProperties([{element:el, properties:{left: l + "px", top: t + "px", width: w + "px", height:h + "px"}}], eventType, source);
+                        this.application.ninja.elementMediator.setProperties([{element:el,
+                                        properties:{left: l + "px", top: t + "px", width: w + "px", height: h + "px"},
+                                        previousProperties:{left: ol + "px", top: ot + "px", width: ow + "px", height: oh + "px"}}],
+                                        eventType, source);
 
                     }
                     el.elementModel.shapeModel.GLGeomObj.setStrokeWidth(val);
