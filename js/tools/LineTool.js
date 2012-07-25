@@ -97,34 +97,38 @@ exports.LineTool = Montage.create(ShapeTool, {
                 if(this.drawData) {
                     w = Math.floor(this.drawData.width);
                     h = Math.floor(this.drawData.height);
+                    // set the dimensions
+                    if(slope === "horizontal") {
+                        h = Math.max(this._strokeSize, 1);
+                        w = Math.max(w, 1);
+                    } else if(slope === "vertical") {
+                        w = Math.max(this._strokeSize, 1);
+                        h = Math.max(h, 1);
+                    } else {
+                        // else make the line's stroke fit inside the canvas by growing the canvas
+                        var theta = Math.atan(slope);
+                        xAdj = Math.abs((this._strokeSize/2)*Math.sin(theta));
+                        yAdj = Math.abs((this._strokeSize/2)*Math.cos(theta));
+
+                        w += ~~(xAdj*2);
+                        h += ~~(yAdj*2);
+                    }
+
                     if(!this._useExistingCanvas()) {
-                            // set the dimensions
-                            if(slope === "horizontal") {
-                                h = Math.max(this._strokeSize, 1);
-                                w = Math.max(w, 1);
-                            } else if(slope === "vertical") {
-                                w = Math.max(this._strokeSize, 1);
-                                h = Math.max(h, 1);
-                            } else {
-                                // else make the line's stroke fit inside the canvas by growing the canvas
-                                var theta = Math.atan(slope);
-                                xAdj = Math.abs((this._strokeSize/2)*Math.sin(theta));
-                                yAdj = Math.abs((this._strokeSize/2)*Math.cos(theta));
 
-                                w += ~~(xAdj*2);
-                                h += ~~(yAdj*2);
-                            }
+                        canvas = document.application.njUtils.make("canvas", {"data-RDGE-id": NJUtils.generateRandom()}, this.application.ninja.currentDocument);
 
-                            canvas = document.application.njUtils.make("canvas", {"data-RDGE-id": NJUtils.generateRandom()}, this.application.ninja.currentDocument);
-
-                            var styles = document.application.njUtils.stylesFromDraw(canvas, w, h, this.drawData);
-                            this.application.ninja.elementMediator.addElements(canvas, styles);
-                        } else {
-                            canvas = this._targetedElement;
-                            canvas.elementModel.controller = ShapesController;
-                            if(!canvas.elementModel.shapeModel) {
-                                canvas.elementModel.shapeModel = Montage.create(ShapeModel);
+                        var styles = document.application.njUtils.stylesFromDraw(canvas, w, h, this.drawData);
+                        this.application.ninja.elementMediator.addElements(canvas, styles);
+                    } else {
+                        canvas = this._targetedElement;
+                        if (!canvas.getAttribute( "data-RDGE-id" ))
+                            canvas.setAttribute( "data-RDGE-id", NJUtils.generateRandom() );
+                        canvas.elementModel.controller = ShapesController;
+                        if(!canvas.elementModel.shapeModel) {
+                            canvas.elementModel.shapeModel = Montage.create(ShapeModel);
                         }
+                        this.RenderShape(w, h, this.drawData.planeMat, this.drawData.midPt, canvas, slope, xAdj, yAdj);
                     }
                 }
             }
