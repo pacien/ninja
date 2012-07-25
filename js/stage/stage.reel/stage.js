@@ -368,10 +368,26 @@ exports.Stage = Montage.create(Component, {
 
                 this.clearAllCanvas();
                 this.initWithDocument();
+
+                this._currentDocument.addPropertyChangeListener("model.currentView", this, false);
             } else {
                 this.collapseAllPanels();
                 this.hideCanvas(true);
                 this.hideRulers();
+            }
+        }
+    },
+
+    handleDocumentViewChange: {
+        value: function() {
+            if(this.currentDocument.model.currentView.identifier === "design-code") {
+                this.collapseAllPanels();
+                this.hideRulers();
+                this.hideCanvas(true);
+            } else {
+                this.restoreAllPanels(true);
+                this.hideCanvas(false);
+                this.showRulers();
             }
         }
     },
@@ -492,8 +508,6 @@ exports.Stage = Montage.create(Component, {
             this.eventManager.addEventListener( "elementChange", this, false);
 
             this.addPropertyChangeListener("currentDocument.model.domContainer", this, true);
-//            this.addPropertyChangeListener("currentDocument.model.domContainer", this);
-
         }
     },
 
@@ -586,6 +600,8 @@ exports.Stage = Montage.create(Component, {
                     drawUtils.drawXZ = false;
                     this.updatedStage = true;
                 }
+            } else if(notification.currentPropertyPath === "model.currentView") {
+                this.handleDocumentViewChange();
             }
             /*
             else if(notification.currentPropertyPath === "currentDocument.model.domContainer") {
