@@ -217,6 +217,9 @@ exports.DocumentBar = Montage.create(Component, {
         value: function () {
             //
             this.showView('design', this.renderDesignView, this.btnDesign, this.btnCode);
+
+            //todo - temp
+            this.application.ninja.documentBar.codeEditorControls.visible = false;
         }
     },
     ////////////////////////////////////////////////////////////////////
@@ -225,6 +228,9 @@ exports.DocumentBar = Montage.create(Component, {
         value: function () {
             //
             this.showView('code', this.renderCodeView, this.btnCode, this.btnDesign);
+
+            //todo - temp
+            this.application.ninja.documentBar.codeEditorControls.visible = true;
         }
     },
     ////////////////////////////////////////////////////////////////////
