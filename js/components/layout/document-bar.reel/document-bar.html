@@ -77,6 +77,13 @@ POSSIBILITY OF SUCH DAMAGE.
                         "label": "Preview"
                     }
                 },
+
+                "codeEditorControls":{
+                    "prototype": "js/code-editor/ui/code-editor-view-options.reel",
+                    "properties": {
+                        "element": {"#": "codeViewOptions"}
+                    }
+                },
     
                 "owner": {
                     "prototype": "js/components/layout/document-bar.reel",
@@ -85,7 +92,8 @@ POSSIBILITY OF SUCH DAMAGE.
                         "zoomControl": {"@": "hottext1"},
                         "btnDesign": {"#": "buttonDesign"},
                         "btnCode": {"#": "buttonCode"},
-                        "btnPreview": {"#": "buttonPreview"}
+                        "btnPreview": {"#": "buttonPreview"},
+                        "codeEditorControls": {"@": "codeEditorControls"}
                     }
                 }
             }
@@ -129,7 +137,11 @@ POSSIBILITY OF SUCH DAMAGE.
 
             </section>
         
-            <div data-montage-id="disabledCondition" class="panelDisabled"></div>
+            <div data-montage-id="disabledCondition" class="panelDisabled">
+
+            </div>
+
+            <div data-montage-id="codeViewOptions" class="viewOptions"></div>
         
         </div>
         

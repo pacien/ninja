@@ -70,10 +70,7 @@ exports.DesignCodeView = Montage.create(CodeDocumentView, {
     //
     show: {
         value: function (callback) {
-
-            this.textViewContainer.style.display = "block";
-            this.textViewContainer.style.background = "white";
-            this.textViewContainer.style.height = "100%";
+            this.textViewContainer.setAttribute("class", "codeViewContainer cm-s-default");
 
             //todo : update options bar
 

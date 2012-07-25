@@ -51,10 +51,18 @@ exports.CodeEditorViewOptions = Montage.create(Component, {
 
             this._currentDocument = value;
 
-            if(!value || (this._currentDocument.currentView === "design") || ((this._currentDocument.model.views.design !== null))) {
+            if(!value || (this._currentDocument.currentView === "design")) {
                 this.visible = false;
-            } else {
-                this.visible = true;
+            } else if(this._currentDocument.currentView === "code") {
+
+                if(this._currentDocument.model.views.design){//code view of design document
+                    this.application.ninja.editorViewOptions.visible = false;
+                    this.application.ninja.documentBar.codeEditorControls.visible = true;
+                }else if(!this._currentDocument.model.views.design){//code view for text document
+                    this.application.ninja.editorViewOptions.visible = true;
+                    this.application.ninja.documentBar.codeEditorControls.visible = false;
+                }
+
                 this.autocomplete = !this.codeCompletionSupport[this._currentDocument.model.file.extension];
                 this._currentDocument.model.views.code.editor.automaticCodeHint = this.codeCompleteCheck.checked;
             }
@@ -199,6 +207,11 @@ exports.CodeEditorViewOptions = Montage.create(Component, {
                 this.autoCompleteLabel.classList.add("disabled");
             } else {
                 this.autoCompleteLabel.classList.remove("disabled");
+            }
+
+            //hide the zoom hottext if it is code view of a design file
+            if (this._currentDocument && this._currentDocument.model && this._currentDocument.model.views.design){
+                this.zoomHottext.element.style.display = "none";
             }
         }
     },
