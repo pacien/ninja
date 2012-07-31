@@ -51,12 +51,29 @@ exports.CodeEditorViewOptions = Montage.create(Component, {
 
             this._currentDocument = value;
 
-            if(!value || this._currentDocument.currentView === "design") {
+            if(!value || (this._currentDocument.currentView === "design")) {
                 this.visible = false;
-            } else {
-                this.visible = true;
+            } else if(this._currentDocument && this._currentDocument.currentView === "code") {
+
+                if(this._currentDocument.model.views.design){//code view of design document
+                    this.application.ninja.editorViewOptions.visible = false;
+                    //this.application.ninja.documentBar.codeEditorControls.visible = false;//todo
+                }else if(!this._currentDocument.model.views.design){//code view for text document
+                    this.application.ninja.editorViewOptions.visible = true;
+                    //this.application.ninja.documentBar.codeEditorControls.visible = false;
+                }
+
                 this.autocomplete = !this.codeCompletionSupport[this._currentDocument.model.file.extension];
                 this._currentDocument.model.views.code.editor.automaticCodeHint = this.codeCompleteCheck.checked;
+            }
+
+            if(this._currentDocument && (this._currentDocument.currentView === "design")) {
+                this._currentDocument.addPropertyChangeListener("model.currentViewIdentifier", this, false);
+            }
+
+            //hide the zoom hottext if it is code view of a design file
+            if (this._currentDocument && this._currentDocument.model && this._currentDocument.model.views.code){
+                this.zoomHottext.element.style.display = "block";
             }
 
         }
@@ -206,6 +223,18 @@ exports.CodeEditorViewOptions = Montage.create(Component, {
     getSelectedRange:{
         value:function(editor){
             return { from: editor.getCursor(true), to: editor.getCursor(false) };
+        }
+    },
+
+    handleChange: {
+        value: function(notification) {
+            if(notification.currentPropertyPath === "model.currentViewIdentifier") {
+                if(this.currentDocument.model.currentView.identifier === "design-code") {
+                    //this.application.ninja.documentBar.codeEditorControls.visible = false;//todo
+                } else {
+                    //this.application.ninja.documentBar.codeEditorControls.visible = false;
+                }
+            }
         }
     },
 

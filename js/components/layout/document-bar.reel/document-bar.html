@@ -75,20 +75,18 @@ POSSIBILITY OF SUCH DAMAGE.
                         "element": {"#": "previewButton"},
                         "identifier": "preview",
                         "label": "Preview"
-                    },
-                    "listeners": [
-                        {
-                            "type": "action",
-                            "listener": {"@": "owner"}
-                        }
-                    ]
+                    }
                 },
+
     
                 "owner": {
                     "prototype": "js/components/layout/document-bar.reel",
                     "properties": {
                         "element": {"#": "documentBar"},
-                        "zoomControl": {"@": "hottext1"}
+                        "zoomControl": {"@": "hottext1"},
+                        "btnDesign": {"#": "buttonDesign"},
+                        "btnCode": {"#": "buttonCode"},
+                        "btnPreview": {"#": "buttonPreview"}
                     }
                 }
             }
@@ -108,7 +106,7 @@ POSSIBILITY OF SUCH DAMAGE.
                 
             </section>
             
-            <section>
+            <section data-montage-id="buttonDesign">
                 
                 <div class="viewicon viewdesign"></div>
                 
@@ -116,7 +114,7 @@ POSSIBILITY OF SUCH DAMAGE.
                 
             </section>
             
-            <section class="inactive">
+            <section data-montage-id="buttonCode">
                 
                 <div class="viewicon viewcode"></div>
                 
@@ -124,7 +122,7 @@ POSSIBILITY OF SUCH DAMAGE.
                 
             </section>
 
-            <section class="inactive">
+            <section data-montage-id="buttonPreview" class="inactive">
 
                 <div class="viewicon viewPreview"></div>
 
@@ -132,7 +130,11 @@ POSSIBILITY OF SUCH DAMAGE.
 
             </section>
         
-            <div data-montage-id="disabledCondition" class="panelDisabled"></div>
+            <div data-montage-id="disabledCondition" class="panelDisabled">
+
+            </div>
+
+            <div data-montage-id="codeViewOptions" class="viewOptions"></div>
         
         </div>
         

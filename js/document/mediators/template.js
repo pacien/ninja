@@ -47,7 +47,7 @@ exports.TemplateDocumentMediator = Montage.create(Component, {
     //
     getAppTemplatesUrlRegEx: {
         value: function () {
-            var regex = new RegExp(chrome.extension.getURL(this.application.ninja.currentDocument.model.views.design.iframe.src.split(chrome.extension.getURL('/'))[1]).replace(/\//gi, '\\\/'), 'gi');
+            var regex = new RegExp(chrome.extension.getURL(this.application.ninja.currentDocument.model.views.design.document.baseURI.split(chrome.extension.getURL('/'))[1]).replace(/\//gi, '\\\/'), 'gi');
             return regex;
         }
     },
@@ -326,7 +326,7 @@ exports.TemplateDocumentMediator = Montage.create(Component, {
                         }
                     }
                 }
-            } else if (template.css) {
+            } else if (template.css && saveExternalData) {
                 //Getting all style and link tags
                 var styleCounter = 0,
                     docStyles = template.file.content.document.getElementsByTagName('style'),
@@ -592,7 +592,7 @@ exports.TemplateDocumentMediator = Montage.create(Component, {
 
 
             //TODO: Make proper Montage method
-
+            var mjsDirName, mjsVersion;
             //Checking for Montage
             if (mJsSerialization) {
                 //Copy Montage library if needed

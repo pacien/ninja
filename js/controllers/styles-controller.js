@@ -99,6 +99,8 @@ var stylesController = exports.StylesController = Montage.create(Component, {
             ///// setting document via binding
             this._currentDocument = document;
 
+            this._currentDocument.addPropertyChangeListener("model.currentViewIdentifier", this, false);
+
             ///// Stage stylesheet should always be found
             this._stageStylesheet  = this.getSheetFromElement(this.CONST.STAGE_SHEET_ID);
             // Returns null if sheet not found (as in non-ninja projects)
@@ -124,6 +126,38 @@ var stylesController = exports.StylesController = Montage.create(Component, {
             NJevent('styleSheetsReady', this);
         },
         enumerable : false
+    },
+
+    handleChange: {
+        value: function(notification) {
+            if(notification.currentPropertyPath === "model.currentViewIdentifier") {
+                if(this.currentDocument && this.currentDocument.model.currentView.identifier === "design") {
+                    ///// Stage stylesheet should always be found
+                    this._stageStylesheet  = this.getSheetFromElement(this.CONST.STAGE_SHEET_ID);
+                    // Returns null if sheet not found (as in non-ninja projects)
+                    // Setter will handle null case
+                    this.defaultStylesheet = this.getSheetFromElement(this.CONST.DEFAULT_SHEET_ID);
+
+                    this.userStyleSheets = nj.toArray(this.currentDocument.model.views.design.document.styleSheets).filter(function(sheet) {
+                        if(sheet === this._stageStylesheet) { return false; }
+
+                        var media = sheet.ownerNode.getAttribute('media');
+
+                        ///// If the media attribute contains a query, we'll watch for changes in media
+                        if(/\([0-9A-Za-z-: ]+\)/.test(media)) {
+                            this.watchMedia(media);
+                        }
+
+                        return true;
+
+                    }, this);
+
+                    this.initializeRootStyles();
+
+                    NJevent('styleSheetsReady', this);
+                }
+            }
+        }
     },
 
     _mediaList : {

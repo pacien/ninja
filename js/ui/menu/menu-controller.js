@@ -56,6 +56,7 @@ exports.MenuController = Montage.create(Component, {
             if(this._currentDocument && this._currentDocument.currentView === "design") {
                 document.application.model.show3dGrid = this._currentDocument.model.draw3DGrid;
                 this.topLevelMenu[2].entries[5].checked = this._currentDocument.model.draw3DGrid;
+                this._currentDocument.addPropertyChangeListener("model.currentViewIdentifier", this, false);
             }
 
             if(!this._currentDocument) {
@@ -82,6 +83,22 @@ exports.MenuController = Montage.create(Component, {
                 }
             }
 
+        }
+    },
+
+    handleChange: {
+        value: function(notification) {
+            if(notification.currentPropertyPath === "model.currentViewIdentifier") {
+                if(this.currentDocument.model.currentView.identifier === "design-code") {
+                    this.designDocumentEnabledItems.forEach(function(index) {
+                        index.enabled = false;
+                    });
+                } else {
+                    this.designDocumentEnabledItems.forEach(function(index) {
+                        index.enabled = true;
+                    });
+                }
+            }
         }
     },
 

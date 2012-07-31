@@ -88,9 +88,26 @@ exports.BaseDocumentModel = Montage.create(Component, {
     },
     ////////////////////////////////////////////////////////////////////
     //
+    _currentViewIdentifier: {
+        value: ""
+    },
+    ////////////////////////////////////////////////////////////////////
+    //
+    currentViewIdentifier: {
+        get: function() {
+            return this._currentViewIdentifier;
+        },
+        set: function(value) {
+            this._currentViewIdentifier = value;
+        }
+    },
+    ////////////////////////////////////////////////////////////////////
+    //
     _selection: {
         value: []
     },
+    ////////////////////////////////////////////////////////////////////
+    //
     domContainer: {
         value: null
     },
@@ -120,7 +137,8 @@ exports.BaseDocumentModel = Montage.create(Component, {
     libs: {
         value: null
     },
-
+    ////////////////////////////////////////////////////////////////////
+    //
     _mObjects: {
             value: []
         },
@@ -138,6 +156,23 @@ exports.BaseDocumentModel = Montage.create(Component, {
     switchViewTo: {
         value: function (view) {
             //
+            switch (view) {
+                case 'design':
+                    //
+                    if (this.views.design) this.views.design.show();
+                    if (this.views.code) this.views.code.hide();
+                    this.currentView = this.views.design;
+                    break;
+                case 'code':
+                    //
+                    if (this.views.code) this.views.code.show();
+                    if (this.views.design) this.views.design.hide();
+                    this.currentView = this.views.code;
+                    break;
+                default:
+                    //Error
+                    break;
+            }
         }
     },
     ////////////////////////////////////////////////////////////////////
@@ -201,6 +236,8 @@ exports.BaseDocumentModel = Montage.create(Component, {
     //
     save: {
         value: function (callback, libCopyCallback) {
+            var self = this;
+
             //TODO: Implement on demand logic
             if (this.needsSave) {
                 //Save
@@ -233,8 +270,19 @@ exports.BaseDocumentModel = Montage.create(Component, {
                         this.libs.canvas = true;
                     }
                 }
+            } else if (this.currentView === this.views.code) {
+                //TODO: Add save logic for code view
+                //save to textarea
+                self.views.code.editor.save();
+                //save to disk
+                this.application.ninja.ioMediator.fileSave({
+                    mode: 'html-text',
+                    file: self.file,
+                    content:self.views.code.textArea.value
+                }, this.handleSaved.bind({callback: callback, model: this}));
+
             } else {
-                //TODO: Add logic to save code view data
+                //TODO: Error handle
             }
         }
     },
@@ -274,8 +322,11 @@ exports.BaseDocumentModel = Montage.create(Component, {
                         this.libs.canvas = true;
                     }
                 }
+            } else if (this.currentView === this.views.code) {
+                //TODO: Add save logic for code view (this is a temp patch)
+                this.save(libCopyCallback);
             } else {
-                //TODO: Add logic to save code view data
+                //TODO: Error handle
             }
 
         }
