@@ -232,7 +232,7 @@ exports.DocumentBar = Montage.create(Component, {
     showView: {
 	    value: function (view, render, aBtn, iBtn) {
 	    	//TODO: Remove reference to string view
-		    if (this._currentDocument.model.currentView !== view) {
+		    if (this._currentDocument.currentView !== view) {
     		    var doc;
                 //Switching view and changing button modes
                 this._currentDocument.model.switchViewTo(view);
