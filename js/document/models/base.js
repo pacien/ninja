@@ -323,7 +323,8 @@ exports.BaseDocumentModel = Montage.create(Component, {
                     }
                 }
             } else if (this.currentView === this.views.code) {
-                //TODO: Add save logic for code view
+                //TODO: Add save logic for code view (this is a temp patch)
+                this.save(libCopyCallback);
             } else {
                 //TODO: Error handle
             }
