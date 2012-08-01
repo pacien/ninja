@@ -1,7 +1,7 @@
 {
   "name": "Ninja Authoring Tool Preview",
   "description": "Ninja HTML5 Authoring Tool Preview",
-  "version": "0.7.1.0",
+  "version": "0.7.1.1",
   "app": {
     "launch": {
       "local_path": "index.html"
