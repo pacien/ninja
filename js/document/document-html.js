@@ -157,6 +157,14 @@ exports.HtmlDocument = Montage.create(Component, {
                 this.model.views.design.show();
                 this.model.views.design.iframe.style.opacity = 0;
                 this.model.views.design.content = this.application.ninja.ioMediator.tmplt.parseHtmlToNinjaTemplate(doc);
+                //
+                if (!template) {
+                    if (this.model.views.design.content.body.indexOf('Ninja-Banner Dimensions@@@') !== -1) {
+                        dimensions = (this.model.views.design.content.body.split('Ninja-Banner Dimensions@@@'))[1].split('-->')[0].split('x');
+                        dimensions = {width: parseInt(dimensions[0]), height: parseInt(dimensions[1])};
+                        template = {type: 'banner', size: dimensions};
+                    }
+                }
                 //TODO: Improve reference (probably through binding values)
                 this.model.views.design._webGlHelper = this.model.webGlHelper;
                 //Rendering design view, using observers to know when template is ready
