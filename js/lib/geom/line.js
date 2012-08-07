@@ -537,6 +537,15 @@ exports.Line = Object.create(GeomObj, {
                     ctx.strokeStyle = c;
                 }
 
+                var viewUtils = require("js/helper-classes/3D/view-utils").ViewUtils;
+                viewUtils.pushViewportObj( world.getCanvas() );
+                var cop = viewUtils.getCenterOfProjection();
+                viewUtils.popViewportObj();
+                var xCtr = cop[0] + this._xOffset,                  yCtr = cop[1] - this._yOffset;
+                var xLeft = xCtr - 0.5*this.getWidth(),             yTop = yCtr - 0.5*this.getHeight();
+                var xDist = cop[0] - xLeft,                         yDist = cop[1] - yTop;
+                var xOff = 0.5*world.getViewportWidth() - xDist,    yOff  = 0.5*world.getViewportHeight() - yDist;
+
                 // get the points
                 var p0,  p1;
                 if(this._slope === "vertical") {
@@ -554,8 +563,8 @@ exports.Line = Object.create(GeomObj, {
                 }
 
                 // draw the line
-                ctx.moveTo( p0[0],  p0[1] );
-                ctx.lineTo( p1[0],  p1[1] );
+                ctx.moveTo( p0[0]+xOff,  p0[1]+yOff );
+                ctx.lineTo( p1[0]+xOff,  p1[1]+yOff );
                 ctx.stroke();
             }
         }
