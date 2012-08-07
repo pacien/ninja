@@ -96,7 +96,7 @@ exports.ChromeApi = Montage.create(Object.prototype, {
                 //
                 f.createWriter(function(writer) {
                     //
-                    var mime, blob = new window.WebKitBlobBuilder, type = filePath.split('.');
+                    var mime, blob, type = filePath.split('.');
                     type = type[type.length-1];
                     switch (type) {
                         case 'bmp':
@@ -137,8 +137,9 @@ exports.ChromeApi = Montage.create(Object.prototype, {
                             break;
                     }
                     //
-                    blob.append(content);
-                    writer.write(blob.getBlob(mime));
+                    blob = new Blob([content], {type: type});
+                    //
+                    writer.write(blob);
                     //
                     if (callback) callback(true);
                 }, function (e) {if (callback) callback(false)});

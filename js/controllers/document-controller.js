@@ -68,7 +68,7 @@ exports.DocumentController = Montage.create(Component, {
                 return;
             }
 
-            if(this._currentDocument) {
+            if(this._currentDocument && this._currentDocument.model.currentView) {
                 this._currentDocument.model.currentView.hide();
             }
 
@@ -80,14 +80,32 @@ exports.DocumentController = Montage.create(Component, {
             } else if(this._currentDocument.currentView === "design") {
                 document.getElementById("codeViewContainer").style.display = "none";
                 document.getElementById("iframeContainer").style.display = "block";
-                this._currentDocument.model.currentView.show();
+                this._currentDocument.addPropertyChangeListener("model.currentViewIdentifier", this, false);
+                if (this._currentDocument.model.currentView) this._currentDocument.model.currentView.show();
                 this._currentDocument.model.views.design._liveNodeList = this._currentDocument.model.documentRoot.getElementsByTagName('*');
             } else {
                 document.getElementById("iframeContainer").style.display = "none";
                 this._currentDocument.model.parentContainer.style["display"] = "block";
-                this._currentDocument.model.currentView.show();
+                if (this._currentDocument.model.currentView) this._currentDocument.model.currentView.show();
             }
 
+        }
+    },
+
+    handleChange: {
+        value: function(notification) {
+            if(notification.currentPropertyPath === "model.currentViewIdentifier") {
+                if(this.currentDocument.model.currentView.identifier === "design-code") {
+//                    document.getElementById("iframeContainer").style.display = "none";
+//                    this._currentDocument.model.parentContainer.style["display"] = "block";
+//                    if (this._currentDocument.model.currentView) this._currentDocument.model.currentView.show();
+                } else {
+                    document.getElementById("codeViewContainer").style.display = "none";
+                    document.getElementById("iframeContainer").style.display = "block";
+                    if (this._currentDocument.model.currentView) this._currentDocument.model.currentView.show();
+                    this._currentDocument.model.views.design._liveNodeList = this._currentDocument.model.documentRoot.getElementsByTagName('*');
+                }
+            }
         }
     },
 
@@ -356,7 +374,7 @@ exports.DocumentController = Montage.create(Component, {
                     break;
                 default:
                     //Open in code view
-                    Montage.create(TextDocument).init(file, this.application.ninja, this.application.ninja.openDocument, 'code');
+                    Montage.create(TextDocument).init(file, this.application.ninja, this.application.ninja.openDocument, 'code', document.getElementById("codeViewContainer"));
                     break;
             }
         }

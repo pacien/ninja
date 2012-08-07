@@ -207,19 +207,33 @@ exports.BindingView = Montage.create(Component, {
         }
     },
 
-    _currentDocument : { value: null },
-    currentDocument : {
-        get : function() { return this._currentDocument; },
-        set : function(value) {
-            if(value === this._currentDocument) { return; }
+    _currentDocument: {
+        value: null
+    },
 
+    currentDocument: {
+        get: function() {
+            return this._currentDocument;
+        },
+        set: function(value) {
+            if(value === this._currentDocument) {
+                return;
+            }
 
             this._currentDocument = value;
+
             if(value) {
                 this.hide = (value.currentView === 'code');
+                this.currentDocument.addPropertyChangeListener("model.currentView", this, false);
             }
 
             this.needsDraw = true;
+        }
+    },
+
+    handleChange: {
+        value: function() {
+            this.hide = this.currentDocument.model.currentView.identifier === "design-code";
         }
     },
 

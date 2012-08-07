@@ -68,7 +68,11 @@ POSSIBILITY OF SUCH DAMAGE.
 
 .codeViewContainer .CodeMirror-scroll {
     height: 100%;
-    overflow: auto;
+    overflow-y: hidden;
+}
+
+.codeViewContainer .CodeMirror-scrollbar {
+    display:none;
 }
 
 .codeViewContainer>div{

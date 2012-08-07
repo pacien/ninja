@@ -34,7 +34,8 @@ POSSIBILITY OF SUCH DAMAGE.
 var Montage =               require("montage/core/core").Montage,
     Component =             require("montage/ui/component").Component,
     HtmlDocumentModel =     require("js/document/models/html").HtmlDocumentModel,
-    DesignDocumentView =    require("js/document/views/design").DesignDocumentView;
+    DesignDocumentView =    require("js/document/views/design").DesignDocumentView,
+    CodeDocumentView =		require("js/document/views/design-code").DesignCodeView;
 ////////////////////////////////////////////////////////////////////////
 //
 exports.HtmlDocument = Montage.create(Component, {
@@ -76,7 +77,7 @@ exports.HtmlDocument = Montage.create(Component, {
     ////////////////////////////////////////////////////////////////////
     //
     init: {
-        value:function(file, context, callback, view, template) {
+        value: function(file, context, callback, view, template) {
             //Storing callback data for loaded dispatch
             this.loaded.callback = callback;
             this.loaded.context = context;
@@ -85,7 +86,7 @@ exports.HtmlDocument = Montage.create(Component, {
                 file: {value: file},
                 fileTemplate: {value: template},
                 parentContainer: {value: document.getElementById("iframeContainer")}, //Saving reference to parent container of all views (should be changed to buckets approach
-                views: {value: {'design': DesignDocumentView.create(), 'code': null}} //TODO: Add code view logic
+                views: {value: {'design': DesignDocumentView.create(), 'code': CodeDocumentView.create()}} //TODO: Add code view logic
             });
             //Calling the any init routines in the model
             this.model.init();
@@ -98,6 +99,14 @@ exports.HtmlDocument = Montage.create(Component, {
             } else {
                 //ERROR: Design View not initialized
             }
+
+            
+            //TODO: Make sure you have a boolean to indicate if view was initilize and handle errors (just like design view above)
+            //initialize the code view for the html document and hide it since design is the default view
+            this.model.views.code.initialize(this.model.parentContainer);
+            this.model.views.code.hide();
+
+
             //
             if (view === 'design') {
                 //TODO: Remove reference and use as part of model
@@ -116,10 +125,62 @@ exports.HtmlDocument = Montage.create(Component, {
                     this._observer = new WebKitMutationObserver(this.handleTemplateReady.bind(this));
                     this._observer.observe(this.model.views.design.document.head, {childList: true});
                 }.bind(this), template, {viewCallback: this.handleViewReady, context: this});
+            } else  if (view === 'code'){
+                //TODO: Add logic to open document in code view since it's now available
             } else {
-                //TODO: Identify default view (probably code)
+	            //TODO: Add error handling
             }
         }
+    },
+    ////////////////////////////////////////////////////////////////////
+    //TODO: Make into one method to use here and one init
+    reloadView: {
+        value: function (view, template, doc) {
+            //
+            this.model.parentContainer.removeChild(this.model.views.design.iframe);
+            //Initiliazing views and hiding
+            if (this.model.views.design.initialize(this.model.parentContainer)) {
+                //Hiding iFrame, just initiliazing
+                this.model.views.design.hide();
+                //Setting the iFrame property for reference in helper class
+                this.model.webGlHelper.iframe = this.model.views.design.iframe;
+            } else {
+                //ERROR: Design View not initialized
+            }
+            //
+            if (view === 'design') {
+                //TODO: Remove reference and use as part of model
+                this.currentView = 'design';
+                //Setting current view object to design
+                this.model.currentView = this.model.views.design;
+                //Showing design iFrame
+                this.model.views.design.show();
+                this.model.views.design.iframe.style.opacity = 0;
+                this.model.views.design.content = this.application.ninja.ioMediator.tmplt.parseHtmlToNinjaTemplate(doc);
+                //TODO: Improve reference (probably through binding values)
+                this.model.views.design._webGlHelper = this.model.webGlHelper;
+                //Rendering design view, using observers to know when template is ready
+                this.model.views.design.render(function () {
+                    //Adding observer to know when template is ready
+                    this._observer = new WebKitMutationObserver(this.handleTemplateReady.bind(this));
+                    this._observer.observe(this.model.views.design.document.head, {childList: true});
+                }.bind(this), template, {viewCallback: this.handleReloadViewReady, context: this});
+            } else if(view === 'code'){
+            	//TODO: Add logic to handle external changed files
+            	//Checking for template type and not saving external data
+            	if (doc.template && (doc.template.type === 'banner' || doc.template.type === 'animation')) {
+                	this.model.views.code.load(this.application.ninja.ioMediator.tmplt.parseNinjaTemplateToHtml(false, doc, true, null).content);
+                } else {
+                 	this.model.views.code.load(this.application.ninja.ioMediator.tmplt.parseNinjaTemplateToHtml(false, doc, false, null).content);
+                }
+                //Setting current view object to code
+                this.currentView = 'code';
+                this.model.currentView = this.model.views.code;
+                this.model.currentViewIdentifier = this.model.currentView.identifier;
+            } else {
+	            //TODO: Identify default view (probably code) - Error handling
+            }
+        }  
     },
     ////////////////////////////////////////////////////////////////////
     //
@@ -130,6 +191,8 @@ exports.HtmlDocument = Montage.create(Component, {
             this._observer = null;
         }
     },
+    ////////////////////////////////////////////////////////////////////
+    //
     handleViewReady: {
         value: function(mObjects) {
             this.model.mObjects = mObjects;
@@ -138,9 +201,20 @@ exports.HtmlDocument = Montage.create(Component, {
             if(typeof this.model.domContainer !== "undefined") {
                 this.model.domContainer = this.model.documentRoot;
             }
-
+            this.model.currentViewIdentifier = this.model.currentView.identifier;
             //Making callback after view is loaded
             this.loaded.callback.call(this.loaded.context, this);
+        }
+    },
+    handleReloadViewReady: {
+        value: function(mObjects) {
+            this.model.mObjects = mObjects;
+            // TODO: Find a better way to initialize this property
+            // Assign the domContainer to be the document root on open
+            if(typeof this.model.domContainer !== "undefined") {
+                this.model.domContainer = this.model.documentRoot;
+            }
+            this.model.currentViewIdentifier = this.model.currentView.identifier;
         }
     },
     ////////////////////////////////////////////////////////////////////
