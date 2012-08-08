@@ -137,7 +137,7 @@ exports.ChromeApi = Montage.create(Object.prototype, {
                             break;
                     }
                     //
-                    blob = new Blob([content], {type: type});
+                    blob = new Blob([new Uint8Array(content)], {type: type});
                     //
                     writer.write(blob);
                     //
@@ -169,7 +169,7 @@ exports.ChromeApi = Montage.create(Object.prototype, {
                     var reader = new FileReader();
                     reader.onloadend = function(e) {
                         if (callback) {
-                            callback({content: this.result, data: file, file: f, url: f.toURL()});
+                            callback({content: new Uint8Array(this.result), data: file, file: f, url: f.toURL()});
                         }
                     };
                     reader.readAsArrayBuffer(file);
