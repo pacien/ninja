@@ -166,7 +166,7 @@ exports.Translate3DToolBase = Montage.create(ModifierToolBase,
 
             var len = selectedElements.length,
                 self = this,
-                target = selectedElements[0],
+                target = this.clickedObject,
                 curMat = viewUtils.getMatrixFromElement( target ),
                 matInv = glmat4.inverse(this._startMat, []),
                 nMat = glmat4.multiply(transMat, this._startMat, [] );
@@ -180,7 +180,7 @@ exports.Translate3DToolBase = Montage.create(ModifierToolBase,
 
             var shouldUpdateStartMat = true;
 
-            if(this._clickedOnStage || ((this._handleMode === 2) && (len > 1)))
+            if(this._clickedOnStage || ((this._handleMode !== null) && (len > 1)))
             {
                 shouldUpdateStartMat = false;
             }
