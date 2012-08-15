@@ -142,10 +142,10 @@ POSSIBILITY OF SUCH DAMAGE.
     white-space: normal;
 }
 .edit-value dt {
-    margin-right: -5px;
+    margin-right: -7px;
 }
 .edit-value dd {
-    margin-left: 5px;
+    margin-left: 7px;
 }
 
 /* ------------------------
