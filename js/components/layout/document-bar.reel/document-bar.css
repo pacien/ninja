@@ -33,7 +33,7 @@ POSSIBILITY OF SUCH DAMAGE.
     background: -webkit-radial-gradient(center, ellipse cover, rgba(100, 100, 100, .9) 40%, rgba(100, 100, 100, .4) 50%, rgba(100, 100, 100, 0) 51%), -webkit-radial-gradient(center, ellipse cover, rgba(100, 100, 100, .9) 40%, rgba(100, 100, 100, .4) 50%, rgba(100, 100, 100, 0) 51%), -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(60, 60, 60)), color-stop(70%, rgb(30, 30, 30)), color-stop(100%, rgb(25, 25, 25))), -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(10, 10, 10)), color-stop(50%, rgb(20, 20, 20)), color-stop(100%, rgb(10, 10, 10))) !important;
     background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat !important;
     background-position: 49.5% center, 50.5% center, center center, left top !important;
-    background-size: 5px 5px, 5px 5px, 3% 100%, 100% 100%;
+    background-size: 5px 5px, 5px 5px, 3% 100%, 100% 100% !important;
 }
 
 .documentBar {

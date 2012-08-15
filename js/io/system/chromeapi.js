@@ -96,7 +96,7 @@ exports.ChromeApi = Montage.create(Object.prototype, {
                 //
                 f.createWriter(function(writer) {
                     //
-                    var mime, blob, type = filePath.split('.');
+                    var mime, blob, type = filePath.split('.'), version = parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10);
                     type = type[type.length-1];
                     switch (type) {
                         case 'bmp':
@@ -136,8 +136,12 @@ exports.ChromeApi = Montage.create(Object.prototype, {
                             mime = 'text/'+type;
                             break;
                     }
-                    //
-                    blob = new Blob([content], {type: type});
+                    //TODO: Remove version checking once Chrome version 22 is stable
+                    if (version > 21) {
+                        blob = new Blob([new Uint8Array(content)], {type: type});
+                    } else {
+                         blob = new Blob([content], {type: type});  
+                    }
                     //
                     writer.write(blob);
                     //
@@ -166,10 +170,15 @@ exports.ChromeApi = Montage.create(Object.prototype, {
             //
             this.fileSystem.root.getFile(filePath, {}, function(f) {
                 f.file(function(file) {
-                    var reader = new FileReader();
+                    var reader = new FileReader(), version = parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10);
                     reader.onloadend = function(e) {
                         if (callback) {
-                            callback({content: this.result, data: file, file: f, url: f.toURL()});
+                            //TODO: Remove version checking once Chrome version 22 is stable
+                            if (version > 21) {
+                                callback({content: new Uint8Array(this.result), data: file, file: f, url: f.toURL()});
+                            } else {
+                                callback({content: this.result, data: file, file: f, url: f.toURL()});
+                            }
                         }
                     };
                     reader.readAsArrayBuffer(file);

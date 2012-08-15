@@ -58,13 +58,13 @@ exports.SelectionController = Montage.create(Component, {
                 return;
             }
 
-            if(this._currentDocument && this._currentDocument.currentView === "design") {
+            if(this._currentDocument && (this._currentDocument.currentView === "design" || this._currentDocument.model.currentView.identifier !== "code")) {
                 this._currentDocument.model._selection = this.application.ninja.selectedElements;
             }
 
             this._currentDocument = value;
 
-            if(this._currentDocument && this._currentDocument.currentView === "design") {
+            if(this._currentDocument && (this._currentDocument.currentView === "design" || this._currentDocument.model.currentView.identifier !== "code")) {
                 this.selectedElements = this._currentDocument.model.selection;
             }
             /*

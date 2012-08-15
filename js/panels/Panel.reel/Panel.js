@@ -159,8 +159,21 @@ exports.Panel = Montage.create(Component, {
                 this.disabled = true;
             } else {
                 this.disabled = this._currentDocument.currentView !== "design";
+                this._currentDocument.addPropertyChangeListener("model.currentViewIdentifier", this, false);
             }
 
+        }
+    },
+
+    handleChange: {
+        value: function(notification) {
+            if(notification.currentPropertyPath === "model.currentViewIdentifier") {
+                if(this.currentDocument.model.currentView.identifier === "design-code") {
+                    this.disabled = true;
+                } else {
+                    this.disabled = false;
+                }
+            }
         }
     },
 

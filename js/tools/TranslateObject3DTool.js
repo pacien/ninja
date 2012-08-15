@@ -77,15 +77,12 @@ exports.TranslateObject3DTool = Montage.create(Translate3DToolBase, {
             else
             {
                 this._delta = null;
-                //if(this._handleMode === 2) {
-                    this._dragPlane = viewUtils.getNormalToUnprojectedElementPlane(this._target, this._handleMode, this._inLocalMode);
-                    //console.log( "dragPlane: " + this._dragPlane );
-                    snapManager.setupDragPlaneFromPlane(this._dragPlane);
-                    do3DSnap = false;
+                this._dragPlane = viewUtils.getNormalToUnprojectedElementPlane(this._target, this._handleMode, (this._inLocalMode && (this.application.ninja.selectedElements.length === 1)));
+                snapManager.setupDragPlaneFromPlane(this._dragPlane);
+                do3DSnap = false;
 
-                    snapManager.enableElementSnap   ( false );
-                    snapManager.enableGridSnap      ( false );
-                //}
+                snapManager.enableElementSnap   ( false );
+                snapManager.enableGridSnap      ( false );
             }
 
             if(this.application.ninja.selectedElements.length) {
@@ -95,7 +92,7 @@ exports.TranslateObject3DTool = Montage.create(Translate3DToolBase, {
                 // a snap on the mouse down
                 var hitRec = snapManager.snap(point.x, point.y, do3DSnap);
 
-                if(this._handleMode === 2)
+                if(this._handleMode !== null)
                 {
                     // translate z doesn't snap to element so hitRec's element will always be different
                     // from what the browser says we clicked on. So, skip this check.
@@ -135,7 +132,7 @@ exports.TranslateObject3DTool = Montage.create(Translate3DToolBase, {
                         snapManager.enableSnapAlign( snapManager.snapAlignEnabledAppLevel() );
                     }
 
-                    if(this._handleMode === 2)
+                    if(this._handleMode !== null)
                         this.clickedObject = this._target;
 
                     // parameterize the snap point on the target
