@@ -57,6 +57,7 @@ exports.CssStyle = Montage.create(Component, {
     delegate          : { value: null },
     disabledClass     : { value: 'style-item-disabled' },
     editingStyleClass : { value: 'edit-style-item' },
+    editingValueClass : { value: 'edit-value' },
     editNewEmptyClass : { value: 'edit-empty-style' },
     invalidStyleClass : { value: "style-item-invalid" },
     emptyStyleClass   : { value: "empty-css-style" },
@@ -181,6 +182,18 @@ exports.CssStyle = Montage.create(Component, {
         }
     },
 
+    _editingValue : { value: null },
+    editingValue : {
+        get : function() { return this._editingValue; },
+        set : function(value) {
+            if(value === this._editingValue) { return; }
+
+            this._editingValue = value;
+
+            this.needsDraw = true;
+        }
+    },
+
     remove : {
         value: function() {
             var branchController = this.parentComponent.parentComponent.contentController;
@@ -257,6 +270,9 @@ exports.CssStyle = Montage.create(Component, {
             if(this.empty) {
                 this.editingNewStyle = true;
             }
+
+            this.editingValue = (this.valueField.element === e._currentTarget.element);
+
         }
     },
 
@@ -300,7 +316,7 @@ exports.CssStyle = Montage.create(Component, {
                 return false;
             }
 
-            this.editing = false;
+            this.editing = this.editingValue = false;
 
             if(this.empty && !this.dirty && !fieldsClicked.bind(this)()) {
                 ///// Show add button
@@ -456,6 +472,12 @@ exports.CssStyle = Montage.create(Component, {
                 this._element.classList.add(this.editingStyleClass);
             } else {
                 this._element.classList.remove(this.editingStyleClass);
+            }
+
+            if(this.editingValue) {
+                this._element.classList.add(this.editingValueClass);
+            } else {
+                this._element.classList.remove(this.editingValueClass);
             }
         }
     }
