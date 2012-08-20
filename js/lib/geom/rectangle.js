@@ -603,7 +603,7 @@ exports.Rectangle = Object.create(GeomObj, {
 
             // render the stroke
             ctx.beginPath();
-            if (this._strokeColor) {
+            if (this._strokeColor && (lw > 0)) {
                 inset = Math.ceil( 0.5*lw ) - 0.5;
 
                 if(this._strokeColor.gradientMode) {

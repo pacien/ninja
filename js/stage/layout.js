@@ -69,7 +69,7 @@ exports.Layout = Montage.create(Component, {
         set : function(value) {
             if (value !== this._currentDocument) {
                 this._currentDocument = value;
-                if(this._currentDocument && this._currentDocument.currentView === "design") {
+                if(this._currentDocument && (this._currentDocument.currentView === "design" || this._currentDocument.model.currentView.identifier !== "code")) {
                     this.elementsToDraw = Array.prototype.slice.call(this._currentDocument.model.documentRoot.childNodes, 0);
                 }
             }

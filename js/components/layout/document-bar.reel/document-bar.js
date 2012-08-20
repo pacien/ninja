@@ -246,7 +246,7 @@ exports.DocumentBar = Montage.create(Component, {
                         file: this._currentDocument.model.file,
                         webgl: this._currentDocument.model.webGlHelper.glData,
                         styles: this._currentDocument.model.getStyleSheets(),
-                        template: this._currentDocument.fileTemplate,
+                        template: this._currentDocument.model.fileTemplate,
                         document: this._currentDocument.model.views.design.iframe.contentWindow.document,
                         head: this._currentDocument.model.views.design.iframe.contentWindow.document.head,
                         body: this._currentDocument.model.views.design.iframe.contentWindow.document.body,
@@ -256,7 +256,7 @@ exports.DocumentBar = Montage.create(Component, {
                     doc = this._currentDocument.model.views.code.textArea.value;
                 }
                 //Reloading the document from changes made
-                this._currentDocument.reloadView(view, this.fileTemplate, doc);
+                this._currentDocument.reloadView(view, doc.template, doc);
             }
 	    }
     },

@@ -209,12 +209,14 @@ var ShapeProperties = exports.ShapeProperties = Montage.create(ToolProperties, {
                     this._fillColorCtrlIcon.style["display"] = "none";
                     this._fillColorCtrlIcon.visible = false;
                     this.endDivider.style["display"] = "none";
+                    this._strokeSize.minValue = 1;
                 } else {
                     this._fillColorCtrlContainer.style["display"] = "";
                     this._fillColorCtrlContainer.visible = true;
                     this._fillColorCtrlIcon.style["display"] = "";
                     this._fillColorCtrlIcon.visible = true;
                     this.endDivider.style["display"] = "";
+                    this._strokeSize.minValue = 0;
                 }
 
                 if (this._useWebGL.checked) {

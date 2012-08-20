@@ -669,53 +669,33 @@ exports.Circle = Object.create(GeomObj, {
                 mat[5] = yScale;
 
                 // set up the stroke style
-                ctx.beginPath();
-                ctx.lineWidth   = lineWidth;
-                if (this._strokeColor) {
-                    if(this._strokeColor.gradientMode) {
-                        if(this._strokeColor.gradientMode === "radial") {
-                            gradient = ctx.createRadialGradient(xCtr, yCtr, 0,
-                                                                xCtr, yCtr, 0.5*Math.max(this._height, this._width));
+                if(lineWidth > 0) {
+                    ctx.beginPath();
+                    ctx.lineWidth   = lineWidth;
+                    if (this._strokeColor) {
+                        if(this._strokeColor.gradientMode) {
+                            if(this._strokeColor.gradientMode === "radial") {
+                                gradient = ctx.createRadialGradient(xCtr, yCtr, 0,
+                                                                    xCtr, yCtr, 0.5*Math.max(this._height, this._width));
+                            } else {
+                                gradient = ctx.createLinearGradient(0, this._height/2, this._width, this._height/2);
+                            }
+                            colors = this._strokeColor.color;
+
+                            len = colors.length;
+
+                            for(j=0; j<len; j++) {
+                                position = colors[j].position/100;
+                                cs = colors[j].value;
+                                gradient.addColorStop(position, "rgba(" + cs.r + "," + cs.g + "," + cs.b + "," + cs.a + ")");
+                            }
+
+                            ctx.strokeStyle = gradient;
+
                         } else {
-                            gradient = ctx.createLinearGradient(0, this._height/2, this._width, this._height/2);
+                            c = "rgba(" + 255*this._strokeColor[0] + "," + 255*this._strokeColor[1] + "," + 255*this._strokeColor[2] + "," + this._strokeColor[3] + ")";
+                            ctx.strokeStyle = c;
                         }
-                        colors = this._strokeColor.color;
-
-                        len = colors.length;
-
-                        for(j=0; j<len; j++) {
-                            position = colors[j].position/100;
-                            cs = colors[j].value;
-                            gradient.addColorStop(position, "rgba(" + cs.r + "," + cs.g + "," + cs.b + "," + cs.a + ")");
-                        }
-
-                        ctx.strokeStyle = gradient;
-
-                    } else {
-                        c = "rgba(" + 255*this._strokeColor[0] + "," + 255*this._strokeColor[1] + "," + 255*this._strokeColor[2] + "," + this._strokeColor[3] + ")";
-                        ctx.strokeStyle = c;
-                    }
-                    // draw the stroke
-                    p = MathUtils.transformPoint( bezPts[0],   mat );
-                    ctx.moveTo( p[0],  p[1] );
-                    index = 1;
-                    while (index < n) {
-                        var p0   = MathUtils.transformPoint( bezPts[index],  mat );
-                        var p1 = MathUtils.transformPoint( bezPts[index+1],  mat );
-
-                        var x0 = p0[0],  y0 = p0[1],
-                            x1 = p1[0],  y1 = p1[1];
-                        ctx.quadraticCurveTo( x0,  y0,  x1, y1 );
-                        index += 2;
-                    }
-
-                    if (MathUtils.fpSign(innerRad) > 0) {
-                        // calculate the stroke matrix
-                        xScale = 0.5*innerRad*this._width  - 0.5*lineWidth;
-                        yScale = 0.5*innerRad*this._height - 0.5*lineWidth;
-                        mat[0] = xScale;
-                        mat[5] = yScale;
-
                         // draw the stroke
                         p = MathUtils.transformPoint( bezPts[0],   mat );
                         ctx.moveTo( p[0],  p[1] );
@@ -729,10 +709,32 @@ exports.Circle = Object.create(GeomObj, {
                             ctx.quadraticCurveTo( x0,  y0,  x1, y1 );
                             index += 2;
                         }
-                    }
 
-                    // render the stroke
-                    ctx.stroke();
+                        if (MathUtils.fpSign(innerRad) > 0) {
+                            // calculate the stroke matrix
+                            xScale = 0.5*innerRad*this._width  - 0.5*lineWidth;
+                            yScale = 0.5*innerRad*this._height - 0.5*lineWidth;
+                            mat[0] = xScale;
+                            mat[5] = yScale;
+
+                            // draw the stroke
+                            p = MathUtils.transformPoint( bezPts[0],   mat );
+                            ctx.moveTo( p[0],  p[1] );
+                            index = 1;
+                            while (index < n) {
+                                var p0   = MathUtils.transformPoint( bezPts[index],  mat );
+                                var p1 = MathUtils.transformPoint( bezPts[index+1],  mat );
+
+                                var x0 = p0[0],  y0 = p0[1],
+                                    x1 = p1[0],  y1 = p1[1];
+                                ctx.quadraticCurveTo( x0,  y0,  x1, y1 );
+                                index += 2;
+                            }
+                        }
+
+                        // render the stroke
+                        ctx.stroke();
+                    }
                 }
             }
         }

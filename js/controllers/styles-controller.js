@@ -87,7 +87,7 @@ var stylesController = exports.StylesController = Montage.create(Component, {
         set : function(document) {
             ///// If the document is null set default stylesheets to null
 
-            if(!document || document.currentView === "code") {
+            if(!document || (document.currentView === "code" && document.model.currentView.identifier !== "design-code")) {
                 this._currentDocument   = null;
                 this._stageStylesheet  = null;
                 this.defaultStylesheet = null;

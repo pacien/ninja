@@ -499,7 +499,7 @@ exports.PiData = Montage.create( Montage, {
                             prop : "strokeSize",
                             label : "Stroke",
                             inputFunction: parseFloat,
-                            min :   0,
+                            min :   1,
                             max :   100,
                             value : 1,
                             unit : "px",
