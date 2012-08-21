@@ -138,6 +138,15 @@ POSSIBILITY OF SUCH DAMAGE.
 .style-item .hintable-hint {
     color: #bdbdbd;
 }
+.edit-value {
+    white-space: normal;
+}
+.edit-value dt {
+    margin-right: -7px;
+}
+.edit-value dd {
+    margin-left: 7px;
+}
 
 /* ------------------------
   Empty Style (Add Style)
