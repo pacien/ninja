@@ -136,12 +136,8 @@ exports.ChromeApi = Montage.create(Object.prototype, {
                             mime = 'text/'+type;
                             break;
                     }
-                    //TODO: Remove version checking once Chrome version 22 is stable
-                    if (version > 21) {
-                        blob = new Blob([new Uint8Array(content)], {type: type});
-                    } else {
-                         blob = new Blob([content], {type: type});  
-                    }
+                    //
+                    blob = new Blob([new Uint8Array(content)], {type: type});
                     //
                     writer.write(blob);
                     //
