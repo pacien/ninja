@@ -33,7 +33,6 @@ var Montage =   require("montage/core/core").Montage,
     ShapeTool = require("js/tools/ShapeTool").ShapeTool,
     DrawingToolBase = require("js/tools/drawing-tool-base").DrawingToolBase,
     NJUtils = require("js/lib/NJUtils").NJUtils,
-    TagTool = require("js/tools/TagTool").TagTool,
     ShapesController =  require("js/controllers/elements/shapes-controller").ShapesController,
     ShapeModel = require("js/models/shape-model").ShapeModel;
 

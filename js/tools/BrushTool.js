@@ -36,7 +36,6 @@ var defaultEventManager = require("montage/core/event/event-manager").defaultEve
 var Montage = require("montage/core/core").Montage;
 var NJUtils = require("js/lib/NJUtils").NJUtils;
 var ElementMediator = require("js/mediators/element-mediator").ElementMediator;
-var TagTool = require("js/tools/TagTool").TagTool;
 var snapManager = require("js/helper-classes/3D/snap-manager").SnapManager;
 var ViewUtils = require("js/helper-classes/3D/view-utils").ViewUtils;
 var BrushStroke = require("js/lib/geom/brush-stroke").BrushStroke;
