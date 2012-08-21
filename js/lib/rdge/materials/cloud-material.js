@@ -34,7 +34,6 @@ var Material            = require("js/lib/rdge/materials/material").Material;
 var GLWorld             = require("js/lib/drawing/world").World;
 var Texture             = require("js/lib/rdge/texture").Texture;
 var ElementMediator     = require("js/mediators/element-mediator").ElementMediator;
-var TagTool             = require("js/tools/TagTool").TagTool;
 
 ///////////////////////////////////////////////////////////////////////
 // Class GLMaterial
@@ -152,8 +151,7 @@ var CloudMaterial = function CloudMaterial()
 
         //////////////////////////////////////////////////////////////////////////////////
         // IS THIS NECESSARY??
-//        var elementModel = TagTool.makeElement(~~srcCanvas.width, ~~srcCanvas.height,
-//                                                                        Matrix.I(4), [0,0,0], srcCanvas);
+//        var elementModel = TagTool.makeElement(~~srcCanvas.width, ~~srcCanvas.height, Matrix.I(4), [0,0,0], srcCanvas);
 //        ElementMediator.addElement(srcCanvas, elementModel.data, true);
         //////////////////////////////////////////////////////////////////////////////////
 
