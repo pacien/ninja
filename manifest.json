@@ -18,7 +18,8 @@
     "webRequestBlocking",
     "http://tetsubo.org/*",
     "clipboardRead",
-    "clipboardWrite"
+    "clipboardWrite",
+    "http://localhost/*"
   ],
   "requirements": {
     "3D": {
