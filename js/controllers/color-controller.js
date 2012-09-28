@@ -34,10 +34,10 @@ POSSIBILITY OF SUCH DAMAGE.
 var Montage =               require("montage/core/core").Montage,
     Component =             require("montage/ui/component").Component,
     ColorModel =            require("js/models/color-model").ColorModel,
-    ColorPanelBase =        require("js/panels/Color/colorpanelbase.reel").ColorPanelBase,
+    ColorPanelBase =        require("js/panels/color/colorpanelbase.reel").ColorPanelBase,
     ElementsMediator =      require("js/mediators/element-mediator").ElementMediator,
-    ColorPopupManager =     require("js/panels/Color/colorpopup-manager").ColorPopupManager,
-    ColorButtonManager =    require("js/panels/Color/colorbutton-manager").ColorButtonManager;
+    ColorPopupManager =     require("js/panels/color/colorpopup-manager").ColorPopupManager,
+    ColorButtonManager =    require("js/panels/color/colorbutton-manager").ColorButtonManager;
 ////////////////////////////////////////////////////////////////////////
 //Exporting as ColorController
 exports.ColorController = Montage.create(Component, {

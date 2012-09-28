@@ -30,7 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
 
 var Montage = require("montage/core/core").Montage;
-var SliderBase = require("js/components/sliderbase").SliderBase;
+var SliderBase = require("js/components/SliderBase").SliderBase;
 
 var HotText = exports.HotText = Montage.create(SliderBase, {
     /* Allow users to specify a function to format the display.

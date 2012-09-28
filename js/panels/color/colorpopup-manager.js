@@ -33,7 +33,7 @@ POSSIBILITY OF SUCH DAMAGE.
 //
 var Montage =           require("montage/core/core").Montage,
     Component =         require("montage/ui/component").Component,
-    ColorPanelPopup =   require("js/panels/Color/colorpanelpopup.reel").ColorPanelPopup,
+    ColorPanelPopup =   require("js/panels/color/colorpanelpopup.reel").ColorPanelPopup,
     ColorModel =        require("js/models/color-model").ColorModel;
 ////////////////////////////////////////////////////////////////////////
 //Exporting as ColorPopupManager

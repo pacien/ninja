@@ -45,7 +45,7 @@ exports.PanelsData = Montage.create(Montage, {
             scrollable: false,
             collapsed: false,
             open: true,
-            modulePath: "js/panels/Color/colorpanelbase.reel",
+            modulePath: "js/panels/color/colorpanelbase.reel",
             moduleName: "ColorPanelBase"
         },
         {

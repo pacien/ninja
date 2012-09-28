@@ -30,7 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 </copyright> */
 
 var Montage = require("montage/core/core").Montage;
-var SliderBase = require("js/components/sliderbase").SliderBase;
+var SliderBase = require("js/components/SliderBase").SliderBase;
 
 var Slider = exports.Slider = Montage.create(SliderBase, {
 
